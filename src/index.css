@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Smooth theme transition */
+.theme-transition {
+  transition: background-color 300ms, color 300ms, border-color 300ms;
+}
+
+/* Enable smooth scroll behavior for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Animated gradient background */
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradientShift 12s ease infinite;
+}
+
+/* Subtle dot noise texture */
+.bg-noise {
+  background-image: radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px);
+  background-size: 6px 6px;
+}
+.dark .bg-noise {
+  background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+}
