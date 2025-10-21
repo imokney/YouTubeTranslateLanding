@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowRight,
@@ -15,18 +15,22 @@ import {
   Sun,
 } from "lucide-react";
 
+/** ====== Константы проекта ====== */
 const AGENCY_NAME = "Studio Translate";
 const TELEGRAM_LINK = "https://t.me/your_agency";
 const EMAIL = "hello@youragency.com";
 
+/** ====== Вспомогательные утилиты ====== */
 const getPreferredTheme = (): "light" | "dark" => {
   try {
     const stored = localStorage.getItem("theme");
     if (stored === "light" || stored === "dark") return stored;
   } catch {}
-  if (typeof window !== "undefined" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) {
+  if (
+    typeof window !== "undefined" &&
+    window.matchMedia?.("(prefers-color-scheme: dark)").matches
+  )
     return "dark";
-  }
   return "light";
 };
 
@@ -36,12 +40,20 @@ const fadeInUp = {
 };
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 
-/** iOS-like theme switch with Moon/Sun */
-function ThemeSwitch({ theme, setTheme }: { theme: "light" | "dark"; setTheme: (t: "light" | "dark") => void }) {
+/** ====== Тумблер темы (iOS-стиль, 🌙/🌞) ====== */
+function ThemeSwitch({
+  theme,
+  setTheme,
+}: {
+  theme: "light" | "dark";
+  setTheme: (t: "light" | "dark") => void;
+}) {
   const isDark = theme === "dark";
 
   useEffect(() => {
-    try { localStorage.setItem("theme", theme); } catch {}
+    try {
+      localStorage.setItem("theme", theme);
+    } catch {}
   }, [theme]);
 
   return (
@@ -49,8 +61,8 @@ function ThemeSwitch({ theme, setTheme }: { theme: "light" | "dark"; setTheme: (
       role="switch"
       aria-checked={isDark}
       onClick={() => setTheme(isDark ? "light" : "dark")}
-      className={`relative inline-flex h-7 w-12 items-center rounded-full border transition-colors duration-300
-        ${isDark ? "bg-orange-600 border-orange-600" : "bg-gray-300 border-gray-300"}
+      className={`relative inline-flex h-7 w-12 items-center rounded-full border transition-colors duration-300 
+        ${isDark ? "bg-orange-600 border-orange-600" : "bg-gray-300 border-gray-300"} 
         dark:${isDark ? "bg-orange-600 border-orange-600" : "bg-neutral-700 border-neutral-700"}`}
       aria-label="Переключить тему"
       title={isDark ? "Светлая тема" : "Тёмная тема"}
@@ -58,7 +70,9 @@ function ThemeSwitch({ theme, setTheme }: { theme: "light" | "dark"; setTheme: (
       <motion.span
         layout
         transition={{ type: "spring", stiffness: 500, damping: 30 }}
-        className={`absolute flex items-center justify-center h-5 w-5 rounded-full bg-white shadow-sm text-orange-500 ${isDark ? "right-0.5" : "left-0.5"}`}
+        className={`absolute flex items-center justify-center h-5 w-5 rounded-full bg-white shadow-sm text-orange-500 ${
+          isDark ? "right-0.5" : "left-0.5"
+        }`}
       >
         {isDark ? <Moon className="w-3.5 h-3.5" /> : <Sun className="w-3.5 h-3.5" />}
       </motion.span>
@@ -66,30 +80,60 @@ function ThemeSwitch({ theme, setTheme }: { theme: "light" | "dark"; setTheme: (
   );
 }
 
+/** ====== Главный компонент ====== */
 export default function Landing() {
   const [theme, setTheme] = useState<"light" | "dark">(() => getPreferredTheme());
   const [scrolled, setScrolled] = useState(false);
 
+  // ScrollSpy + кнопка "Наверх"
+  const sectionIds = useMemo(
+    () => ["services", "process", "pricing", "cases", "contact", "faq"],
+    []
+  );
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [showTop, setShowTop] = useState(false);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveId(entry.target.id);
+        });
+      },
+      { rootMargin: "-40% 0px -55% 0px", threshold: 0.1 }
+    );
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    const onScrollTop = () => setShowTop(window.scrollY > 600);
+    window.addEventListener("scroll", onScrollTop);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("scroll", onScrollTop);
+      observer.disconnect();
+    };
+  }, [sectionIds]);
 
   return (
     <div className={theme === "dark" ? "dark" : ""}>
       <div className="theme-transition min-h-screen bg-white text-gray-900 dark:bg-neutral-950 dark:text-neutral-100 relative overflow-hidden">
-        {/* Subtle global texture (defined in index.css as .bg-noise) */}
+        {/* Глобальная текстура (см. .bg-noise в index.css) */}
         <div aria-hidden className="pointer-events-none absolute inset-0 bg-noise" />
 
-        {/* Animated hero gradient blob */}
+        {/* Анимированный градиент в hero */}
         <div
           aria-hidden
           className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-[40%] blur-3xl opacity-40 animate-gradient
                      bg-gradient-to-r from-orange-600 via-amber-500 to-rose-500 dark:opacity-25"
         />
 
-        {/* Fixed transparent header with shadow on scroll */}
+        {/* Хедер: фиксирован, полупрозрачный, тень при скролле */}
         <header
           className={`fixed top-0 left-0 w-full z-50 backdrop-blur transition-all duration-300 border-b border-black/5 dark:border-white/10 ${
             scrolled ? "bg-white/80 dark:bg-neutral-950/70 shadow-md" : "bg-white/50 dark:bg-neutral-950/40"
@@ -100,13 +144,33 @@ export default function Landing() {
               <Globe2 className="w-5 h-5" />
               <span className="font-semibold text-sm md:text-base">{AGENCY_NAME}</span>
             </div>
+
+            {/* Навигация с подсветкой активного пункта */}
             <nav className="hidden md:flex items-center gap-6 text-sm">
-              <a href="#services" className="hover:text-gray-700 dark:hover:text-neutral-300">Услуги</a>
-              <a href="#process" className="hover:text-gray-700 dark:hover:text-neutral-300">Как мы работаем</a>
-              <a href="#pricing" className="hover:text-gray-700 dark:hover:text-neutral-300">Тарифы</a>
-              <a href="#cases" className="hover:text-gray-700 dark:hover:text-neutral-300">Кейсы</a>
-              <a href="#faq" className="hover:text-gray-700 dark:hover:text-neutral-300">FAQ</a>
+              {[
+                { id: "services", label: "Услуги" },
+                { id: "process", label: "Как мы работаем" },
+                { id: "pricing", label: "Тарифы" },
+                { id: "cases", label: "Кейсы" },
+                { id: "faq", label: "FAQ" },
+              ].map((l) => (
+                <a
+                  key={l.id}
+                  href={`#${l.id}`}
+                  className={`relative hover:text-gray-700 dark:hover:text-neutral-300 transition-colors ${
+                    activeId === l.id ? "text-orange-600 dark:text-orange-300" : ""
+                  }`}
+                >
+                  {l.label}
+                  <span
+                    className={`absolute -bottom-1 left-0 h-[2px] w-full rounded bg-current transition-opacity ${
+                      activeId === l.id ? "opacity-100" : "opacity-0"
+                    }`}
+                  />
+                </a>
+              ))}
             </nav>
+
             <div className="flex items-center gap-3">
               <ThemeSwitch theme={theme} setTheme={setTheme} />
               <motion.a
@@ -123,7 +187,7 @@ export default function Landing() {
           </div>
         </header>
 
-        {/* Hero (add top padding to clear fixed header) */}
+        {/* Hero (отступ сверху под fixed-Header) */}
         <section className="relative pt-28 md:pt-32">
           <div className="max-w-6xl mx-auto px-4 py-16 md:py-20 grid md:grid-cols-2 gap-10 items-center">
             <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }}>
@@ -136,13 +200,11 @@ export default function Landing() {
                 Локализация контента на испанский, английский, русский и другие языки. Больше просмотров, CPM и подписчиков без смены формата.
               </motion.p>
               <motion.div variants={fadeInUp} className="mt-6 flex flex-col sm:flex-row gap-3">
-                <motion.a whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}
-                  href={TELEGRAM_LINK} target="_blank" rel="noreferrer"
+                <motion.a whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} href={TELEGRAM_LINK} target="_blank" rel="noreferrer"
                   className="inline-flex items-center gap-2 rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2">
                   Заказать бесплатное демо <ArrowRight className="w-4 h-4" />
                 </motion.a>
-                <motion.a whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }}
-                  href="#pricing"
+                <motion.a whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} href="#pricing"
                   className="inline-flex items-center gap-2 rounded-2xl border border-orange-300 text-orange-700 hover:bg-orange-50 px-4 py-2 dark:border-orange-500/40 dark:text-orange-300 dark:hover:bg-orange-500/10">
                   Смотреть тарифы <PlayCircle className="w-5 h-5" />
                 </motion.a>
@@ -154,9 +216,13 @@ export default function Landing() {
               </motion.div>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, amount: 0.3 }} transition={{ duration: 0.6, delay: 0.1 }}
-              className="relative">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.98 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="relative"
+            >
               <div className="aspect-video rounded-2xl shadow-xl border border-black/5 dark:border-white/10 overflow-hidden grid grid-cols-2">
                 <div className="relative p-6 bg-gray-50 dark:bg-neutral-900 flex flex-col justify-between">
                   <div>
@@ -354,25 +420,13 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* FAQ */}
+        {/* FAQ (аккордеон) */}
         <section id="faq" className="scroll-mt-24 py-20" data-testid="section-faq">
           <div className="max-w-6xl mx-auto px-4">
             <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">FAQ</motion.h2>
-            <div className="mt-8 grid md:grid-cols-2 gap-6">
-              {[
-                { q: "Сколько занимает перевод и озвучка?", a: "Обычно 48–72 часа для ролика до 10 минут. Большие проекты — по договорённости." },
-                { q: "Какие языки вы поддерживаете?", a: "EN/ES/RU/DE/FR — базово. Другие — по запросу, подключаем носителей." },
-                { q: "Можно ли получить бесплатное демо?", a: "Да, делаем демо-фрагмент 20–30 секунд, чтобы утвердить голос и стиль." },
-                { q: "Как считаете стоимость?", a: "По минутам финального видео. При подписке от 4 роликов — скидка." },
-              ].map((f, i) => (
-                <motion.div key={i} variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }}>
-                  <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
-                    <div className="font-semibold">{f.q}</div>
-                    <div className="text-gray-600 dark:text-neutral-300 mt-2">{f.a}</div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+
+            {/* Простая реализация аккордеона на state */}
+            <FAQAccordion />
           </div>
         </section>
 
@@ -387,8 +441,61 @@ export default function Landing() {
             </div>
           </div>
         </footer>
+
+        {/* Кнопка "Наверх" */}
+        {showTop && (
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="fixed bottom-6 right-6 z-50 rounded-full bg-orange-600 text-white px-3 py-2 shadow-lg hover:bg-orange-700 transition-colors"
+            aria-label="Наверх"
+            title="Наверх"
+          >
+            ↑
+          </button>
+        )}
       </div>
     </div>
   );
 }
 
+/** ====== FAQ Accordion (отдельный подкомпонент) ====== */
+function FAQAccordion() {
+  const items = [
+    { q: "Сколько занимает перевод и озвучка?", a: "Обычно 48–72 часа для ролика до 10 минут. Большие проекты — по договорённости." },
+    { q: "Какие языки вы поддерживаете?", a: "EN/ES/RU/DE/FR — базово. Другие — по запросу, подключаем носителей." },
+    { q: "Можно ли получить бесплатное демо?", a: "Да, делаем демо-фрагмент 20–30 секунд, чтобы утвердить голос и стиль." },
+    { q: "Как считаете стоимость?", a: "По минутам финального видео. При подписке от 4 роликов — скидка." },
+  ];
+  const [open, setOpen] = useState<number | null>(0);
+
+  return (
+    <div className="mt-8 grid md:grid-cols-2 gap-6">
+      {items.map((f, i) => {
+        const opened = open === i;
+        return (
+          <motion.div key={i} variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }}>
+            <button
+              onClick={() => setOpen(opened ? null : i)}
+              className="w-full text-left rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+              aria-expanded={opened}
+            >
+              <div className="flex items-start justify-between gap-4">
+                <span className="font-semibold">{f.q}</span>
+                <span className={`ml-4 transition-transform ${opened ? "rotate-45" : ""}`}>＋</span>
+              </div>
+              <div
+                className={`grid transition-[grid-template-rows] duration-300 ease-out ${
+                  opened ? "grid-rows-[1fr] mt-2" : "grid-rows-[0fr] mt-0"
+                }`}
+              >
+                <div className="overflow-hidden">
+                  <p className="text-gray-600 dark:text-neutral-300">{f.a}</p>
+                </div>
+              </div>
+            </button>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
