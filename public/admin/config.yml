@@ -3,6 +3,7 @@ backend:
   repo: imokney/YouTubeTranslateLanding      # 👈 замени на свой репозиторий
   branch: main
   auth_scope: repo
+  base_url: https://lang2lang-oauth.vercel.app/api
 
 site_url: https://lang2lang.io
 logo_url: https://lang2lang.io/favicon.ico
