@@ -16,9 +16,9 @@ import {
 } from "lucide-react";
 
 /** ====== Константы проекта ====== */
-const AGENCY_NAME = "Studio Translate";
-const TELEGRAM_LINK = "https://t.me/your_agency";
-const EMAIL = "hello@youragency.com";
+const AGENCY_NAME = "lang2lang";
+const TELEGRAM_LINK = "https://t.me/lang2lang";
+const EMAIL = "hello@lang2lang.com";
 
 /** ====== Вспомогательные утилиты ====== */
 const getPreferredTheme = (): "light" | "dark" => {
@@ -432,15 +432,22 @@ export default function Landing() {
 
         {/* Footer */}
         <footer className="border-t border-black/5 dark:border-white/10 py-10">
-          <div className="max-w-6xl mx-auto px-4 text-sm text-gray-600 dark:text-neutral-400 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div>© {new Date().getFullYear()} {AGENCY_NAME}. Все права защищены.</div>
-            <div className="flex items-center gap-4">
-              <a href={TELEGRAM_LINK} target="_blank" rel="noreferrer" className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">Telegram</a>
-              <a href={`mailto:${EMAIL}`} className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">Email</a>
-              <a href="#" className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">Политика конфиденциальности</a>
-            </div>
-          </div>
-        </footer>
+  <div className="max-w-6xl mx-auto px-4 text-sm text-gray-600 dark:text-neutral-400 flex flex-col md:flex-row items-center justify-between gap-4">
+    <div>© {new Date().getFullYear()} lang2lang. Все права защищены.</div>
+    <div className="flex items-center gap-4">
+      <a href={TELEGRAM_LINK} target="_blank" rel="noreferrer"
+         className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">
+         Telegram
+      </a>
+      <a href={`mailto:${EMAIL}`} className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">
+        Email
+      </a>
+      <a href="#" className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">
+        Политика конфиденциальности
+      </a>
+    </div>
+  </div>
+</footer>
 
         {/* Кнопка "Наверх" */}
         {showTop && (
