@@ -1,0 +1,33 @@
+backend:
+  name: github
+  repo: imokney/YouTubeTranslateLanding      # 👈 замени на свой репозиторий
+  branch: main
+  auth_scope: repo
+
+site_url: https://lang2lang.io
+logo_url: https://lang2lang.io/favicon.ico
+
+media_folder: "public/uploads"   # файлы будут храниться в репозитории здесь
+public_folder: "/uploads"        # и доступны на сайте по этому пути
+
+collections:
+  - name: "home"
+    label: "Главная"
+    format: "json"
+    editor:
+      preview: false
+    files:
+      - file: "content/home.json"
+        label: "Контент главной"
+        name: "homeJson"
+        fields:
+          - { label: "Hero — заголовок", name: "heroTitle", widget: "string" }
+          - { label: "Hero — подзаголовок", name: "heroSubtitle", widget: "text" }
+          - { label: "CTA (кнопка 1)", name: "ctaPrimary", widget: "string" }
+          - { label: "CTA (кнопка 2)", name: "ctaSecondary", widget: "string" }
+          - label: "Услуги"
+            name: "services"
+            widget: "list"
+            fields:
+              - { label: "Название", name: "title", widget: "string" }
+              - { label: "Описание", name: "desc", widget: "text" }

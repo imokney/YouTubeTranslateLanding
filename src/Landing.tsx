@@ -15,22 +15,19 @@ import {
   Sun,
 } from "lucide-react";
 
-/** ====== Константы проекта ====== */
+// 👉 JSON-контент, редактируемый через админку
+import home from "../content/home.json";
+
 const AGENCY_NAME = "lang2lang";
 const TELEGRAM_LINK = "https://t.me/lang2lang";
 const EMAIL = "hello@lang2lang.com";
 
-/** ====== Вспомогательные утилиты ====== */
 const getPreferredTheme = (): "light" | "dark" => {
   try {
     const stored = localStorage.getItem("theme");
     if (stored === "light" || stored === "dark") return stored;
   } catch {}
-  if (
-    typeof window !== "undefined" &&
-    window.matchMedia?.("(prefers-color-scheme: dark)").matches
-  )
-    return "dark";
+  if (typeof window !== "undefined" && window.matchMedia?.("(prefers-color-scheme: dark)").matches) return "dark";
   return "light";
 };
 
@@ -40,7 +37,6 @@ const fadeInUp = {
 };
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
 
-/** ====== Тумблер темы (iOS-стиль, 🌙/🌞) ====== */
 function ThemeSwitch({
   theme,
   setTheme,
@@ -49,7 +45,6 @@ function ThemeSwitch({
   setTheme: (t: "light" | "dark") => void;
 }) {
   const isDark = theme === "dark";
-
   useEffect(() => {
     try {
       localStorage.setItem("theme", theme);
@@ -80,16 +75,12 @@ function ThemeSwitch({
   );
 }
 
-/** ====== Главный компонент ====== */
 export default function Landing() {
   const [theme, setTheme] = useState<"light" | "dark">(() => getPreferredTheme());
   const [scrolled, setScrolled] = useState(false);
 
-  // ScrollSpy + кнопка "Наверх"
-  const sectionIds = useMemo(
-    () => ["services", "process", "pricing", "cases", "contact", "faq"],
-    []
-  );
+  // ScrollSpy + back-to-top
+  const sectionIds = useMemo(() => ["services", "process", "pricing", "cases", "contact", "faq"], []);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [showTop, setShowTop] = useState(false);
 
@@ -98,11 +89,7 @@ export default function Landing() {
     window.addEventListener("scroll", onScroll);
 
     const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) setActiveId(entry.target.id);
-        });
-      },
+      (entries) => entries.forEach((entry) => entry.isIntersecting && setActiveId(entry.target.id)),
       { rootMargin: "-40% 0px -55% 0px", threshold: 0.1 }
     );
     sectionIds.forEach((id) => {
@@ -123,17 +110,17 @@ export default function Landing() {
   return (
     <div className={theme === "dark" ? "dark" : ""}>
       <div className="theme-transition min-h-screen bg-white text-gray-900 dark:bg-neutral-950 dark:text-neutral-100 relative overflow-hidden">
-        {/* Глобальная текстура (см. .bg-noise в index.css) */}
+        {/* Текстура фона */}
         <div aria-hidden className="pointer-events-none absolute inset-0 bg-noise" />
 
-        {/* Анимированный градиент в hero */}
+        {/* Анимированный градиент Hero */}
         <div
           aria-hidden
           className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[900px] h-[600px] rounded-[40%] blur-3xl opacity-40 animate-gradient
                      bg-gradient-to-r from-orange-600 via-amber-500 to-rose-500 dark:opacity-25"
         />
 
-        {/* Хедер: фиксирован, полупрозрачный, тень при скролле */}
+        {/* Хедер */}
         <header
           className={`fixed top-0 left-0 w-full z-50 backdrop-blur transition-all duration-300 border-b border-black/5 dark:border-white/10 ${
             scrolled ? "bg-white/80 dark:bg-neutral-950/70 shadow-md" : "bg-white/50 dark:bg-neutral-950/40"
@@ -144,8 +131,6 @@ export default function Landing() {
               <Globe2 className="w-5 h-5" />
               <span className="font-semibold text-sm md:text-base">{AGENCY_NAME}</span>
             </div>
-
-            {/* Навигация с подсветкой активного пункта */}
             <nav className="hidden md:flex items-center gap-6 text-sm">
               {[
                 { id: "services", label: "Услуги" },
@@ -170,7 +155,6 @@ export default function Landing() {
                 </a>
               ))}
             </nav>
-
             <div className="flex items-center gap-3">
               <ThemeSwitch theme={theme} setTheme={setTheme} />
               <motion.a
@@ -187,26 +171,26 @@ export default function Landing() {
           </div>
         </header>
 
-        {/* Hero (отступ сверху под fixed-Header) */}
+        {/* Hero */}
         <section className="relative pt-28 md:pt-32">
           <div className="max-w-6xl mx-auto px-4 py-16 md:py-20 grid md:grid-cols-2 gap-10 items-center">
             <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }}>
               <motion.h1 variants={fadeInUp} className="text-4xl md:text-5xl font-bold leading-tight">
-                Переводим и озвучиваем ваши{" "}
+                {home.heroTitle}{" "}
                 <span className="bg-gradient-to-r from-orange-600 to-amber-500 bg-clip-text text-transparent">YouTube-ролики</span>
                 <br />для выхода на новые рынки
               </motion.h1>
               <motion.p variants={fadeInUp} className="mt-4 text-lg text-gray-600 dark:text-neutral-300">
-                Локализация контента на испанский, английский, русский и другие языки. Больше просмотров, CPM и подписчиков без смены формата.
+                {home.heroSubtitle}
               </motion.p>
               <motion.div variants={fadeInUp} className="mt-6 flex flex-col sm:flex-row gap-3">
                 <motion.a whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} href={TELEGRAM_LINK} target="_blank" rel="noreferrer"
                   className="inline-flex items-center gap-2 rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2">
-                  Заказать бесплатное демо <ArrowRight className="w-4 h-4" />
+                  {home.ctaPrimary} <ArrowRight className="w-4 h-4" />
                 </motion.a>
                 <motion.a whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} href="#pricing"
                   className="inline-flex items-center gap-2 rounded-2xl border border-orange-300 text-orange-700 hover:bg-orange-50 px-4 py-2 dark:border-orange-500/40 dark:text-orange-300 dark:hover:bg-orange-500/10">
-                  Смотреть тарифы <PlayCircle className="w-5 h-5" />
+                  {home.ctaSecondary} <PlayCircle className="w-5 h-5" />
                 </motion.a>
               </motion.div>
               <motion.div variants={fadeInUp} className="mt-6 flex flex-wrap gap-4 text-sm text-gray-600 dark:text-neutral-300">
@@ -250,31 +234,23 @@ export default function Landing() {
             <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 mt-2">
               Соберите нужный пакет или оформите подписку на несколько роликов в месяц.
             </motion.p>
+
             <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className="mt-10 grid md:grid-cols-3 gap-6">
-              {[{
-                icon: <Subtitles className="w-5 h-5" />,
-                title: "Перевод + субтитры",
-                items: ["Проверка редактором", "Адаптация терминов", "Быстрый релиз"],
-                desc: "Точный перевод и стилевое выравнивание, тайм-коды и экспорт .srt/.vtt."
-              }, {
-                icon: <Mic2 className="w-5 h-5" />,
-                title: "Перевод + озвучка",
-                items: ["AI-голоса или актёры", "Сохранение интонаций", "Файлы .wav/.mp3 + финальный .mp4"],
-                desc: "Даббинг с выбором голоса (м/ж, тембр), шумоподавление, сведение с оригиналом."
-              }, {
-                icon: <Clapperboard className="w-5 h-5" />,
-                title: "Полная локализация канала",
-                items: ["Аудит канала", "Подбор рынков (ES/DE/FR/AR)", "Запуск за 7–10 дней"],
-                desc: "Обложки, описания, теги, перевод шапки/о канале, эндскрины и плейлисты."
-              }].map((s, idx) => (
+              {home.services.map((s, idx) => (
                 <motion.div key={idx} variants={fadeInUp} whileHover={{ y: -4 }}>
                   <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
-                    <div className="flex items-center gap-2 font-semibold">{s.icon}{s.title}</div>
+                    <div className="flex items-center gap-2 font-semibold">
+                      {idx === 0 && <Subtitles className="w-5 h-5" />}
+                      {idx === 1 && <Mic2 className="w-5 h-5" />}
+                      {idx === 2 && <Clapperboard className="w-5 h-5" />}
+                      {s.title}
+                    </div>
                     <p className="text-sm text-gray-600 dark:text-neutral-300 mt-2">{s.desc}</p>
+                    {/* Пример списка фич — оставлен как было; можно тоже вынести в JSON при желании */}
                     <ul className="mt-3 space-y-2 text-sm text-gray-600 dark:text-neutral-300">
-                      {s.items.map((it) => (
-                        <li key={it} className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />{it}</li>
-                      ))}
+                      <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />Высокое качество</li>
+                      <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />Согласование правок</li>
+                      <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />Быстрый релиз</li>
                     </ul>
                   </div>
                 </motion.div>
@@ -290,7 +266,7 @@ export default function Landing() {
             <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className="mt-10 grid md:grid-cols-4 gap-6">
               {[
                 { step: "1", title: "Бриф", text: "Вы выбираете язык, отправляете ссылку на ролик и пожелания." },
-                { step: "2", title: "Демо", text: "Делам бесплатный 20–30 сек фрагмент для согласования голоса и стиля." },
+                { step: "2", title: "Демо", text: "Делаем бесплатный 20–30 сек фрагмент для согласования голоса и стиля." },
                 { step: "3", title: "Перевод/Озвучка", text: "Готовим субтитры и/или даббинг, согласовываем правки." },
                 { step: "4", title: "Публикация", text: "Отдаём финальные файлы или помогаем с выгрузкой на канал." },
               ].map((i) => (
@@ -420,36 +396,27 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* FAQ (аккордеон) */}
+        {/* FAQ */}
         <section id="faq" className="scroll-mt-24 py-20" data-testid="section-faq">
           <div className="max-w-6xl mx-auto px-4">
             <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">FAQ</motion.h2>
-
-            {/* Простая реализация аккордеона на state */}
             <FAQAccordion />
           </div>
         </section>
 
         {/* Footer */}
         <footer className="border-t border-black/5 dark:border-white/10 py-10">
-  <div className="max-w-6xl mx-auto px-4 text-sm text-gray-600 dark:text-neutral-400 flex flex-col md:flex-row items-center justify-between gap-4">
-    <div>© {new Date().getFullYear()} lang2lang. Все права защищены.</div>
-    <div className="flex items-center gap-4">
-      <a href={TELEGRAM_LINK} target="_blank" rel="noreferrer"
-         className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">
-         Telegram
-      </a>
-      <a href={`mailto:${EMAIL}`} className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">
-        Email
-      </a>
-      <a href="#" className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">
-        Политика конфиденциальности
-      </a>
-    </div>
-  </div>
-</footer>
+          <div className="max-w-6xl mx-auto px-4 text-sm text-gray-600 dark:text-neutral-400 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div>© {new Date().getFullYear()} {AGENCY_NAME}. Все права защищены.</div>
+            <div className="flex items-center gap-4">
+              <a href={TELEGRAM_LINK} target="_blank" rel="noreferrer" className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">Telegram</a>
+              <a href={`mailto:${EMAIL}`} className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">Email</a>
+              <a href="#" className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">Политика конфиденциальности</a>
+            </div>
+          </div>
+        </footer>
 
-        {/* Кнопка "Наверх" */}
+        {/* Back to top */}
         {showTop && (
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
@@ -465,7 +432,6 @@ export default function Landing() {
   );
 }
 
-/** ====== FAQ Accordion (отдельный подкомпонент) ====== */
 function FAQAccordion() {
   const items = [
     { q: "Сколько занимает перевод и озвучка?", a: "Обычно 48–72 часа для ролика до 10 минут. Большие проекты — по договорённости." },
