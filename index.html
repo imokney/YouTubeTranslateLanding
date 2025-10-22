@@ -1,33 +1,39 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
   <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>lang2lang — Перевод и озвучка YouTube-роликов</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>lang2lang — Перевод и озвучка YouTube-роликов</title>
 
-  <!-- SEO -->
-  <meta name="description" content="lang2lang — агентство по переводу и озвучке YouTube-контента. Локализация, субтитры, озвучка и запуск каналов на новые рынки." />
+    <!-- SEO -->
+    <meta name="description" content="lang2lang — агентство по переводу и озвучке YouTube-контента. Локализация, субтитры, озвучка и запуск каналов на новые рынки." />
 
-  <!-- Open Graph -->
-  <meta property="og:title" content="lang2lang — Перевод и озвучка YouTube-роликов" />
-  <meta property="og:description" content="Выводим контент на новые рынки: субтитры, даббинг и полная локализация каналов." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://lang2lang.com" />
-  <meta property="og:site_name" content="lang2lang" />
-  <meta property="og:image" content="https://lang2lang.com/og-cover.jpg" />
+    <!-- Open Graph -->
+    <meta property="og:title" content="lang2lang — Перевод и озвучка YouTube-роликов" />
+    <meta property="og:description" content="Выводим контент на новые рынки: субтитры, даббинг и полная локализация каналов." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://lang2lang.io" />
+    <meta property="og:site_name" content="lang2lang" />
+    <meta property="og:image" content="https://lang2lang.io/og-cover.jpg" />
 
-  <!-- Twitter -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="lang2lang — Перевод и озвучка YouTube-роликов" />
-  <meta name="twitter:description" content="Локализация YouTube: субтитры, озвучка, запуск на новые рынки." />
-  <meta name="twitter:image" content="https://lang2lang.com/og-cover.jpg" />
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="lang2lang — Перевод и озвучка YouTube-роликов" />
+    <meta name="twitter:description" content="Локализация YouTube: субтитры, озвучка, запуск на новые рынки." />
+    <meta name="twitter:image" content="https://lang2lang.io/og-cover.jpg" />
 
-  <!-- Theme -->
-  <meta name="theme-color" content="#ea580c" />
-  <link rel="icon" href="/favicon.ico" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <!-- Theme -->
+    <meta name="theme-color" content="#ea580c" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
-  <!-- Plausible Analytics (если включал) -->
-  <!-- <script defer data-domain="lang2lang.com" src="https://plausible.io/js/script.js"></script> -->
-</head>
+    <!-- Plausible Analytics (опционально) -->
+    <!-- <script defer data-domain="lang2lang.io" src="https://plausible.io/js/script.js"></script> -->
+  </head>
 
+  <body>
+    <div id="root"></div>
+    <!-- ВАЖНО: у тебя main.tsx лежит в корне, поэтому путь /main.tsx -->
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
