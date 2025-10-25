@@ -19,8 +19,8 @@ import {
 import home from "../content/home.json";
 
 const AGENCY_NAME = "lang2lang";
-const TELEGRAM_LINK = "https://t.me/lang2lang";
-const EMAIL = "hello@lang2lang.com";
+const TELEGRAM_LINK = "https://t.me/sup_lang2lang";
+const EMAIL = "support@lang2lang.io";
 
 const getPreferredTheme = (): "light" | "dark" => {
   try {
@@ -133,10 +133,11 @@ export default function Landing() {
             </div>
             <nav className="hidden md:flex items-center gap-6 text-sm">
               {[
-                { id: "services", label: "Услуги" },
+                { id: "services", label: "Вы получаете" },
                 { id: "process", label: "Как мы работаем" },
                 { id: "pricing", label: "Тарифы" },
                 { id: "cases", label: "Кейсы" },
+                //{ id: "why", label: "Почему мы" },
                 { id: "faq", label: "FAQ" },
               ].map((l) => (
                 <a
@@ -194,9 +195,9 @@ export default function Landing() {
                 </motion.a>
               </motion.div>
               <motion.div variants={fadeInUp} className="mt-6 flex flex-wrap gap-4 text-sm text-gray-600 dark:text-neutral-300">
-                <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-orange-600" />Срок от 48 часов</div>
-                <div className="flex items-center gap-2"><Shield className="w-4 h-4 text-orange-600" />Сохранение стиля автора</div>
-                <div className="flex items-center gap-2"><Sparkles className="w-4 h-4 text-orange-600" />AI + человек-редактор</div>
+                <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-orange-600" />Быстрый запуск</div>
+                <div className="flex items-center gap-2"><Shield className="w-4 h-4 text-orange-600" />Качественная озвучка</div>
+                <div className="flex items-center gap-2"><Sparkles className="w-4 h-4 text-orange-600" />Проверка носителями языка</div>
               </motion.div>
             </motion.div>
 
@@ -213,14 +214,14 @@ export default function Landing() {
                     <div className="text-xs uppercase tracking-wide text-gray-500 dark:text-neutral-400 mb-2">Оригинал</div>
                     <div className="h-40 rounded-xl bg-white dark:bg-neutral-800 shadow-inner flex items-center justify-center text-gray-400 dark:text-neutral-500">Видео</div>
                   </div>
-                  <div className="text-gray-500 dark:text-neutral-400 text-sm">EN / RU / ES</div>
+                  <div className="text-gray-500 dark:text-neutral-400 text-sm">Русский</div>
                 </div>
                 <div className="relative p-6 bg-gradient-to-br from-orange-600 to-rose-600 text-white flex flex-col justify-between">
                   <div>
                     <div className="text-xs uppercase tracking-wide text-white/70 mb-2">Локализация</div>
                     <div className="h-40 rounded-xl bg-black/30 border border-white/10 flex items-center justify-center">Озвучка / Субтитры</div>
                   </div>
-                  <div className="text-white/80 text-sm">Адаптация под культуру</div>
+                  <div className="text-white/80 text-sm">English</div>
                 </div>
               </div>
             </motion.div>
@@ -265,10 +266,10 @@ export default function Landing() {
             <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">Как мы работаем</motion.h2>
             <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className="mt-10 grid md:grid-cols-4 gap-6">
               {[
-                { step: "1", title: "Бриф", text: "Вы выбираете язык, отправляете ссылку на ролик и пожелания." },
-                { step: "2", title: "Демо", text: "Делаем бесплатный 20–30 сек фрагмент для согласования голоса и стиля." },
-                { step: "3", title: "Перевод/Озвучка", text: "Готовим субтитры и/или даббинг, согласовываем правки." },
-                { step: "4", title: "Публикация", text: "Отдаём финальные файлы или помогаем с выгрузкой на канал." },
+                { step: "1", title: "Заявка", text: "Вы оставляете заявку на нашем сайте." },
+                { step: "2", title: "Старт", text: "Мы запускаем каналы, локализуем и дублируем для вас." },
+                { step: "3", title: "Рост", text: "Увеличение аудитории и доходов. Мы управляем и монетизируем." },
+                { step: "4", title: "Оплата", text: "Справедливое распределение доходов. Мы зарабатываем только тогда, когда зарабатываете вы." },
               ].map((i) => (
                 <motion.div key={i.step} variants={fadeInUp} whileHover={{ y: -3 }}>
                   <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
