@@ -178,8 +178,8 @@ export default function Landing() {
             <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }}>
               <motion.h1 variants={fadeInUp} className="text-4xl md:text-5xl font-bold leading-tight">
                 {home.heroTitle}{" "}
-                <span className="bg-gradient-to-r from-orange-600 to-amber-500 bg-clip-text text-transparent">YouTube-ролики</span>
-                <br />для выхода на новые рынки
+                <span className="bg-gradient-to-r from-orange-600 to-amber-500 bg-clip-text text-transparent">каналы YouTube</span>
+                <br />на других языках
               </motion.h1>
               <motion.p variants={fadeInUp} className="mt-4 text-lg text-gray-600 dark:text-neutral-300">
                 {home.heroSubtitle}
