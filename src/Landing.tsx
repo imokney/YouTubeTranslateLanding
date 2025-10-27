@@ -8,8 +8,8 @@ import {
   //Mic2,
   //Clapperboard,
   Globe,
-  BadgeDollarSign,
-  Handshake,
+  ChartNoAxesCombined,
+  ShieldCheck,
   Check,
   Clock,
   Shield,
@@ -245,8 +245,8 @@ export default function Landing() {
                   <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
                     <div className="flex items-center gap-2 font-semibold">
                       {idx === 0 && <Globe className="w-5 h-5" />}
-                      {idx === 1 && <BadgeDollarSign className="w-5 h-5" />}
-                      {idx === 2 && <Handshake className="w-5 h-5" />}
+                      {idx === 1 && <ChartNoAxesCombined className="w-5 h-5" />}
+                      {idx === 2 && <ShieldCheck className="w-5 h-5" />}
                       {s.title}
                     </div>
                     <p className="text-sm text-gray-600 dark:text-neutral-300 mt-2">{s.desc}</p>
