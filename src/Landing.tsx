@@ -269,10 +269,10 @@ export default function Landing() {
             <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">Как мы работаем</motion.h2>
             <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className="mt-10 grid md:grid-cols-4 gap-6">
               {[
-                { step: "1", title: "Заявка", text: "Вы оставляете заявку на нашем сайте." },
-                { step: "2", title: "Старт", text: "Мы запускаем каналы, локализуем и дублируем для вас." },
-                { step: "3", title: "Рост", text: "Увеличение аудитории и доходов. Мы управляем и монетизируем." },
-                { step: "4", title: "Оплата", text: "Справедливое распределение доходов. Мы зарабатываем только тогда, когда зарабатываете вы." },
+                { step: "1", title: "Заявка", text: "Оставляете заявку на сайте — мы быстро связываемся, чтобы обсудить детали и запуск." },
+                { step: "2", title: "Старт", text: "Запускаем локализованные каналы, адаптируем контент и берём все технические задачи на себя." },
+                { step: "3", title: "Рост", text: "Продвигаем ролики, увеличиваем охваты и помогаем вам выйти на новую аудиторию." },
+                { step: "4", title: "Оплата", text: "Справедливое распределние доходов, мы зарабатываем только тогда, когда зарабатываете вы. ❤️" },
               ].map((i) => (
                 <motion.div key={i.step} variants={fadeInUp} whileHover={{ y: -3 }}>
                   <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
