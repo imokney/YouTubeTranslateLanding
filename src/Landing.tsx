@@ -20,7 +20,7 @@ import {
 
 // 👉 JSON-контент, редактируемый через админку
 import home from "../content/home.json";
-import VideoShowcase from "./components/VideoShowcase";
+import VideoShowcase from "./components/VideoShowcase"; // 👈 добавлен импорт
 
 const AGENCY_NAME = "lang2lang";
 const TELEGRAM_LINK = "https://t.me/sup_lang2lang";
@@ -205,19 +205,15 @@ export default function Landing() {
               </motion.div>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, scale: 0.98 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, amount: 0.3 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="relative"
-            >
-              <div className="mt-8 md:mt-0">
-                <VideoShowcase />
-                 <p className="mt-3 text-sm text-gray-500 dark:text-neutral-400">
-                  Переключайте аудио-дорожки: EN / RU / ES — демонстрация локализации.
-                 </p>
-              </div>
+            {/* Правая колонка hero */}
+            <div className="mt-8 md:mt-0">
+              <VideoShowcase />
+              <p className="mt-3 text-sm text-gray-500 dark:text-neutral-400">
+                Переключайте аудио-дорожки: EN / RU / ES — демонстрация локализации.
+              </p>
+            </div>
+          </div>
+        </section>
 
         {/* Services */}
         <section id="services" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-neutral-950" data-testid="section-services">
@@ -464,3 +460,4 @@ function FAQAccordion() {
     </div>
   );
 }
+
