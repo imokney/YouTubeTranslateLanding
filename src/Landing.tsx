@@ -269,6 +269,29 @@ export default function Landing() {
           </div>
         </section>
 
+                {/* Cases */}
+        <section id="cases" className="scroll-mt-24 py-20" data-testid="section-cases">
+          <div className="max-w-6xl mx-auto px-4">
+            <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">Кейсы</motion.h2>
+            <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 mt-2">
+              Несколько примеров до/после. Замените заглушки на ваши ролики.
+            </motion.p>
+            <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className="mt-10 grid md:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
+                <motion.div key={i} variants={fadeInUp} whileHover={{ y: -4 }}>
+                  <div className="rounded-2xl overflow-hidden border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900">
+                    <div className="aspect-video bg-gray-100 dark:bg-neutral-800 flex items-center justify-center text-gray-400 dark:text-neutral-500">Видео {i}</div>
+                    <div className="p-4">
+                      <div className="text-base font-semibold">Tech review → Spanish</div>
+                      <div className="text-sm text-gray-600 dark:text-neutral-400">+130% просмотров из Латам</div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </motion.div>
+          </div>
+        </section>
+        
         {/* Pricing */}
         <section id="pricing" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-neutral-950" data-testid="section-pricing">
           <div className="max-w-6xl mx-auto px-4">
@@ -330,30 +353,7 @@ export default function Landing() {
             </motion.div>
           </div>
         </section>
-
-        {/* Cases */}
-        <section id="cases" className="scroll-mt-24 py-20" data-testid="section-cases">
-          <div className="max-w-6xl mx-auto px-4">
-            <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">Кейсы</motion.h2>
-            <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 mt-2">
-              Несколько примеров до/после. Замените заглушки на ваши ролики.
-            </motion.p>
-            <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className="mt-10 grid md:grid-cols-3 gap-6">
-              {[1, 2, 3].map((i) => (
-                <motion.div key={i} variants={fadeInUp} whileHover={{ y: -4 }}>
-                  <div className="rounded-2xl overflow-hidden border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900">
-                    <div className="aspect-video bg-gray-100 dark:bg-neutral-800 flex items-center justify-center text-gray-400 dark:text-neutral-500">Видео {i}</div>
-                    <div className="p-4">
-                      <div className="text-base font-semibold">Tech review → Spanish</div>
-                      <div className="text-sm text-gray-600 dark:text-neutral-400">+130% просмотров из Латам</div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </section>
-
+        
         {/* Contact */}
         <section id="contact" className="scroll-mt-24 py-20 bg-gray-50 dark:bg-neutral-950" data-testid="section-contact">
           <div className="max-w-2xl mx-auto px-4">
