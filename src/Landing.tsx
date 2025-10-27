@@ -20,6 +20,7 @@ import {
 
 // 👉 JSON-контент, редактируемый через админку
 import home from "../content/home.json";
+import VideoShowcase from "./components/VideoShowcase";
 
 const AGENCY_NAME = "lang2lang";
 const TELEGRAM_LINK = "https://t.me/sup_lang2lang";
@@ -211,25 +212,12 @@ export default function Landing() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="relative"
             >
-              <div className="aspect-video rounded-2xl shadow-xl border border-black/5 dark:border-white/10 overflow-hidden grid grid-cols-2">
-                <div className="relative p-6 bg-gray-50 dark:bg-neutral-900 flex flex-col justify-between">
-                  <div>
-                    <div className="text-xs uppercase tracking-wide text-gray-500 dark:text-neutral-400 mb-2">Оригинал</div>
-                    <div className="h-40 rounded-xl bg-white dark:bg-neutral-800 shadow-inner flex items-center justify-center text-gray-400 dark:text-neutral-500">Видео</div>
-                  </div>
-                  <div className="text-gray-500 dark:text-neutral-400 text-sm">Русский</div>
-                </div>
-                <div className="relative p-6 bg-gradient-to-br from-orange-600 to-rose-600 text-white flex flex-col justify-between">
-                  <div>
-                    <div className="text-xs uppercase tracking-wide text-white/70 mb-2">Локализация</div>
-                    <div className="h-40 rounded-xl bg-black/30 border border-white/10 flex items-center justify-center">Озвучка / Субтитры</div>
-                  </div>
-                  <div className="text-white/80 text-sm">English</div>
-                </div>
+              <div className="mt-8 md:mt-0">
+                <VideoShowcase />
+                 <p className="mt-3 text-sm text-gray-500 dark:text-neutral-400">
+                  Переключайте аудио-дорожки: EN / RU / ES — демонстрация локализации.
+                 </p>
               </div>
-            </motion.div>
-          </div>
-        </section>
 
         {/* Services */}
         <section id="services" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-neutral-950" data-testid="section-services">

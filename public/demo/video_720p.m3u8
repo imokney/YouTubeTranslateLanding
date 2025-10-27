@@ -1,0 +1,4 @@
+#EXTM3U
+#EXTINF:5.0,
+segment1.ts
+#EXT-X-ENDLIST
