@@ -7,7 +7,6 @@ import {
   Subtitles,
   //Mic2,
   //Clapperboard,
-  Globe1,
   Coins,
   Handshake,
   Check,
@@ -244,7 +243,7 @@ export default function Landing() {
                 <motion.div key={idx} variants={fadeInUp} whileHover={{ y: -4 }}>
                   <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
                     <div className="flex items-center gap-2 font-semibold">
-                      {idx === 0 && <Globe1 className="w-5 h-5" />}
+                      {idx === 0 && <Globe2 className="w-5 h-5" />}
                       {idx === 1 && <Coins className="w-5 h-5" />}
                       {idx === 2 && <Handshake className="w-5 h-5" />}
                       {s.title}
