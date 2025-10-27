@@ -231,9 +231,9 @@ export default function Landing() {
         {/* Services */}
         <section id="services" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-neutral-950" data-testid="section-services">
           <div className="max-w-6xl mx-auto px-4">
-            <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">Услуги</motion.h2>
+            <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">Вы получаете</motion.h2>
             <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 mt-2">
-              Соберите нужный пакет или оформите подписку на несколько роликов в месяц.
+              Начните сотрудничество сейчас чтобы начать не потом
             </motion.p>
 
             <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className="mt-10 grid md:grid-cols-3 gap-6">
@@ -249,9 +249,9 @@ export default function Landing() {
                     <p className="text-sm text-gray-600 dark:text-neutral-300 mt-2">{s.desc}</p>
                     {/* Пример списка фич — оставлен как было; можно тоже вынести в JSON при желании */}
                     <ul className="mt-3 space-y-2 text-sm text-gray-600 dark:text-neutral-300">
-                      <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />Высокое качество</li>
-                      <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />Согласование правок</li>
-                      <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />Быстрый релиз</li>
+                      <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />Профессиональный перевод и озвучка</li>
+                      <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />Согласование деталей и контроль качества</li>
+                      <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />Быстрый запуск и поддержка</li>
                     </ul>
                   </div>
                 </motion.div>
