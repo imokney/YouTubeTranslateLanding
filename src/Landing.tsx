@@ -270,7 +270,6 @@ export default function Landing() {
         </section>
 
                 {/* Cases */}
-        //<section id="cases" className="scroll-mt-24 py-20" data-testid="section-cases">
         <section id="cases" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-neutral-950" data-testid="section-cases">  
           <div className="max-w-6xl mx-auto px-4">
             <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">Кейсы</motion.h2>
