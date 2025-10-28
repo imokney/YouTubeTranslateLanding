@@ -427,7 +427,7 @@ function FAQAccordion() {
     { q: "Можно ли получить бесплатное демо?", a: "Да, делаем демо-фрагмент 20–30 секунд, чтобы утвердить голос и стиль." },
     { q: "Как считаете стоимость?", a: "По минутам финального видео. При подписке от 4 роликов — скидка." },
   ];
-  const [open, setOpen] = useState<number | null>(0);
+  const [open, setOpen] = useState<number | null>(null);
 
   return (
     <div className="mt-8 grid md:grid-cols-2 gap-6">
