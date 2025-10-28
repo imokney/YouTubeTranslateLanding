@@ -270,7 +270,7 @@ export default function Landing() {
         </section>
 
                 {/* Cases */}
-        <section id="cases" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-[#3C1F0A]" data-testid="section-cases">  
+        <section id="cases" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-[#2B1600]" data-testid="section-cases">  
           <div className="max-w-6xl mx-auto px-4">
             <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">Кейсы</motion.h2>
             <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 mt-2">
@@ -355,7 +355,7 @@ export default function Landing() {
         </section>
         
         {/* Contact */}
-        <section id="contact" className="scroll-mt-24 py-20 bg-gray-50 dark:bg-amber-950" data-testid="section-contact">
+        <section id="contact" className="scroll-mt-24 py-20 bg-gray-50 dark:bg-[#2A1A12]" data-testid="section-contact">
           <div className="max-w-2xl mx-auto px-4">
             <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold text-center">Расскажите о проекте</motion.h2>
             <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 text-center mt-2">
