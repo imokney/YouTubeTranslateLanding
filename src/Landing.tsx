@@ -226,7 +226,7 @@ export default function Landing() {
             <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className="mt-10 grid md:grid-cols-3 gap-6">
               {home.services.map((s, idx) => (
                 <motion.div key={idx} variants={fadeInUp} whileHover={{ y: -4 }}>
-                  <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
+                  <div className="relative z-10 rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
                     <div className="flex items-center gap-2 font-semibold">
                       {idx === 0 && <Globe className="w-5 h-5" />}
                       {idx === 1 && <CircleDollarSign className="w-5 h-5" />}
@@ -270,7 +270,7 @@ export default function Landing() {
         </section>
 
                 {/* Cases */}
-        <section id="cases" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-[#2B1600]" data-testid="section-cases">  
+        <section id="cases" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-[#2A1A12]" data-testid="section-cases">  
           <div className="max-w-6xl mx-auto px-4">
             <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">Кейсы</motion.h2>
             <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 mt-2">
