@@ -226,7 +226,7 @@ export default function Landing() {
             <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className="mt-10 grid md:grid-cols-3 gap-6">
               {home.services.map((s, idx) => (
                 <motion.div key={idx} variants={fadeInUp} whileHover={{ y: -4 }}>
-                  <div className="relative z-10 rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
+                  <div className="relative z-10 rounded-2xl border border-black/5 dark:border-white/95 bg-white dark:bg-neutral-900/90 p-6">
                     <div className="flex items-center gap-2 font-semibold">
                       {idx === 0 && <Globe className="w-5 h-5" />}
                       {idx === 1 && <CircleDollarSign className="w-5 h-5" />}
@@ -259,7 +259,7 @@ export default function Landing() {
                 { step: "4", title: "Оплата", text: "Справедливое распределние доходов, мы зарабатываем только тогда, когда зарабатываете вы." },
               ].map((i) => (
                 <motion.div key={i.step} variants={fadeInUp} whileHover={{ y: -3 }}>
-                  <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
+                  <div className="relative z-10 rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
                     <div className="text-xl font-semibold">Шаг {i.step}. {i.title}</div>
                     <div className="text-gray-600 dark:text-neutral-300 mt-2">{i.text}</div>
                   </div>
@@ -279,7 +279,7 @@ export default function Landing() {
             <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className="mt-10 grid md:grid-cols-3 gap-6">
               {[1, 2, 3].map((i) => (
                 <motion.div key={i} variants={fadeInUp} whileHover={{ y: -4 }}>
-                  <div className="rounded-2xl overflow-hidden border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900">
+                  <div className="relative z-10 rounded-2xl overflow-hidden border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900">
                     <div className="aspect-video bg-gray-100 dark:bg-neutral-800 flex items-center justify-center text-gray-400 dark:text-neutral-500">Видео {i}</div>
                     <div className="p-4">
                       <div className="text-base font-semibold">Tech review → Spanish</div>
@@ -301,7 +301,7 @@ export default function Landing() {
             </motion.p>
             <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className="mt-10 grid md:grid-cols-3 gap-6">
               <motion.div variants={fadeInUp} whileHover={{ y: -4 }}>
-                <div className="rounded-2xl border border-gray-300 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
+                <div className="relative z-10 rounded-2xl border border-gray-300 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
                   <div className="font-semibold">Субтитры</div>
                   <div className="text-3xl font-bold mt-2">от $6 <span className="text-base font-normal text-gray-500 dark:text-neutral-400">/ мин</span></div>
                   <ul className="text-sm text-gray-600 dark:text-neutral-300 space-y-2 mt-3">
@@ -318,7 +318,7 @@ export default function Landing() {
               </motion.div>
 
               <motion.div variants={fadeInUp} whileHover={{ y: -4 }}>
-                <div className="rounded-2xl border-2 border-orange-600 bg-white dark:bg-neutral-900 p-6">
+                <div className="relative z-10 rounded-2xl border-2 border-orange-600 bg-white dark:bg-neutral-900 p-6">
                   <div className="font-semibold">Озвучка</div>
                   <div className="text-3xl font-bold mt-2">от $12 <span className="text-base font-normal text-gray-500 dark:text-neutral-400">/ мин</span></div>
                   <ul className="text-sm text-gray-600 dark:text-neutral-300 space-y-2 mt-3">
@@ -335,7 +335,7 @@ export default function Landing() {
               </motion.div>
 
               <motion.div variants={fadeInUp} whileHover={{ y: -4 }}>
-                <div className="rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 p-6">
+                <div className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 p-6">
                   <div className="font-semibold">Локализация канала</div>
                   <div className="text-3xl font-bold mt-2">по запросу</div>
                   <ul className="text-sm text-gray-600 dark:text-neutral-300 space-y-2 mt-3">
@@ -437,7 +437,7 @@ function FAQAccordion() {
           <motion.div key={i} variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }}>
             <button
               onClick={() => setOpen(opened ? null : i)}
-              className="w-full text-left rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+              className="w-full text-left relative z-10 rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
               aria-expanded={opened}
             >
               <div className="flex items-start justify-between gap-4">
