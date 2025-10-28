@@ -364,10 +364,11 @@ export default function Landing() {
             <motion.form variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }}
               onSubmit={(e) => { e.preventDefault(); alert("Спасибо! Мы свяжемся с вами в Telegram/по email."); }}
               className="mt-8 grid gap-4">
-              <input placeholder="Ваше имя" required className="rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2" />
-              <input type="email" placeholder="Почта" required className="rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2" />
-              <input placeholder="Ссылка на канал/видео" className="rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2" />
-              <textarea placeholder="Кратко опишите задачу (язык, длительность, дедлайн)" className="rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2" rows={5} />
+              <input placeholder="Ваше имя" required   className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2
+                                                                  focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+              <input type="email" placeholder="Почта" required className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2" />
+              <input placeholder="Ссылка на канал/видео" className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2" />
+              <textarea placeholder="Кратко опишите задачу (язык, длительность, дедлайн)" className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2" rows={5} />
               <div className="flex gap-3">
                 <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
                   type="submit" className="rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 shadow-lg shadow-orange-600/25">
@@ -375,7 +376,7 @@ export default function Landing() {
                 </motion.button>
                 <motion.a whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
                   href={TELEGRAM_LINK} target="_blank"
-                  className="rounded-2xl border border-orange-300 text-orange-700 hover:bg-orange-50 px-4 py-2 dark:border-orange-500/40 dark:text-orange-300 dark:hover:bg-orange-500/10">
+                  className="relative z-10 rounded-2xl border border-orange-300 text-orange-700 hover:bg-orange-50 px-4 py-2 dark:border-orange-500/40 dark:text-orange-300 dark:hover:bg-orange-500/10">
                   Написать в Telegram
                 </motion.a>
               </div>
