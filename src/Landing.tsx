@@ -365,7 +365,7 @@ export default function Landing() {
               onSubmit={(e) => { e.preventDefault(); alert("Спасибо! Мы свяжемся с вами в Telegram/по email."); }}
               className="mt-8 grid gap-4">
               <input placeholder="Ваше имя" required   className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2
-                                                                  focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+                                                                  focus:outline-none focus:ring-2 focus:ring-orange-500/50" />
               <input type="email" placeholder="Почта" required className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2" />
               <input placeholder="Ссылка на канал/видео" className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2" />
               <textarea placeholder="Кратко опишите задачу (язык, длительность, дедлайн)" className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2" rows={5} />
