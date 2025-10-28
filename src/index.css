@@ -30,3 +30,23 @@ html {
 .dark .bg-noise {
   background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
 }
+
+/* ...твой текущий CSS... */
+
+/* Ленивая отрисовка длинных секций */
+.cv {
+  content-visibility: auto;
+  contain-intrinsic-size: 1000px;
+}
+
+/* Небольшая шумовая текстура для фона по классу .bg-noise */
+.bg-noise {
+  background-image: radial-gradient(#00000008 0.5px, transparent 0.5px);
+  background-size: 8px 8px;
+}
+
+/* Фокус-стили по доступности */
+:focus-visible {
+  outline: 2px solid rgba(255, 102, 0, 0.7);
+  outline-offset: 2px;
+}

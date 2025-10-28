@@ -1,39 +1,90 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>lang2lang — Перевод и озвучка YouTube-роликов</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <!-- SEO -->
-    <meta name="description" content="lang2lang — агентство по переводу и озвучке YouTube-контента. Локализация, субтитры, озвучка и запуск каналов на новые рынки." />
+    <title>lang2lang — Перевод и озвучка YouTube на новые языки</title>
+    <meta name="description" content="Локализуем ваши YouTube-ролики: перевод, озвучка, субтитры, продвижение. Бесплатное демо 30 сек." />
 
     <!-- Open Graph -->
-    <meta property="og:title" content="lang2lang — Перевод и озвучка YouTube-роликов" />
-    <meta property="og:description" content="Выводим контент на новые рынки: субтитры, даббинг и полная локализация каналов." />
+    <meta property="og:title" content="lang2lang — Перевод и озвучка YouTube" />
+    <meta property="og:description" content="Локализуем ролики на новые рынки. Демо 30 сек бесплатно." />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://lang2lang.io" />
-    <meta property="og:site_name" content="lang2lang" />
-    <meta property="og:image" content="https://lang2lang.io/og-cover.jpg" />
+    <meta property="og:url" content="https://lang2lang.io/" />
+    <meta property="og:image" content="https://lang2lang.io/og.jpg" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="lang2lang — Перевод и озвучка YouTube-роликов" />
-    <meta name="twitter:description" content="Локализация YouTube: субтитры, озвучка, запуск на новые рынки." />
-    <meta name="twitter:image" content="https://lang2lang.io/og-cover.jpg" />
+    <meta name="twitter:title" content="lang2lang — Перевод и озвучка YouTube" />
+    <meta name="twitter:description" content="Локализация, озвучка, субтитры. Демо бесплатно." />
+    <meta name="twitter:image" content="https://lang2lang.io/og.jpg" />
 
-    <!-- Theme -->
-    <meta name="theme-color" content="#ea580c" />
+    <!-- Preload hero poster -->
+    <link rel="preload" as="image" href="/demo/poster.jpg" fetchpriority="high" />
+
+    <!-- Plausible (privacy-friendly analytics) -->
+    <script defer data-domain="lang2lang.io" src="https://plausible.io/js/script.tagged-events.js"></script>
+
+    <!-- GA4 (опционально: если используете, раскомментируйте и вставьте ID)
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments)}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    -->
+
+    <!-- JSON-LD: Organization -->
+    <script type="application/ld+json">
+    {
+      "@context":"https://schema.org",
+      "@type":"Organization",
+      "name":"lang2lang",
+      "url":"https://lang2lang.io",
+      "logo":"https://lang2lang.io/logo.png",
+      "email":"support@lang2lang.io"
+    }
+    </script>
+
+    <!-- JSON-LD: Service -->
+    <script type="application/ld+json">
+    {
+      "@context":"https://schema.org",
+      "@type":"Service",
+      "name":"Локализация YouTube-каналов",
+      "provider":{"@type":"Organization","name":"lang2lang"},
+      "areaServed":"Worldwide",
+      "hasOfferCatalog":{
+        "@type":"OfferCatalog",
+        "name":"Тарифы",
+        "itemListElement":[
+          {"@type":"Offer","name":"Субтитры","priceSpecification":{"@type":"UnitPriceSpecification","priceCurrency":"USD","price":6,"unitCode":"MIN"}},
+          {"@type":"Offer","name":"Озвучка","priceSpecification":{"@type":"UnitPriceSpecification","priceCurrency":"USD","price":12,"unitCode":"MIN"}},
+          {"@type":"Offer","name":"Локализация канала","priceSpecification":{"@type":"PriceSpecification","priceCurrency":"USD"}}
+        ]
+      }
+    }
+    </script>
+
+    <!-- JSON-LD: FAQPage -->
+    <script type="application/ld+json">
+    {
+      "@context":"https://schema.org",
+      "@type":"FAQPage",
+      "mainEntity":[
+        {"@type":"Question","name":"Сколько занимает перевод и озвучка?","acceptedAnswer":{"@type":"Answer","text":"Обычно 48–72 часа для ролика до 10 минут."}},
+        {"@type":"Question","name":"Какие языки поддерживаете?","acceptedAnswer":{"@type":"Answer","text":"Базово EN/ES/RU/DE/FR. Другие — по запросу."}},
+        {"@type":"Question","name":"Есть ли бесплатное демо?","acceptedAnswer":{"@type":"Answer","text":"Да, делаем демо-фрагмент 20–30 секунд."}}
+      ]
+    }
+    </script>
+
     <link rel="icon" href="/favicon.ico" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-
-    <!-- Plausible Analytics (опционально) -->
-    <!-- <script defer data-domain="lang2lang.io" src="https://plausible.io/js/script.js"></script> -->
   </head>
-
   <body>
     <div id="root"></div>
-    <!-- ВАЖНО: у тебя main.tsx лежит в корне, поэтому путь /main.tsx -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
