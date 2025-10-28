@@ -293,7 +293,7 @@ export default function Landing() {
         </section>
         
         {/* Pricing */}
-        <section id="pricing" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-neutral-950" data-testid="section-pricing">
+        <section id="pricing" className="scroll-mt-24 py-20" data-testid="section-pricing">
           <div className="max-w-6xl mx-auto px-4">
             <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">Тарифы</motion.h2>
             <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 mt-2">
