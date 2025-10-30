@@ -230,7 +230,7 @@ useEffect(() => {
         </section>
 
         {/* Services */}
-        <section id="services" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-[#2A1A12]" data-testid="section-services">
+        <section id="services" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-[#2E2C2B]" data-testid="section-services">
           <div className="max-w-6xl mx-auto px-4">
             <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">Вы получаете</motion.h2>
             <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 mt-2">
@@ -284,7 +284,7 @@ useEffect(() => {
         </section>
 
         {/* Cases */}
-        <section id="cases" className="scroll-mt-24 py-20" data-testid="section-cases">
+        <section id="cases" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-[#2E2C2B]" data-testid="section-cases">
           <div className="max-w-6xl mx-auto px-4">
             <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">Кейсы</motion.h2>
             <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 mt-2">
@@ -382,14 +382,12 @@ useEffect(() => {
             </motion.div>
 
             {/* Калькулятор под карточками */}
-            <div className="mt-8 max-w-3xl mx-auto">
-              <PriceCalculator />
-            </div>
+
           </div>
         </section>
         
         {/* Contact */}
-        <section id="contact" className="scroll-mt-24 py-20 bg-gray-50 dark:bg-[#2A1A12]" data-testid="section-contact">
+        <section id="contact" className="scroll-mt-24 py-20 bg-gray-50 dark:bg-[#2E2C2B]" data-testid="section-contact">
           <div className="max-w-2xl mx-auto px-4">
             <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold text-center">Расскажите о проекте</motion.h2>
             <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 text-center mt-2">
