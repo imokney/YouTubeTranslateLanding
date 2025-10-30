@@ -45,3 +45,40 @@ html {
   outline: 2px solid rgba(255, 102, 0, 0.7);
   outline-offset: 2px;
 }
+
+/* --- Glass / жидкое стекло --- */
+.glass {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 6px 30px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.06);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+}
+:root.dark .glass {
+  background: rgba(20, 20, 20, 0.45);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* --- Градиентная рамка --- */
+.border-gradient { position: relative; border-radius: 16px; }
+.border-gradient::before {
+  content: ""; position: absolute; inset: 0; padding: 1px; border-radius: inherit;
+  background: linear-gradient(120deg,#ff6600,#ff2d55);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+}
+.border-gradient > .bg { border-radius: inherit; }
+
+/* Плавные смены темы/цветов */
+.theme-transition * { transition: background-color .35s ease, color .35s ease, border-color .35s ease; }
+
+/* Фоновая точечная текстура */
+.bg-noise {
+  background-image: radial-gradient(#00000008 0.5px, transparent 0.5px);
+  background-size: 8px 8px;
+}
+
+/* Предпочтение «мало анимаций» */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}

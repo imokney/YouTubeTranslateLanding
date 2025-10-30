@@ -23,6 +23,11 @@ import home from "../content/home.json";
 import VideoShowcase from "./components/VideoShowcase"; // 👈 добавлен импорт
 import PriceCalculator from "./components/PriceCalculator";
 
+// Новые UI-компоненты для «дороже» визуала
+import FloatingOrbs from "./components/ui/FloatingOrbs";
+import GlassCard from "./components/ui/GlassCard";
+import MagneticButton from "./components/ui/MagneticButton";
+
 const AGENCY_NAME = "lang2lang";
 const TELEGRAM_LINK = "https://t.me/sup_lang2lang";
 const EMAIL = "support@lang2lang.io";
@@ -89,41 +94,41 @@ export default function Landing() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [showTop, setShowTop] = useState(false);
 
-useEffect(() => {
-  const onScrollShadow = () => setScrolled(window.scrollY > 10);
-  const onScrollTop = () => setShowTop(window.scrollY > 600);
+  useEffect(() => {
+    const onScrollShadow = () => setScrolled(window.scrollY > 10);
+    const onScrollTop = () => setShowTop(window.scrollY > 600);
 
-  window.addEventListener("scroll", onScrollShadow, { passive: true });
-  window.addEventListener("scroll", onScrollTop, { passive: true });
+    window.addEventListener("scroll", onScrollShadow, { passive: true });
+    window.addEventListener("scroll", onScrollTop, { passive: true });
 
-  // ✅ Выбираем секцию с максимальным пересечением
-  const io = new IntersectionObserver(
-    (entries) => {
-      const vis = entries
-        .filter((e) => e.isIntersecting)
-        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-      if (vis[0]) setActiveId(vis[0].target.id);
-    },
-    {
-      root: null,
-      // Чуть «сужаем» окно, чтобы хедер не мешал
-      rootMargin: "-20% 0px -60% 0px",
-      threshold: [0, 0.25, 0.5, 0.75, 1],
-    }
-  );
+    // ✅ Выбираем секцию с максимальным пересечением
+    const io = new IntersectionObserver(
+      (entries) => {
+        const vis = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (vis[0]) setActiveId(vis[0].target.id);
+      },
+      {
+        root: null,
+        // Чуть «сужаем» окно, чтобы хедер не мешал
+        rootMargin: "-20% 0px -60% 0px",
+        threshold: [0, 0.25, 0.5, 0.75, 1],
+      }
+    );
 
-  // Подписываем нужные секции
-  sectionIds.forEach((id) => {
-    const el = document.getElementById(id);
-    if (el) io.observe(el);
-  });
+    // Подписываем нужные секции
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) io.observe(el);
+    });
 
-  return () => {
-    window.removeEventListener("scroll", onScrollShadow);
-    window.removeEventListener("scroll", onScrollTop);
-    io.disconnect();
-  };
-}, [sectionIds]);
+    return () => {
+      window.removeEventListener("scroll", onScrollShadow);
+      window.removeEventListener("scroll", onScrollTop);
+      io.disconnect();
+    };
+  }, [sectionIds]);
 
   return (
     <div className={theme === "dark" ? "dark" : ""}>
@@ -138,10 +143,10 @@ useEffect(() => {
                      bg-gradient-to-r from-orange-600 via-amber-500 to-rose-500 dark:opacity-25"
         />
 
-        {/* Хедер */}
+        {/* Хедер (glass при скролле) */}
         <header
-          className={`fixed top-0 left-0 w-full z-50 backdrop-blur transition-all duration-300 border-b border-black/5 dark:border-white/10 ${
-            scrolled ? "bg-white/80 dark:bg-neutral-950/70 shadow-md" : "bg-white/50 dark:bg-neutral-950/40"
+          className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 border-b border-black/5 dark:border-white/10 ${
+            scrolled ? "glass" : "bg-white/50 dark:bg-neutral-950/40 backdrop-blur"
           }`}
         >
           <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
@@ -155,7 +160,6 @@ useEffect(() => {
                 { id: "process", label: "Как мы работаем" },
                 { id: "cases", label: "Кейсы" },
                 { id: "pricing", label: "Тарифы" },
-                //{ id: "why", label: "Почему мы" },
                 { id: "faq", label: "FAQ" },
               ].map((l) => (
                 <a
@@ -176,22 +180,21 @@ useEffect(() => {
             </nav>
             <div className="flex items-center gap-3">
               <ThemeSwitch theme={theme} setTheme={setTheme} />
-              <motion.a
-                whileHover={{ scale: 1.03 }}
-                whileTap={{ scale: 0.98 }}
+              <a
                 href={TELEGRAM_LINK}
                 target="_blank"
                 rel="noreferrer"
-                className="rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 shadow-md shadow-orange-600/20 text-sm"
+                className="hidden sm:inline-block rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 shadow-md shadow-orange-600/20 text-sm"
               >
                 Связаться
-              </motion.a>
+              </a>
             </div>
           </div>
         </header>
 
         {/* Hero */}
         <section className="relative pt-28 md:pt-32">
+          <FloatingOrbs />
           <div className="max-w-6xl mx-auto px-4 py-16 md:py-20 grid md:grid-cols-2 gap-10 items-center">
             <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }}>
               <motion.h1 variants={fadeInUp} className="text-4xl md:text-5xl font-bold leading-tight">
@@ -203,19 +206,33 @@ useEffect(() => {
                 {home.heroSubtitle}
               </motion.p>
               <motion.div variants={fadeInUp} className="mt-6 flex flex-col sm:flex-row gap-3">
-                <motion.a whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} href={TELEGRAM_LINK} target="_blank" rel="noreferrer"
-                  className="inline-flex items-center gap-2 rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2">
-                  {home.ctaPrimary} <ArrowRight className="w-4 h-4" />
-                </motion.a>
-                <motion.a whileHover={{ y: -2 }} whileTap={{ scale: 0.98 }} href="#pricing"
-                  className="inline-flex items-center gap-2 rounded-2xl border border-orange-300 text-orange-700 hover:bg-orange-50 px-4 py-2 dark:border-orange-500/40 dark:text-orange-300 dark:hover:bg-orange-500/10">
+                <MagneticButton onClick={() => window.open(TELEGRAM_LINK, "_blank", "noopener")}>
+                  <span className="inline-flex items-center gap-2">
+                    {home.ctaPrimary} <ArrowRight className="w-4 h-4" />
+                  </span>
+                </MagneticButton>
+                <motion.a
+                  whileHover={{ y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                  href="#pricing"
+                  className="inline-flex items-center gap-2 rounded-2xl border border-orange-300 text-orange-700 hover:bg-orange-50 px-4 py-2 dark:border-orange-500/40 dark:text-orange-300 dark:hover:bg-orange-500/10"
+                >
                   {home.ctaSecondary} <PlayCircle className="w-5 h-5" />
                 </motion.a>
               </motion.div>
               <motion.div variants={fadeInUp} className="mt-6 flex flex-wrap gap-4 text-sm text-gray-600 dark:text-neutral-300">
-                <div className="flex items-center gap-2"><Clock className="w-4 h-4 text-orange-600" />Быстрый запуск</div>
-                <div className="flex items-center gap-2"><Shield className="w-4 h-4 text-orange-600" />Качественная озвучка</div>
-                <div className="flex items-center gap-2"><Sparkles className="w-4 h-4 text-orange-600" />Проверка носителями языка</div>
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-orange-600" />
+                  Быстрый запуск
+                </div>
+                <div className="flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-orange-600" />
+                  Качественная озвучка
+                </div>
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-orange-600" />
+                  Проверка носителями языка
+                </div>
               </motion.div>
             </motion.div>
 
@@ -232,15 +249,23 @@ useEffect(() => {
         {/* Services */}
         <section id="services" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-[#0D0B0A]" data-testid="section-services">
           <div className="max-w-6xl mx-auto px-4">
-            <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">Вы получаете</motion.h2>
+            <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">
+              Вы получаете
+            </motion.h2>
             <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 mt-2">
               Начните сотрудничество сейчас чтобы начать не потом
             </motion.p>
 
-            <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className="mt-10 grid md:grid-cols-3 gap-6">
+            <motion.div
+              variants={stagger}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.2 }}
+              className="mt-10 grid md:grid-cols-3 gap-6"
+            >
               {home.services.map((s, idx) => (
                 <motion.div key={idx} variants={fadeInUp} whileHover={{ y: -4 }}>
-                  <div className="relative z-10 rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
+                  <GlassCard>
                     <div className="flex items-center gap-2 font-semibold">
                       {idx === 0 && <Globe className="w-5 h-5" />}
                       {idx === 1 && <CircleDollarSign className="w-5 h-5" />}
@@ -250,11 +275,20 @@ useEffect(() => {
                     <p className="text-sm text-gray-600 dark:text-neutral-300 mt-2">{s.desc}</p>
                     {/* Пример списка фич — оставлен как было; можно тоже вынести в JSON при желании */}
                     <ul className="mt-3 space-y-2 text-sm text-gray-600 dark:text-neutral-300">
-                      <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />Профессиональный перевод и озвучка</li>
-                      <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />Согласование деталей и контроль качества</li>
-                      <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />Быстрый запуск и поддержка</li>
+                      <li className="flex items-center gap-2">
+                        <Check className="w-4 h-4 text-orange-600" />
+                        Профессиональный перевод и озвучка
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Check className="w-4 h-4 text-orange-600" />
+                        Согласование деталей и контроль качества
+                      </li>
+                      <li className="flex items-center gap-2">
+                        <Check className="w-4 h-4 text-orange-600" />
+                        Быстрый запуск и поддержка
+                      </li>
                     </ul>
-                  </div>
+                  </GlassCard>
                 </motion.div>
               ))}
             </motion.div>
@@ -264,8 +298,16 @@ useEffect(() => {
         {/* Process */}
         <section id="process" className="scroll-mt-24 py-20" data-testid="section-process">
           <div className="max-w-6xl mx-auto px-4">
-            <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">Как мы работаем</motion.h2>
-            <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className="mt-10 grid md:grid-cols-4 gap-6">
+            <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">
+              Как мы работаем
+            </motion.h2>
+            <motion.div
+              variants={stagger}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.2 }}
+              className="mt-10 grid md:grid-cols-4 gap-6"
+            >
               {[
                 { step: "1", title: "Заявка", text: "Оставляете заявку на сайте — мы быстро связываемся, чтобы обсудить детали и запуск." },
                 { step: "2", title: "Старт", text: "Запускаем локализованные каналы, адаптируем контент и берём все технические задачи на себя." },
@@ -273,10 +315,12 @@ useEffect(() => {
                 { step: "4", title: "Оплата", text: "Справедливое распределние доходов, мы зарабатываем только тогда, когда зарабатываете вы." },
               ].map((i) => (
                 <motion.div key={i.step} variants={fadeInUp} whileHover={{ y: -3 }}>
-                  <div className="relative z-10 rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
-                    <div className="text-xl font-semibold">Шаг {i.step}. {i.title}</div>
+                  <GlassCard>
+                    <div className="text-xl font-semibold">
+                      Шаг {i.step}. {i.title}
+                    </div>
                     <div className="text-gray-600 dark:text-neutral-300 mt-2">{i.text}</div>
-                  </div>
+                  </GlassCard>
                 </motion.div>
               ))}
             </motion.div>
@@ -286,30 +330,44 @@ useEffect(() => {
         {/* Cases */}
         <section id="cases" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-[#0D0B0A]" data-testid="section-cases">
           <div className="max-w-6xl mx-auto px-4">
-            <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">Кейсы</motion.h2>
+            <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">
+              Кейсы
+            </motion.h2>
             <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 mt-2">
               Несколько примеров до/после. Замените заглушки на ваши ролики.
             </motion.p>
-            <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className="mt-10 grid md:grid-cols-3 gap-6">
+            <motion.div
+              variants={stagger}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.2 }}
+              className="mt-10 grid md:grid-cols-3 gap-6"
+            >
               {[1, 2, 3].map((i) => (
                 <motion.div key={i} variants={fadeInUp} whileHover={{ y: -4 }}>
-                  <div className="relative z-10 rounded-2xl overflow-hidden border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900">
-                    <div className="aspect-video bg-gray-100 dark:bg-neutral-800 flex items-center justify-center text-gray-400 dark:text-neutral-500">Видео {i}</div>
-                    <div className="p-4">
-                      <div className="text-base font-semibold">Tech review → Spanish</div>
-                      <div className="text-sm text-gray-600 dark:text-neutral-400">+130% просмотров из Латам</div>
+                  <GlassCard>
+                    <div className="rounded-xl overflow-hidden border border-black/5 dark:border-white/10 bg-white/60 dark:bg-neutral-900/60">
+                      <div className="aspect-video bg-gray-100 dark:bg-neutral-800 flex items-center justify-center text-gray-400 dark:text-neutral-500">
+                        Видео {i}
+                      </div>
+                      <div className="p-4">
+                        <div className="text-base font-semibold">Tech review → Spanish</div>
+                        <div className="text-sm text-gray-600 dark:text-neutral-400">+130% просмотров из Латам</div>
+                      </div>
                     </div>
-                  </div>
+                  </GlassCard>
                 </motion.div>
               ))}
             </motion.div>
           </div>
         </section>
-        
+
         {/* Pricing */}
         <section id="pricing" className="scroll-mt-24 py-20" data-testid="section-pricing">
           <div className="max-w-6xl mx-auto px-4">
-            <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">Тарифы</motion.h2>
+            <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">
+              Тарифы
+            </motion.h2>
             <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 mt-2">
               Прозрачная стоимость. Скидки при подписке от 4 роликов в месяц.
             </motion.p>
@@ -324,60 +382,99 @@ useEffect(() => {
             >
               {/* Карточка 1 */}
               <motion.div variants={fadeInUp} whileHover={{ y: -4 }}>
-                <div className="relative z-10 rounded-2xl border border-gray-300 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
+                <GlassCard>
                   <div className="font-semibold">Субтитры</div>
                   <div className="text-3xl font-bold mt-2">
                     от $6 <span className="text-base font-normal text-gray-500 dark:text-neutral-400">/ мин</span>
                   </div>
                   <ul className="text-sm text-gray-600 dark:text-neutral-300 space-y-2 mt-3">
-                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />Перевод + тайм-коды</li>
-                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />Форматы .srt/.vtt</li>
-                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />1 круг правок</li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-orange-600" />
+                      Перевод + тайм-коды
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-orange-600" />
+                      Форматы .srt/.vtt
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-orange-600" />
+                      1 круг правок
+                    </li>
                   </ul>
-                  <motion.a whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
-                    href={TELEGRAM_LINK} target="_blank"
-                    className="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 shadow-orange-600/25 shadow-lg">
+                  <motion.a
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    href={TELEGRAM_LINK}
+                    target="_blank"
+                    className="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 shadow-orange-600/25 shadow-lg"
+                  >
                     Заказать демо
                   </motion.a>
-                </div>
+                </GlassCard>
               </motion.div>
 
               {/* Карточка 2 */}
               <motion.div variants={fadeInUp} whileHover={{ y: -4 }}>
-                <div className="relative z-10 rounded-2xl border-2 border-orange-600 bg-white dark:bg-neutral-900 p-6">
+                <GlassCard>
                   <div className="font-semibold">Озвучка</div>
                   <div className="text-3xl font-bold mt-2">
                     от $12 <span className="text-base font-normal text-gray-500 dark:text-neutral-400">/ мин</span>
                   </div>
                   <ul className="text-sm text-gray-600 dark:text-neutral-300 space-y-2 mt-3">
-                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />AI-голоса или актёры</li>
-                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />Сведение и шумоподавление</li>
-                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />2 круга правок</li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-orange-600" />
+                      AI-голоса или актёры
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-orange-600" />
+                      Сведение и шумоподавление
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-orange-600" />
+                      2 круга правок
+                    </li>
                   </ul>
-                  <motion.a whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
-                    href={TELEGRAM_LINK} target="_blank"
-                    className="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 shadow-orange-600/25 shadow-lg">
+                  <motion.a
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    href={TELEGRAM_LINK}
+                    target="_blank"
+                    className="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 shadow-orange-600/25 shadow-lg"
+                  >
                     Заказать демо
                   </motion.a>
-                </div>
+                </GlassCard>
               </motion.div>
 
               {/* Карточка 3 */}
               <motion.div variants={fadeInUp} whileHover={{ y: -4 }}>
-                <div className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 p-6">
+                <GlassCard>
                   <div className="font-semibold">Локализация канала</div>
                   <div className="text-3xl font-bold mt-2">по запросу</div>
                   <ul className="text-sm text-gray-600 dark:text-neutral-300 space-y-2 mt-3">
-                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />Обложки, описания, теги</li>
-                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />Аудит и стратегия выхода</li>
-                    <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />Локализация плейлистов</li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-orange-600" />
+                      Обложки, описания, теги
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-orange-600" />
+                      Аудит и стратегия выхода
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-orange-600" />
+                      Локализация плейлистов
+                    </li>
                   </ul>
-                  <motion.a whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
-                    href={TELEGRAM_LINK} target="_blank"
-                    className="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 shadow-orange-600/25 shadow-lg">
+                  <motion.a
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    href={TELEGRAM_LINK}
+                    target="_blank"
+                    className="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 shadow-orange-600/25 shadow-lg"
+                  >
                     Обсудить проект
                   </motion.a>
-                </div>
+                </GlassCard>
               </motion.div>
             </motion.div>
 
@@ -387,37 +484,71 @@ useEffect(() => {
             </div>
           </div>
         </section>
-        
+
         {/* Contact */}
         <section id="contact" className="scroll-mt-24 py-20 bg-gray-50 dark:bg-[#0D0B0A]" data-testid="section-contact">
           <div className="max-w-2xl mx-auto px-4">
-            <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold text-center">Расскажите о проекте</motion.h2>
+            <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold text-center">
+              Расскажите о проекте
+            </motion.h2>
             <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 text-center mt-2">
               Мы ответим в течение рабочего дня. Или напишите сразу в Telegram.
             </motion.p>
-            <motion.form variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }}
-              onSubmit={(e) => { e.preventDefault(); alert("Спасибо! Мы свяжемся с вами в Telegram/по email."); }}
-              className="mt-8 grid gap-4">
-              <input placeholder="Ваше имя" required   className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2
-                                                                  focus:outline-none focus:ring-2 focus:ring-orange-500/50" />
-              <input type="email" placeholder="Почта" required className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2
-                                                                  focus:outline-none focus:ring-2 focus:ring-orange-500/50" />
-              <input placeholder="Ссылка на канал/видео" className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2
-                                                                  focus:outline-none focus:ring-2 focus:ring-orange-500/50" />
-              <textarea placeholder="Кратко опишите задачу (язык, длительность, дедлайн)" className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2
-                                                                  focus:outline-none focus:ring-2 focus:ring-orange-500/50" rows={5} />
+            <motion.form
+              variants={fadeInUp}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                alert("Спасибо! Мы свяжемся с вами в Telegram/по email.");
+              }}
+              className="mt-8 grid gap-4"
+            >
+              <input
+                placeholder="Ваше имя"
+                required
+                className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2
+                                                                  focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+              />
+              <input
+                type="email"
+                placeholder="Почта"
+                required
+                className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2
+                                                                  focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+              />
+              <input
+                placeholder="Ссылка на канал/видео"
+                className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2
+                                                                  focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+              />
+              <textarea
+                placeholder="Кратко опишите задачу (язык, длительность, дедлайн)"
+                className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2
+                                                                  focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+                rows={5}
+              />
               <div className="flex gap-3">
-                <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
-                  type="submit" className="rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 shadow-lg shadow-orange-600/25">
+                <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} type="submit" className="rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 shadow-lg shadow-orange-600/25">
                   Отправить
                 </motion.button>
-                <motion.a whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
-                  href={TELEGRAM_LINK} target="_blank"
-                  className="rounded-2xl border border-orange-300 text-orange-700 hover:bg-orange-50 px-4 py-2 dark:border-orange-500/40 dark:text-orange-300 dark:hover:bg-orange-500/10">
+                <motion.a
+                  whileHover={{ scale: 1.01 }}
+                  whileTap={{ scale: 0.99 }}
+                  href={TELEGRAM_LINK}
+                  target="_blank"
+                  className="rounded-2xl border border-orange-300 text-orange-700 hover:bg-orange-50 px-4 py-2 dark:border-orange-500/40 dark:text-orange-300 dark:hover:bg-orange-500/10"
+                >
                   Написать в Telegram
                 </motion.a>
               </div>
-              <p className="text-xs text-gray-500 dark:text-neutral-400">Или напишите на почту: <a href={`mailto:${EMAIL}`} className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">{EMAIL}</a></p>
+              <p className="text-xs text-gray-500 dark:text-neutral-400">
+                Или напишите на почту:{" "}
+                <a href={`mailto:${EMAIL}`} className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">
+                  {EMAIL}
+                </a>
+              </p>
             </motion.form>
           </div>
         </section>
@@ -425,7 +556,9 @@ useEffect(() => {
         {/* FAQ */}
         <section id="faq" className="scroll-mt-24 py-20" data-testid="section-faq">
           <div className="max-w-6xl mx-auto px-4">
-            <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">FAQ</motion.h2>
+            <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">
+              FAQ
+            </motion.h2>
             <FAQAccordion />
           </div>
         </section>
@@ -433,11 +566,19 @@ useEffect(() => {
         {/* Footer */}
         <footer className="border-t border-black/5 dark:border-white/10 py-10">
           <div className="max-w-6xl mx-auto px-4 text-sm text-gray-600 dark:text-neutral-400 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div>© {new Date().getFullYear()} {AGENCY_NAME}. Все права защищены.</div>
+            <div>
+              © {new Date().getFullYear()} {AGENCY_NAME}. Все права защищены.
+            </div>
             <div className="flex items-center gap-4">
-              <a href={TELEGRAM_LINK} target="_blank" rel="noreferrer" className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">Telegram</a>
-              <a href={`mailto:${EMAIL}`} className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">Email</a>
-              <a href="#" className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">Политика конфиденциальности</a>
+              <a href={TELEGRAM_LINK} target="_blank" rel="noreferrer" className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">
+                Telegram
+              </a>
+              <a href={`mailto:${EMAIL}`} className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">
+                Email
+              </a>
+              <a href="#" className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">
+                Политика конфиденциальности
+              </a>
             </div>
           </div>
         </footer>
@@ -460,10 +601,22 @@ useEffect(() => {
 
 function FAQAccordion() {
   const items = [
-    { q: "Сколько стоит локализация, адаптация и другие услуги от Lang2Lang?", a: "Мы не берём денег за подписку, работу, локализацию. В нашем сотрудничестве мы платим вам, а не наоборот." },
-    { q: "Какое количество времени занимает локализация контента?", a: "Мы работаем быстро! Сразу после того, как вы становитесь партнёром Lang2Lang, мы сразу начинаем создание каналов и адаптируем его под новые рынки." },
-    { q: "Чем отличается Lang2Lang и обычные инструменты дубляжа?", a: "Большая часть инструментов для дубляжа требует собственного вмешательства, оплаты, загрузки видео, проверок. В нашем случае вам это всё не потребуется, мы делаем всё от начала и до конца, без траты вашего времени и сил." },
-    { q: "Как долго я могу получать доход с локализованных каналов?", a: "Всегда. Пока видео продолжают набирать просмотры, ваш канала будет монетезироваться и мы будем делиться с вами полученным доходом." },
+    {
+      q: "Сколько стоит локализация, адаптация и другие услуги от Lang2Lang?",
+      a: "Мы не берём денег за подписку, работу, локализацию. В нашем сотрудничестве мы платим вам, а не наоборот.",
+    },
+    {
+      q: "Какое количество времени занимает локализация контента?",
+      a: "Мы работаем быстро! Сразу после того, как вы становитесь партнёром Lang2Lang, мы сразу начинаем создание каналов и адаптируем его под новые рынки.",
+    },
+    {
+      q: "Чем отличается Lang2Lang и обычные инструменты дубляжа?",
+      a: "Большая часть инструментов для дубляжа требует собственного вмешательства, оплаты, загрузки видео, проверок. В нашем случае вам это всё не потребуется, мы делаем всё от начала и до конца, без траты вашего времени и сил.",
+    },
+    {
+      q: "Как долго я могу получать доход с локализованных каналов?",
+      a: "Всегда. Пока видео продолжают набирать просмотры, ваш канала будет монетезироваться и мы будем делиться с вами полученным доходом.",
+    },
   ];
   const [open, setOpen] = useState<number | null>(null);
 
@@ -498,4 +651,3 @@ function FAQAccordion() {
     </div>
   );
 }
-
