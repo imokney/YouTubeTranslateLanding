@@ -175,3 +175,148 @@ html {
   background-size: 10px 10px;
 }
 
+/* === Чёткий текст по всей странице === */
+html, body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* === GlassCard: стекло на псевдослое, текст — на «сухом» === */
+.glass-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,.06);
+  /* ВАЖНО: фон самого элемента прозрачен — без «молока» под текстом */
+  background: transparent;
+  contain: paint;            /* изолируем слой, меньше артефактов */
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Стеклянная подложка — на ::after, ПОД границей и текстом */
+.glass-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  background: rgba(255,255,255,.62);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  box-shadow: 0 10px 24px rgba(0,0,0,.08);
+}
+/* Тёмная тема — глубокий фон, меньший blur */
+.dark .glass-card {
+  border-color: rgba(255,255,255,.08);
+}
+.dark .glass-card::after {
+  background: rgba(12,12,12,.58);
+  backdrop-filter: blur(5px) saturate(112%);
+  -webkit-backdrop-filter: blur(5px) saturate(112%);
+  box-shadow: 0 12px 28px rgba(0,0,0,.30);
+}
+
+/* Градиентная окантовка — как раньше (поверх стекла, под контентом) */
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1; /* над стеклом, под контентом */
+  background: linear-gradient(120deg, #ff7a1a, #ff3b6a);
+  opacity: 0;
+  transition: opacity .28s ease;
+}
+.glass-card:hover::before { opacity: .45; }
+.dark .glass-card:hover::before { opacity: .24; }
+
+/* Контент всегда на «сухом» слое */
+.glass-card__inner {
+  position: relative;
+  z-index: 2;
+  padding: 1.5rem;
+  background: transparent !important; /* важно: никакой заливки */
+}
+
+/* Лёгкая «сеточка» в тёмной — ещё мягче, чтобы текст выглядел резче */
+.dark .bg-noise {
+  background-image: radial-gradient(#ffffff0c 0.6px, transparent 0.6px);
+  background-size: 10px 10px;
+}
+ 
+/* === Чёткий текст по всей странице === */
+html, body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* === GlassCard: стекло на псевдослое, текст — на «сухом» === */
+.glass-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,.06);
+  /* ВАЖНО: фон самого элемента прозрачен — без «молока» под текстом */
+  background: transparent;
+  contain: paint;            /* изолируем слой, меньше артефактов */
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Стеклянная подложка — на ::after, ПОД границей и текстом */
+.glass-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  background: rgba(255,255,255,.62);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  box-shadow: 0 10px 24px rgba(0,0,0,.08);
+}
+/* Тёмная тема — глубокий фон, меньший blur */
+.dark .glass-card {
+  border-color: rgba(255,255,255,.08);
+}
+.dark .glass-card::after {
+  background: rgba(12,12,12,.58);
+  backdrop-filter: blur(5px) saturate(112%);
+  -webkit-backdrop-filter: blur(5px) saturate(112%);
+  box-shadow: 0 12px 28px rgba(0,0,0,.30);
+}
+
+/* Градиентная окантовка — как раньше (поверх стекла, под контентом) */
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1; /* над стеклом, под контентом */
+  background: linear-gradient(120deg, #ff7a1a, #ff3b6a);
+  opacity: 0;
+  transition: opacity .28s ease;
+}
+.glass-card:hover::before { opacity: .45; }
+.dark .glass-card:hover::before { opacity: .24; }
+
+/* Контент всегда на «сухом» слое */
+.glass-card__inner {
+  position: relative;
+  z-index: 2;
+  padding: 1.5rem;
+  background: transparent !important; /* важно: никакой заливки */
+}
+
+/* Лёгкая «сеточка» в тёмной — ещё мягче, чтобы текст выглядел резче */
+.dark .bg-noise {
+  background-image: radial-gradient(#ffffff0c 0.6px, transparent 0.6px);
+  background-size: 10px 10px;
+}
