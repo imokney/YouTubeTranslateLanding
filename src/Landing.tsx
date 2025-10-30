@@ -153,8 +153,8 @@ useEffect(() => {
               {[
                 { id: "services", label: "Вы получаете" },
                 { id: "process", label: "Как мы работаем" },
-                { id: "pricing", label: "Тарифы" },
                 { id: "cases", label: "Кейсы" },
+                { id: "pricing", label: "Тарифы" },
                 //{ id: "why", label: "Почему мы" },
                 { id: "faq", label: "FAQ" },
               ].map((l) => (
@@ -230,7 +230,7 @@ useEffect(() => {
         </section>
 
         {/* Services */}
-        <section id="services" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-neutral-950" data-testid="section-services">
+        <section id="services" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-[#2A1A12]" data-testid="section-services">
           <div className="max-w-6xl mx-auto px-4">
             <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">Вы получаете</motion.h2>
             <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 mt-2">
@@ -240,7 +240,7 @@ useEffect(() => {
             <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className="mt-10 grid md:grid-cols-3 gap-6">
               {home.services.map((s, idx) => (
                 <motion.div key={idx} variants={fadeInUp} whileHover={{ y: -4 }}>
-                  <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
+                  <div className="relative z-10 rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
                     <div className="flex items-center gap-2 font-semibold">
                       {idx === 0 && <Globe className="w-5 h-5" />}
                       {idx === 1 && <CircleDollarSign className="w-5 h-5" />}
@@ -273,7 +273,7 @@ useEffect(() => {
                 { step: "4", title: "Оплата", text: "Справедливое распределние доходов, мы зарабатываем только тогда, когда зарабатываете вы." },
               ].map((i) => (
                 <motion.div key={i.step} variants={fadeInUp} whileHover={{ y: -3 }}>
-                  <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
+                  <div className="relative z-10 rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
                     <div className="text-xl font-semibold">Шаг {i.step}. {i.title}</div>
                     <div className="text-gray-600 dark:text-neutral-300 mt-2">{i.text}</div>
                   </div>
@@ -293,7 +293,7 @@ useEffect(() => {
             <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className="mt-10 grid md:grid-cols-3 gap-6">
               {[1, 2, 3].map((i) => (
                 <motion.div key={i} variants={fadeInUp} whileHover={{ y: -4 }}>
-                  <div className="rounded-2xl overflow-hidden border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900">
+                  <div className="relative z-10 rounded-2xl overflow-hidden border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900">
                     <div className="aspect-video bg-gray-100 dark:bg-neutral-800 flex items-center justify-center text-gray-400 dark:text-neutral-500">Видео {i}</div>
                     <div className="p-4">
                       <div className="text-base font-semibold">Tech review → Spanish</div>
@@ -307,7 +307,7 @@ useEffect(() => {
         </section>
         
         {/* Pricing */}
-        <section id="pricing" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-neutral-950" data-testid="section-pricing">
+        <section id="pricing" className="scroll-mt-24 py-20" data-testid="section-pricing">
           <div className="max-w-6xl mx-auto px-4">
             <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">Тарифы</motion.h2>
             <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 mt-2">
@@ -324,7 +324,7 @@ useEffect(() => {
             >
               {/* Карточка 1 */}
               <motion.div variants={fadeInUp} whileHover={{ y: -4 }}>
-                <div className="rounded-2xl border border-gray-300 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
+                <div className="relative z-10 rounded-2xl border border-gray-300 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
                   <div className="font-semibold">Субтитры</div>
                   <div className="text-3xl font-bold mt-2">
                     от $6 <span className="text-base font-normal text-gray-500 dark:text-neutral-400">/ мин</span>
@@ -344,7 +344,7 @@ useEffect(() => {
 
               {/* Карточка 2 */}
               <motion.div variants={fadeInUp} whileHover={{ y: -4 }}>
-                <div className="rounded-2xl border-2 border-orange-600 bg-white dark:bg-neutral-900 p-6">
+                <div className="relative z-10 rounded-2xl border-2 border-orange-600 bg-white dark:bg-neutral-900 p-6">
                   <div className="font-semibold">Озвучка</div>
                   <div className="text-3xl font-bold mt-2">
                     от $12 <span className="text-base font-normal text-gray-500 dark:text-neutral-400">/ мин</span>
@@ -364,7 +364,7 @@ useEffect(() => {
 
               {/* Карточка 3 */}
               <motion.div variants={fadeInUp} whileHover={{ y: -4 }}>
-                <div className="rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 p-6">
+                <div className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 p-6">
                   <div className="font-semibold">Локализация канала</div>
                   <div className="text-3xl font-bold mt-2">по запросу</div>
                   <ul className="text-sm text-gray-600 dark:text-neutral-300 space-y-2 mt-3">
@@ -389,7 +389,7 @@ useEffect(() => {
         </section>
         
         {/* Contact */}
-        <section id="contact" className="scroll-mt-24 py-20 bg-gray-50 dark:bg-neutral-950" data-testid="section-contact">
+        <section id="contact" className="scroll-mt-24 py-20 bg-gray-50 dark:bg-[#2A1A12]" data-testid="section-contact">
           <div className="max-w-2xl mx-auto px-4">
             <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold text-center">Расскажите о проекте</motion.h2>
             <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 text-center mt-2">
@@ -398,10 +398,14 @@ useEffect(() => {
             <motion.form variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }}
               onSubmit={(e) => { e.preventDefault(); alert("Спасибо! Мы свяжемся с вами в Telegram/по email."); }}
               className="mt-8 grid gap-4">
-              <input placeholder="Ваше имя" required className="rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2" />
-              <input type="email" placeholder="Почта" required className="rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2" />
-              <input placeholder="Ссылка на канал/видео" className="rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2" />
-              <textarea placeholder="Кратко опишите задачу (язык, длительность, дедлайн)" className="rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2" rows={5} />
+              <input placeholder="Ваше имя" required   className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2
+                                                                  focus:outline-none focus:ring-2 focus:ring-orange-500/50" />
+              <input type="email" placeholder="Почта" required className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2
+                                                                  focus:outline-none focus:ring-2 focus:ring-orange-500/50" />
+              <input placeholder="Ссылка на канал/видео" className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2
+                                                                  focus:outline-none focus:ring-2 focus:ring-orange-500/50" />
+              <textarea placeholder="Кратко опишите задачу (язык, длительность, дедлайн)" className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2
+                                                                  focus:outline-none focus:ring-2 focus:ring-orange-500/50" rows={5} />
               <div className="flex gap-3">
                 <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
                   type="submit" className="rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 shadow-lg shadow-orange-600/25">
@@ -456,12 +460,12 @@ useEffect(() => {
 
 function FAQAccordion() {
   const items = [
-    { q: "Сколько занимает перевод и озвучка?", a: "Обычно 48–72 часа для ролика до 10 минут. Большие проекты — по договорённости." },
-    { q: "Какие языки вы поддерживаете?", a: "EN/ES/RU/DE/FR — базово. Другие — по запросу, подключаем носителей." },
-    { q: "Можно ли получить бесплатное демо?", a: "Да, делаем демо-фрагмент 20–30 секунд, чтобы утвердить голос и стиль." },
-    { q: "Как считаете стоимость?", a: "По минутам финального видео. При подписке от 4 роликов — скидка." },
+    { q: "Сколько стоит локализация, адаптация и другие услуги от Lang2Lang?", a: "Мы не берём денег за подписку, работу, локализацию. В нашем сотрудничестве мы платим вам, а не наоборот." },
+    { q: "Какое количество времени занимает локализация контента?", a: "Мы работаем быстро! Сразу после того, как вы становитесь партнёром Lang2Lang, мы сразу начинаем создание каналов и адаптируем его под новые рынки." },
+    { q: "Чем отличается Lang2Lang и обычные инструменты дубляжа?", a: "Большая часть инструментов для дубляжа требует собственного вмешательства, оплаты, загрузки видео, проверок. В нашем случае вам это всё не потребуется, мы делаем всё от начала и до конца, без траты вашего времени и сил." },
+    { q: "Как долго я могу получать доход с локализованных каналов?", a: "Всегда. Пока видео продолжают набирать просмотры, ваш канала будет монетезироваться и мы будем делиться с вами полученным доходом." },
   ];
-  const [open, setOpen] = useState<number | null>(0);
+  const [open, setOpen] = useState<number | null>(null);
 
   return (
     <div className="mt-8 grid md:grid-cols-2 gap-6">
@@ -471,7 +475,7 @@ function FAQAccordion() {
           <motion.div key={i} variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }}>
             <button
               onClick={() => setOpen(opened ? null : i)}
-              className="w-full text-left rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+              className="w-full text-left relative z-10 rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
               aria-expanded={opened}
             >
               <div className="flex items-start justify-between gap-4">
