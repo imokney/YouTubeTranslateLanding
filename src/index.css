@@ -24,8 +24,8 @@ html {
 
 /* Subtle dot noise texture */
 .bg-noise {
-  background-image: radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px);
-  background-size: 6px 6px;
+  background-image: radial-gradient(#00000012 0.7px, transparent 0.7px);
+  background-size: 7px 7px;
 }
 .dark .bg-noise {
   background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
