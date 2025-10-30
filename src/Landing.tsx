@@ -382,7 +382,9 @@ useEffect(() => {
             </motion.div>
 
             {/* Калькулятор под карточками */}
-
+            <div className="mt-8 max-w-3xl mx-auto">
+              <PriceCalculator />
+            </div>
           </div>
         </section>
         
