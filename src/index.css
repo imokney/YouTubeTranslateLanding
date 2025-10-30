@@ -46,11 +46,18 @@ html {
   outline-offset: 2px;
 }
 
-/* --- Glass / жидкое стекло --- */
+/* ===== Smooth GPU hints ===== */
+.gpu {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* ===== Glass (без артефактов) ===== */
 .glass {
   background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  box-shadow: 0 6px 30px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 6px 30px rgba(0, 0, 0, .12), inset 0 1px 0 rgba(255, 255, 255, .06);
   backdrop-filter: blur(12px) saturate(120%);
   -webkit-backdrop-filter: blur(12px) saturate(120%);
 }
@@ -59,26 +66,79 @@ html {
   border-color: rgba(255, 255, 255, 0.12);
 }
 
-/* --- Градиентная рамка --- */
-.border-gradient { position: relative; border-radius: 16px; }
-.border-gradient::before {
-  content: ""; position: absolute; inset: 0; padding: 1px; border-radius: inherit;
-  background: linear-gradient(120deg,#ff6600,#ff2d55);
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor; mask-composite: exclude;
+/* ===== GlassCard (граница без mask, нет вспышки) ===== */
+.glass-card {
+  position: relative;
+  border-radius: 16px;
+  /* нейтральная базовая граница: не меняем на hover → нет «мигания» */
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .06);
+  overflow: hidden; /* сглаживает края */
 }
-.border-gradient > .bg { border-radius: inherit; }
+:root.dark .glass-card {
+  border-color: rgba(255, 255, 255, 0.10);
+  background: rgba(16, 16, 16, 0.6);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .22);
+}
 
-/* Плавные смены темы/цветов */
-.theme-transition * { transition: background-color .35s ease, color .35s ease, border-color .35s ease; }
+/* Градиентная рамка — только на hover, без mask */
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(120deg, #ff6600, #ff2d55);
+  opacity: 0;                     /* <-- нет вспышки при загрузке */
+  transition: opacity .35s ease;  /* плавно наводим/убираем */
+  z-index: 0;
+}
+.glass-card:hover::before {
+  opacity: 0.55; /* достаточно, но не ядовито */
+}
 
-/* Фоновая точечная текстура */
+/* Внутренний слой, чтобы текст был поверх ::before */
+.glass-card .inner {
+  position: relative;
+  z-index: 1;
+  border-radius: inherit;
+  background: linear-gradient(
+      to bottom,
+      rgba(255,255,255,0.55),
+      rgba(255,255,255,0.45)
+  );
+}
+:root.dark .glass-card .inner {
+  background: linear-gradient(
+      to bottom,
+      rgba(18,18,18,0.55),
+      rgba(18,18,18,0.45)
+  );
+}
+
+/* ===== Плавность темы и цветов (без дерганья границ) ===== */
+.theme-transition * {
+  transition:
+    background-color .35s ease,
+    color .35s ease,
+    box-shadow .35s ease,
+    opacity .35s ease;
+  /* намеренно НЕ анимируем border-color → уходит «мигание» */
+}
+
+/* ===== Фоновая точечная текстура ===== */
 .bg-noise {
   background-image: radial-gradient(#00000008 0.5px, transparent 0.5px);
   background-size: 8px 8px;
 }
+:root.dark .bg-noise {
+  background-image: radial-gradient(#ffffff12 0.6px, transparent 0.6px);
+}
 
-/* Предпочтение «мало анимаций» */
+/* Поддержка reduce motion */
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }

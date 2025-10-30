@@ -381,7 +381,10 @@ export default function Landing() {
               className="mt-10 grid md:grid-cols-3 gap-6"
             >
               {/* Карточка 1 */}
-              <motion.div variants={fadeInUp} whileHover={{ y: -4 }}>
+              <motion.div className="gpu"
+               variants={fadeInUp}
+               whileHover={{ y: -2, scale: 1.01 }}
+               transition={{ type: "spring", stiffness: 240, damping: 26 }}>
                 <GlassCard>
                   <div className="font-semibold">Субтитры</div>
                   <div className="text-3xl font-bold mt-2">

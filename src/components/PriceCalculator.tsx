@@ -15,6 +15,10 @@ export default function PriceCalculator() {
     return Math.round(perMin * minutes * multiplier);
   }, [minutes, subs, voice, langs]);
 
+  const handleSubmit = () => {
+    track("calc_submit", { minutes, subs, voice, langs, price });
+  };
+
   return (
     <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
       <div className="font-semibold mb-2">Калькулятор</div>
@@ -25,38 +29,55 @@ export default function PriceCalculator() {
             <span className="font-semibold">{minutes}</span>
           </div>
           <input
-            type="range" min={1} max={60} value={minutes}
-            onChange={(e) => setMinutes(parseInt(e.target.value))}
+            type="range"
+            min={1}
+            max={60}
+            value={minutes}
+            onChange={(e) => setMinutes(parseInt(e.target.value || "1", 10))}
             className="w-full"
           />
         </div>
 
         <label className="flex items-center gap-2">
-          <input type="checkbox" checked={subs} onChange={(e) => setSubs(e.target.checked)} />
+          <input
+            type="checkbox"
+            checked={subs}
+            onChange={(e) => setSubs(e.target.checked)}
+          />
           Перевод + субтитры (от $6/мин)
         </label>
 
         <label className="flex items-center gap-2">
-          <input type="checkbox" checked={voice} onChange={(e) => setVoice(e.target.checked)} />
+          <input
+            type="checkbox"
+            checked={voice}
+            onChange={(e) => setVoice(e.target.checked)}
+          />
           Озвучка (от $12/мин)
         </label>
 
         <div className="flex items-center justify-between">
           <label className="text-gray-600 dark:text-neutral-300">Языков</label>
           <input
-            type="number" min={1} max={10} value={langs}
-            onChange={(e) => setLangs(Math.min(10, Math.max(1, parseInt(e.target.value || "1"))))}
+            type="number"
+            min={1}
+            max={10}
+            value={langs}
+            onChange={(e) => {
+              const v = parseInt(e.target.value || "1", 10);
+              setLangs(Math.min(10, Math.max(1, isNaN(v) ? 1 : v)));
+            }}
             className="w-20 rounded-lg bg-white dark:bg-neutral-900 border border-black/10 dark:border-white/10 px-2 py-1 text-right"
           />
         </div>
 
         <div className="text-lg">
-          Итог: <b>${price}</b>
-          <span className="text-gray-500 dark:text-neutral-400"> (оценка)</span>
+          Итог: <b>${price}</b>{" "}
+          <span className="text-gray-500 dark:text-neutral-400">(оценка)</span>
         </div>
 
         <button
-          onClick={() => track("calc_submit", { minutes, subs, voice, langs, price })}
+          onClick={handleSubmit}
           className="mt-2 inline-flex items-center justify-center rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 shadow-orange-600/25 shadow-lg"
         >
           Получить точный расчёт

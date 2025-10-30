@@ -1,11 +1,18 @@
 import React, { PropsWithChildren } from "react";
 
-export default function GlassCard({ children, className = "" }: PropsWithChildren<{ className?: string }>) {
+/**
+ * GlassCard — стеклянная карточка без артефактов:
+ * - градиентная рамка только на hover (opacity), без mask-composite
+ * - нет вспышки границы при загрузке
+ * - внутренний слой .inner имеет свой z-index для чётких углов
+ */
+export default function GlassCard({
+  children,
+  className = "",
+}: PropsWithChildren<{ className?: string }>) {
   return (
-    <div className={`border-gradient ${className}`}>
-      <div className="bg glass rounded-2xl p-6">
-        {children}
-      </div>
+    <div className={`glass-card ${className}`}>
+      <div className="inner p-6">{children}</div>
     </div>
   );
 }
