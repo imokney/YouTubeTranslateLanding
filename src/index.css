@@ -142,3 +142,36 @@ html {
     transform .28s ease;
 }
 
+/* ==== FIX: тёмная тема от предка .dark, а не :root.dark ==== */
+
+/* Карточка: плотный тёмный фон + мягкое стекло */
+.dark .glass-card {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(12, 12, 12, 0.60);
+  backdrop-filter: blur(5px) saturate(110%);
+  -webkit-backdrop-filter: blur(5px) saturate(110%);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.30);
+}
+
+/* Без «молочной» подложки внутри */
+.dark .glass-card__inner {
+  background: transparent !important;
+}
+
+/* Градиентная окантовка в тёмной теме — мягче */
+.dark .glass-card--interactive:hover::before {
+  opacity: .24;
+}
+
+/* Шапка-стекло */
+.dark .glass {
+  background: rgba(22, 22, 22, 0.35);
+  border-color: rgba(255, 255, 255, 0.10);
+}
+
+/* Фоновая точечная текстура — слабее на тёмной */
+.dark .bg-noise {
+  background-image: radial-gradient(#ffffff10 0.6px, transparent 0.6px);
+  background-size: 10px 10px;
+}
+
