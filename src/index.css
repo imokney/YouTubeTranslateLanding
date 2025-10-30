@@ -39,7 +39,11 @@ html {
   contain-intrinsic-size: 1000px;
 }
 
-
+/* Небольшая шумовая текстура для фона по классу .bg-noise */
+.bg-noise {
+  background-image: radial-gradient(#00000008 0.5px, transparent 0.5px);
+  background-size: 8px 8px;
+}
 
 /* Фокус-стили по доступности */
 :focus-visible {
