@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
+import { track } from "../lib/analytics";
 
-// Тизер → HLS по клику, аудиотреки EN/RU/ES
 type Track = { id: number; name: string; lang?: string };
 
 export default function VideoShowcase() {
@@ -15,15 +15,9 @@ export default function VideoShowcase() {
   const [muted, setMuted] = useState(true);
   const [loading, setLoading] = useState(false);
 
-  // Рендерим только когда блок попал в viewport
   useEffect(() => {
     const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setVisible(true);
-          obs.disconnect();
-        }
-      },
+      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
       { rootMargin: "200px" }
     );
     if (hostRef.current) obs.observe(hostRef.current);
@@ -38,6 +32,8 @@ export default function VideoShowcase() {
   const setupHls = async () => {
     if (!videoRef.current || upgraded) return;
     setLoading(true);
+    track("video_demo_open");
+
     const video = videoRef.current;
     const src = "/demo/master.m3u8";
 
@@ -51,11 +47,7 @@ export default function VideoShowcase() {
             const list: Track[] = [];
             for (let i = 0; i < at.length; i++) {
               const t = at[i];
-              list.push({
-                id: i,
-                name: t.label || t.language || `Track ${i + 1}`,
-                lang: t.language,
-              });
+              list.push({ id: i, name: t.label || t.language || `Track ${i + 1}`, lang: t.language });
             }
             setTracks(list);
             setCurrentTrack(at.selectedIndex ?? 0);
@@ -70,16 +62,12 @@ export default function VideoShowcase() {
         hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
         hls.on(Hls.Events.AUDIO_TRACKS_UPDATED, (_: any, data: any) => {
           const list: Track[] = data.audioTracks.map((t: any, idx: number) => ({
-            id: idx,
-            name: t.name || t.lang || `Track ${idx + 1}`,
-            lang: t.lang,
+            id: idx, name: t.name || t.lang || `Track ${idx + 1}`, lang: t.lang,
           }));
           setTracks(list);
           setCurrentTrack(hls.audioTrack ?? 0);
         });
-        hls.on(Hls.Events.AUDIO_TRACK_SWITCHED, (_: any, data: any) =>
-          setCurrentTrack(data.id)
-        );
+        hls.on(Hls.Events.AUDIO_TRACK_SWITCHED, (_: any, data: any) => setCurrentTrack(data.id));
         hlsRef.current = hls;
       }
       setUpgraded(true);
@@ -90,6 +78,8 @@ export default function VideoShowcase() {
 
   const onSelectTrack = (id: number) => {
     setCurrentTrack(id);
+    track("video_audio_change", { id });
+
     const video = videoRef.current!;
     const at: any = (video as any).audioTracks;
     if (at && at.length) {
@@ -104,30 +94,33 @@ export default function VideoShowcase() {
   const onUnmutePlay = async () => {
     const v = videoRef.current!;
     try {
-      v.muted = false;
-      setMuted(false);
+      v.muted = false; setMuted(false);
       await v.play();
+      track("video_unmute");
     } catch {}
   };
 
   useEffect(() => {
-    return () => {
-      if (hlsRef.current) {
-        try {
-          hlsRef.current.destroy();
-        } catch {}
-        hlsRef.current = null;
-      }
+    const v = videoRef.current;
+    if (!v) return;
+    const onTime = () => {
+      const p = v.currentTime / (v.duration || 1);
+      if (p >= 0.25 && p < 0.26) track("video_watch_25");
+      if (p >= 0.5 && p < 0.51) track("video_watch_50");
+      if (p >= 0.99) track("video_watch_100");
     };
+    v.addEventListener("timeupdate", onTime);
+    return () => v.removeEventListener("timeupdate", onTime);
+  }, [upgraded]);
+
+  useEffect(() => {
+    return () => { if (hlsRef.current) { try { hlsRef.current.destroy(); } catch {}; hlsRef.current = null; } };
   }, []);
 
   return (
     <div ref={hostRef}>
       {!visible ? (
-        <div
-          className="rounded-2xl border border-black/5 dark:border-white/10 bg-black/80"
-          style={{ aspectRatio: "16/9" }}
-        />
+        <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-black/80" style={{ aspectRatio: "16/9" }} />
       ) : (
         <div className="relative rounded-2xl border border-black/5 dark:border-white/10 overflow-hidden bg-black">
           <video
@@ -141,7 +134,12 @@ export default function VideoShowcase() {
             poster="/demo/poster.jpg"
             src={upgraded ? undefined : "/demo/teaser.mp4"}
             controls={upgraded}
-          />
+          >
+            {/* VTT субтитры */}
+            <track kind="subtitles" srcLang="en" label="EN Subtitles" src="/demo/en.vtt" default />
+            <track kind="subtitles" srcLang="ru" label="RU Subtitles" src="/demo/ru.vtt" />
+            <track kind="subtitles" srcLang="es" label="ES Subtitles" src="/demo/es.vtt" />
+          </video>
 
           <div className="absolute top-3 right-3 left-3 flex flex-wrap gap-2 items-center justify-between">
             {upgraded && tracks.length > 0 && (
@@ -153,9 +151,7 @@ export default function VideoShowcase() {
                   onChange={(e) => onSelectTrack(parseInt(e.target.value, 10))}
                 >
                   {tracks.map((t) => (
-                    <option key={t.id} value={t.id}>
-                      {t.name}
-                    </option>
+                    <option key={t.id} value={t.id}>{t.name}</option>
                   ))}
                 </select>
                 {muted && (

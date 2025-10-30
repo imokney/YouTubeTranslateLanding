@@ -21,6 +21,7 @@ import {
 // 👉 JSON-контент, редактируемый через админку
 import home from "../content/home.json";
 import VideoShowcase from "./components/VideoShowcase"; // 👈 добавлен импорт
+import PriceCalculator from "./components/PriceCalculator";
 
 const AGENCY_NAME = "lang2lang";
 const TELEGRAM_LINK = "https://t.me/sup_lang2lang";
@@ -88,28 +89,41 @@ export default function Landing() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [showTop, setShowTop] = useState(false);
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", onScroll);
+useEffect(() => {
+  const onScrollShadow = () => setScrolled(window.scrollY > 10);
+  const onScrollTop = () => setShowTop(window.scrollY > 600);
 
-    const observer = new IntersectionObserver(
-      (entries) => entries.forEach((entry) => entry.isIntersecting && setActiveId(entry.target.id)),
-      { rootMargin: "-40% 0px -55% 0px", threshold: 0.1 }
-    );
-    sectionIds.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
+  window.addEventListener("scroll", onScrollShadow, { passive: true });
+  window.addEventListener("scroll", onScrollTop, { passive: true });
 
-    const onScrollTop = () => setShowTop(window.scrollY > 600);
-    window.addEventListener("scroll", onScrollTop);
+  // ✅ Выбираем секцию с максимальным пересечением
+  const io = new IntersectionObserver(
+    (entries) => {
+      const vis = entries
+        .filter((e) => e.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+      if (vis[0]) setActiveId(vis[0].target.id);
+    },
+    {
+      root: null,
+      // Чуть «сужаем» окно, чтобы хедер не мешал
+      rootMargin: "-20% 0px -60% 0px",
+      threshold: [0, 0.25, 0.5, 0.75, 1],
+    }
+  );
 
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("scroll", onScrollTop);
-      observer.disconnect();
-    };
-  }, [sectionIds]);
+  // Подписываем нужные секции
+  sectionIds.forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) io.observe(el);
+  });
+
+  return () => {
+    window.removeEventListener("scroll", onScrollShadow);
+    window.removeEventListener("scroll", onScrollTop);
+    io.disconnect();
+  };
+}, [sectionIds]);
 
   return (
     <div className={theme === "dark" ? "dark" : ""}>
@@ -269,8 +283,8 @@ export default function Landing() {
           </div>
         </section>
 
-                {/* Cases */}
-        <section id="cases" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-[#2A1A12]" data-testid="section-cases">  
+        {/* Cases */}
+        <section id="cases" className="scroll-mt-24 py-20" data-testid="section-cases">
           <div className="max-w-6xl mx-auto px-4">
             <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">Кейсы</motion.h2>
             <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 mt-2">
@@ -299,11 +313,22 @@ export default function Landing() {
             <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 mt-2">
               Прозрачная стоимость. Скидки при подписке от 4 роликов в месяц.
             </motion.p>
-            <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.2 }} className="mt-10 grid md:grid-cols-3 gap-6">
+
+            {/* карточки тарифов */}
+            <motion.div
+              variants={stagger}
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, amount: 0.2 }}
+              className="mt-10 grid md:grid-cols-3 gap-6"
+            >
+              {/* Карточка 1 */}
               <motion.div variants={fadeInUp} whileHover={{ y: -4 }}>
                 <div className="relative z-10 rounded-2xl border border-gray-300 dark:border-white/10 bg-white dark:bg-neutral-900 p-6">
                   <div className="font-semibold">Субтитры</div>
-                  <div className="text-3xl font-bold mt-2">от $6 <span className="text-base font-normal text-gray-500 dark:text-neutral-400">/ мин</span></div>
+                  <div className="text-3xl font-bold mt-2">
+                    от $6 <span className="text-base font-normal text-gray-500 dark:text-neutral-400">/ мин</span>
+                  </div>
                   <ul className="text-sm text-gray-600 dark:text-neutral-300 space-y-2 mt-3">
                     <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />Перевод + тайм-коды</li>
                     <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />Форматы .srt/.vtt</li>
@@ -317,10 +342,13 @@ export default function Landing() {
                 </div>
               </motion.div>
 
+              {/* Карточка 2 */}
               <motion.div variants={fadeInUp} whileHover={{ y: -4 }}>
                 <div className="relative z-10 rounded-2xl border-2 border-orange-600 bg-white dark:bg-neutral-900 p-6">
                   <div className="font-semibold">Озвучка</div>
-                  <div className="text-3xl font-bold mt-2">от $12 <span className="text-base font-normal text-gray-500 dark:text-neutral-400">/ мин</span></div>
+                  <div className="text-3xl font-bold mt-2">
+                    от $12 <span className="text-base font-normal text-gray-500 dark:text-neutral-400">/ мин</span>
+                  </div>
                   <ul className="text-sm text-gray-600 dark:text-neutral-300 space-y-2 mt-3">
                     <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />AI-голоса или актёры</li>
                     <li className="flex items-center gap-2"><Check className="w-4 h-4 text-orange-600" />Сведение и шумоподавление</li>
@@ -334,6 +362,7 @@ export default function Landing() {
                 </div>
               </motion.div>
 
+              {/* Карточка 3 */}
               <motion.div variants={fadeInUp} whileHover={{ y: -4 }}>
                 <div className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 p-6">
                   <div className="font-semibold">Локализация канала</div>
@@ -351,6 +380,11 @@ export default function Landing() {
                 </div>
               </motion.div>
             </motion.div>
+
+            {/* Калькулятор под карточками */}
+            <div className="mt-8 max-w-3xl mx-auto">
+              <PriceCalculator />
+            </div>
           </div>
         </section>
         
