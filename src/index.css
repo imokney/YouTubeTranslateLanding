@@ -57,88 +57,78 @@ html {
 .glass {
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(0, 0, 0, 0.06);
-  box-shadow: 0 6px 30px rgba(0, 0, 0, .12), inset 0 1px 0 rgba(255, 255, 255, .06);
+  box-shadow: 0 6px 30px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.06);
   backdrop-filter: blur(12px) saturate(120%);
   -webkit-backdrop-filter: blur(12px) saturate(120%);
 }
 :root.dark .glass {
-  background: rgba(20, 20, 20, 0.45);
-  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(22, 22, 22, 0.35);
+  border-color: rgba(255, 255, 255, 0.10);
 }
 
 /* ===== GlassCard (граница без mask, нет вспышки) ===== */
 .glass-card {
   position: relative;
   border-radius: 16px;
-  /* нейтральная базовая граница: не меняем на hover → нет «мигания» */
   border: 1px solid rgba(0, 0, 0, 0.06);
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(10px) saturate(120%);
-  -webkit-backdrop-filter: blur(10px) saturate(120%);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, .06);
-  overflow: hidden; /* сглаживает края */
+  background: rgba(255, 255, 255, 0.65);     /* светлая: чуть плотнее, читабельнее */
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .08);
+  overflow: hidden;
 }
 :root.dark .glass-card {
-  border-color: rgba(255, 255, 255, 0.10);
-  background: rgba(16, 16, 16, 0.6);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, .22);
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(14, 14, 14, 0.55);        /* тёмная: ТОНЬШЕ стекло, меньше «мыла» */
+  backdrop-filter: blur(5px) saturate(110%);  /* blur поменьше → меньше «зерна» на краях */
+  -webkit-backdrop-filter: blur(5px) saturate(110%);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .30);
 }
 
-/* Градиентная рамка — только на hover, без mask */
+/* Мягкая градиентная окантовка. В тёмной — слабее. */
 .glass-card::before {
   content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
+  position: absolute; inset: 0; pointer-events: none;
   border-radius: inherit;
-  background: linear-gradient(120deg, #ff6600, #ff2d55);
-  opacity: 0;                     /* <-- нет вспышки при загрузке */
-  transition: opacity .35s ease;  /* плавно наводим/убираем */
+  background: linear-gradient(120deg, #ff7a1a, #ff3b6a);
+  opacity: 0;                              /* без вспышки при загрузке */
+  transition: opacity .28s ease;
   z-index: 0;
 }
-.glass-card:hover::before {
-  opacity: 0.55; /* достаточно, но не ядовито */
-}
+.glass-card:hover::before { opacity: .45; }
+:root.dark .glass-card:hover::before { opacity: .28; }  /* темнее, чтобы не «горело» */
 
-/* Внутренний слой, чтобы текст был поверх ::before */
+/* Внутренний слой (устраняет «зубцы» у ::before) */
 .glass-card .inner {
-  position: relative;
-  z-index: 1;
-  border-radius: inherit;
-  background: linear-gradient(
-      to bottom,
-      rgba(255,255,255,0.55),
-      rgba(255,255,255,0.45)
-  );
+  position: relative; z-index: 1; border-radius: inherit;
+  background: linear-gradient(to bottom, rgba(255,255,255,.55), rgba(255,255,255,.42));
 }
 :root.dark .glass-card .inner {
-  background: linear-gradient(
-      to bottom,
-      rgba(18,18,18,0.55),
-      rgba(18,18,18,0.45)
-  );
+  /* без молочного градиента — лучше читается на тёмной */
+  background: linear-gradient(to bottom, rgba(18,18,18,.55), rgba(18,18,18,.50));
 }
 
-/* ===== Плавность темы и цветов (без дерганья границ) ===== */
+/* Плавность темы/цветов — без анимации границ (убираем «мигание») */
 .theme-transition * {
   transition:
-    background-color .35s ease,
-    color .35s ease,
-    box-shadow .35s ease,
-    opacity .35s ease;
-  /* намеренно НЕ анимируем border-color → уходит «мигание» */
+    background-color .28s ease,
+    color .28s ease,
+    box-shadow .28s ease,
+    opacity .28s ease,
+    transform .28s ease;
 }
 
 /* ===== Фоновая точечная текстура ===== */
 .bg-noise {
-  background-image: radial-gradient(#00000008 0.5px, transparent 0.5px);
-  background-size: 8px 8px;
+  background-image: radial-gradient(#0000000c 0.5px, transparent 0.5px);
+  background-size: 9px 9px;
 }
 :root.dark .bg-noise {
-  background-image: radial-gradient(#ffffff12 0.6px, transparent 0.6px);
+  background-image: radial-gradient(#ffffff10 0.6px, transparent 0.6px); /* слабее, не «сеткой» */
+  background-size: 10px 10px;
 }
 
-/* Поддержка reduce motion */
+/* Reduce motion */
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
