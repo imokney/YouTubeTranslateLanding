@@ -346,7 +346,7 @@ export default function Landing() {
               {[1, 2, 3].map((i) => (
                 <motion.div key={i} variants={fadeInUp} whileHover={{ y: -4 }}>
                   <GlassCard>
-                    <div className="rounded-xl overflow-hidden border border-black/5 dark:border-white/10 bg-white/60 dark:bg-neutral-900/60">
+                    <div className="rounded-xl overflow-hidden border border-black/5 dark:border-white/10 bg-white/60 dark:bg-white/5">
                       <div className="aspect-video bg-gray-100 dark:bg-neutral-800 flex items-center justify-center text-gray-400 dark:text-neutral-500">
                         Видео {i}
                       </div>

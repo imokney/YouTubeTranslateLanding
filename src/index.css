@@ -132,3 +132,20 @@ html {
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
+
+/* --- Dark: чистое стекло без серой заливки --- */
+:root.dark .glass-card {
+  background: rgba(8, 8, 8, 0.20);          /* тонкая подложка вместо серого */
+  border-color: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(4px) saturate(112%);
+  -webkit-backdrop-filter: blur(4px) saturate(112%);
+}
+
+/* Градиентная окантовка мягче в тёмной теме */
+:root.dark .glass-card::before { opacity: 0.14; }
+:root.dark .glass-card:hover::before { opacity: 0.22; }
+
+/* ВАЖНО: убираем тёмный внутренний градиент — он и давал «серость» */
+:root.dark .glass-card .inner {
+  background: transparent !important;
+}
