@@ -120,6 +120,21 @@ useEffect(() => {
     const percent = (views - 50000) / (5000000 - 50000) * 100;
     range.style.setProperty("--percent", percent + "%");
 
+    // bubble value
+    const bubble = document.getElementById("rangeBubble");
+    bubble!.textContent = views.toLocaleString();
+    const sliderWidth = range.offsetWidth;
+    const thumbPos = sliderWidth * (percent / 100);
+    bubble!.style.setProperty("--bubble-x", thumbPos + "px");
+
+    const bubble = document.getElementById("rangeBubble");
+    range.addEventListener("mousedown", () => bubble!.classList.add("show"));
+    range.addEventListener("touchstart", () => bubble!.classList.add("show"));
+
+    range.addEventListener("mouseup", () => bubble!.classList.remove("show"));
+    range.addEventListener("touchend", () => bubble!.classList.remove("show"));
+
+
 
     let total = 0;
     langIds.forEach(id => {
@@ -128,7 +143,8 @@ useEffect(() => {
       }
     });
 
-    animate(incomeOut, currentValue, total);
+    animate(range.style.transition = '0.12s cubic-bezier(0.22, 1, 0.36, 1');
+
     currentValue = total;
   }
 
