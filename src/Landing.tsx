@@ -96,16 +96,10 @@ useEffect(() => {
   const range = document.getElementById("rangeViews") as HTMLInputElement;
   const viewsOut = document.getElementById("viewsOut")!;
   const incomeOut = document.getElementById("incomeOut")!;
-  const bubble = document.getElementById("rangeBubble")!;
   const langIds = ["en", "pt", "es"];
   let currentValue = 0;
 
-  if (!range || !viewsOut || !incomeOut || !bubble) return;
-
-  // ✅ inertia
-  range.style.transition = "0.12s cubic-bezier(0.22,1,0.36,1)";
-
-  function animate(start: number, end: number, duration = 300) {
+  function animate(el: HTMLElement, start: number, end: number, duration = 300) {
     const diff = end - start;
     let startTime: number | null = null;
 
@@ -113,7 +107,7 @@ useEffect(() => {
       if (!startTime) startTime = time;
       const progress = Math.min((time - startTime) / duration, 1);
       const val = Math.floor(start + diff * progress);
-      incomeOut.textContent = "$" + val.toLocaleString() + " / месяц";
+      el.textContent = "$" + val.toLocaleString() + " / месяц";
       if (progress < 1) requestAnimationFrame(frame);
     }
     requestAnimationFrame(frame);
@@ -123,52 +117,25 @@ useEffect(() => {
     const views = Number(range.value);
     viewsOut.textContent = views.toLocaleString();
 
-    const percent = ((views - 50000) / (5000000 - 50000)) * 100;
-    range.style.setProperty("--percent", percent + "%");
-
-    // ✅ bubble follows thumb
-    bubble.textContent = views.toLocaleString();
-    const x = (range.offsetWidth * percent) / 100;
-    bubble.style.setProperty("--bubble-x", x + "px");
-
-    // ✅ income calc
     let total = 0;
     langIds.forEach(id => {
-      const el = document.getElementById(id) as HTMLInputElement;
-      if (el?.checked) total += (views / 1000) * rpm[id];
+      if ((document.getElementById(id) as HTMLInputElement).checked) {
+        total += (views / 1000) * rpm[id as keyof typeof rpm];
+      }
     });
 
-    animate(currentValue, total);
+    animate(incomeOut, currentValue, total);
     currentValue = total;
   }
-
-  // ✅ show bubble on drag
-  const show = () => bubble.classList.add("show");
-  const hide = () => bubble.classList.remove("show");
-  range.addEventListener("mousedown", show);
-  range.addEventListener("touchstart", show);
-  range.addEventListener("mouseup", hide);
-  range.addEventListener("touchend", hide);
 
   range.oninput = calc;
   langIds.forEach(id => {
     const el = document.getElementById(id) as HTMLInputElement;
-    if (el) el.onchange = calc;
+    el.onchange = calc;
   });
 
   calc();
-
-  return () => {
-    range.removeEventListener("mousedown", show);
-    range.removeEventListener("touchstart", show);
-    range.removeEventListener("mouseup", hide);
-    range.removeEventListener("touchend", hide);
-  };
 }, []);
-
-
-
-
 
 
   // ScrollSpy + back-to-top
