@@ -89,6 +89,56 @@ export default function Landing() {
   const [theme, setTheme] = useState<"light" | "dark">(() => getPreferredTheme());
   const [scrolled, setScrolled] = useState(false);
 
+
+  // ✅ Калькулятор дохода: логика
+useEffect(() => {
+  const rpm = { en: 5, pt: 1.5, es: 2.5 };
+  const range = document.getElementById("rangeViews") as HTMLInputElement;
+  const viewsOut = document.getElementById("viewsOut")!;
+  const incomeOut = document.getElementById("incomeOut")!;
+  if (!range || !viewsOut || !incomeOut) return;
+  const langIds = ["en", "pt", "es"];
+  let currentValue = 0;
+
+  function animate(el: HTMLElement, start: number, end: number, duration = 300) {
+    const diff = end - start;
+    let startTime: number | null = null;
+
+    function frame(time: number) {
+      if (!startTime) startTime = time;
+      const progress = Math.min((time - startTime) / duration, 1);
+      const val = Math.floor(start + diff * progress);
+      el.textContent = "$" + val.toLocaleString() + " / месяц";
+      if (progress < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function calc() {
+    const views = Number(range.value);
+    viewsOut.textContent = views.toLocaleString();
+
+    let total = 0;
+    langIds.forEach(id => {
+      if ((document.getElementById(id) as HTMLInputElement).checked) {
+        total += (views / 1000) * rpm[id as keyof typeof rpm];
+      }
+    });
+
+    animate(incomeOut, currentValue, total);
+    currentValue = total;
+  }
+
+  range.oninput = calc;
+  langIds.forEach(id => {
+    const el = document.getElementById(id) as HTMLInputElement;
+    el.onchange = calc;
+  });
+
+  calc();
+}, []);
+
+
   // ScrollSpy + back-to-top
   const sectionIds = useMemo(() => ["services", "process", "pricing", "cases", "contact", "faq"], []);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -361,6 +411,48 @@ export default function Landing() {
             </motion.div>
           </div>
         </section>
+
+{/* YouTube Earnings Calculator */}
+<section className="py-24 px-4 text-center" id="yt-calculator">
+  <h2 className="text-3xl font-bold mb-2">
+    Сколько ваш канал может приносить на других языках?
+  </h2>
+  <p className="text-gray-500 mb-10 text-lg">
+    Передвиньте ползунок и узнайте потенциал вашего YouTube-канала
+  </p>
+
+  <div className="max-w-xl mx-auto bg-white shadow-xl rounded-2xl p-8 transition">
+    <span className="text-sm text-gray-500">Месячные просмотры</span>
+
+    <input 
+      id="rangeViews" 
+      type="range" 
+      min="50000" 
+      max="5000000" 
+      step="50000" 
+      defaultValue="500000"
+      className="w-full my-4"
+    />
+
+    <div id="viewsOut" className="text-2xl font-bold mb-6">500,000</div>
+
+    <div className="flex justify-center gap-6 mb-6 text-lg">
+      <label><input id="en" type="checkbox" defaultChecked /> English</label>
+      <label><input id="pt" type="checkbox" defaultChecked /> Portuguese</label>
+      <label><input id="es" type="checkbox" /> Spanish</label>
+    </div>
+
+    <div className="text-gray-500 text-sm">Потенциальный доход:</div>
+    <div id="incomeOut" className="text-3xl font-extrabold mb-6">
+      $0 / месяц
+    </div>
+
+    <button className="w-full py-4 bg-black text-white rounded-xl text-lg font-semibold hover:opacity-90 transition">
+      🚀 Получить персональный расчёт
+    </button>
+  </div>
+</section>
+
 
         {/* Pricing */}
         <section id="pricing" className="scroll-mt-24 py-20" data-testid="section-pricing">
