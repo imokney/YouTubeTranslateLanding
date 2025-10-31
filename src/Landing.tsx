@@ -440,9 +440,9 @@ useEffect(() => {
 
 <div className="flex justify-center gap-6 mb-6 text-lg">
   {[
-    { id: "en", label: "English", defaultChecked: true },
-    { id: "pt", label: "Portuguese", defaultChecked: true },
-    { id: "es", label: "Spanish", defaultChecked: false },
+    { id: "en", label: "English", flag: "🇺🇸", defaultChecked: true },
+    { id: "pt", label: "Portuguese", flag: "🇵🇹", defaultChecked: true },
+    { id: "es", label: "Spanish", flag: "🇪🇸", defaultChecked: false },
   ].map(lang => (
     <label key={lang.id} className="flex items-center cursor-pointer gap-2">
       <input
@@ -451,18 +451,24 @@ useEffect(() => {
         defaultChecked={lang.defaultChecked}
         className="hidden peer"
       />
+
+      {/* circle with flag */}
       <span
         className="
-          w-5 h-5 rounded-full border-2 border-gray-400 
+          w-7 h-7 flex items-center justify-center 
+          rounded-full border-2 border-gray-400 bg-white
           peer-checked:border-orange-600 peer-checked:bg-orange-600 
-          transition-all duration-200
+          text-xl transition-all duration-200
         "
-      ></span>
-      {lang.label}
+      >
+        <span className="peer-checked:opacity-0">{lang.flag}</span>
+        <span className="absolute text-white opacity-0 peer-checked:opacity-100">
+          {lang.flag}
+        </span>
+      </span>
     </label>
   ))}
 </div>
-
 
     <div className="text-gray-500 text-sm">Потенциальный доход:</div>
     <div id="incomeOut" className="text-3xl font-extrabold mb-6">
