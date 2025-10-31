@@ -134,7 +134,7 @@ export default function Landing() {
     <div className={theme === "dark" ? "dark" : ""}>
       <div className="theme-transition min-h-screen bg-white text-gray-900 dark:bg-neutral-950 dark:text-neutral-100 relative overflow-hidden">
         {/* Текстура фона */}
-        <div aria-hidden className="pointer-events-none absolute inset-0 bg-grid" />
+        <div aria-hidden className="pointer-events-none absolute inset-0 bg-noise" />
 
         {/* Анимированный градиент Hero */}
         <div
