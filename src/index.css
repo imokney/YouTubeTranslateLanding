@@ -408,7 +408,7 @@ html, body {
     0 0 4px rgba(234,88,12,0.4);
   cursor: pointer;
   transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
-  margin-top: -7px;
+  margin-top: -8px;
 }
 
 /* Dark thumb */
