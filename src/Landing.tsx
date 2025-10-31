@@ -418,17 +418,13 @@ useEffect(() => {
           </div>
         </section>
 
-{/* YouTube Earnings Calculator */}
-<section className="py-24 px-4 text-center" id="yt-calculator">
-  <h2 className="text-3xl font-bold mb-2">
-    Сколько ваш канал может приносить на других языках?
-  </h2>
-  <p className="text-gray-500 mb-10 text-lg">
-    Передвиньте ползунок и узнайте потенциал вашего YouTube-канала
-  </p>
+          {/* YouTube Earnings Calculator */}
+        <section className="py-24 px-4 text-center" id="yt-calculator">
+        <h2 className="text-3xl font-bold mb-2">Сколько ваш канал может приносить на других языках?</h2>
+        <p className="text-gray-500 mb-10 text-lg">Передвиньте ползунок и узнайте потенциал вашего YouTube-канала</p>
 
-  <div className="max-w-xl mx-auto bg-white shadow-xl rounded-2xl p-8 transition">
-    <span className="text-sm text-gray-500">Месячные просмотры</span>
+        <div className="max-w-xl mx-auto bg-white shadow-xl rounded-2xl p-8 transition">
+        <span className="text-sm text-gray-500">Месячные просмотры</span>
 
     <input 
       id="rangeViews" 
@@ -442,11 +438,31 @@ useEffect(() => {
 
     <div id="viewsOut" className="text-2xl font-bold mb-6">500,000</div>
 
-    <div className="flex justify-center gap-6 mb-6 text-lg">
-      <label><input id="en" type="checkbox" defaultChecked /> English</label>
-      <label><input id="pt" type="checkbox" defaultChecked /> Portuguese</label>
-      <label><input id="es" type="checkbox" /> Spanish</label>
-    </div>
+<div className="flex justify-center gap-6 mb-6 text-lg">
+  {[
+    { id: "en", label: "English", defaultChecked: true },
+    { id: "pt", label: "Portuguese", defaultChecked: true },
+    { id: "es", label: "Spanish", defaultChecked: false },
+  ].map(lang => (
+    <label key={lang.id} className="flex items-center cursor-pointer gap-2">
+      <input
+        id={lang.id}
+        type="checkbox"
+        defaultChecked={lang.defaultChecked}
+        className="hidden peer"
+      />
+      <span
+        className="
+          w-5 h-5 rounded-full border-2 border-gray-400 
+          peer-checked:border-orange-600 peer-checked:bg-orange-600 
+          transition-all duration-200
+        "
+      ></span>
+      {lang.label}
+    </label>
+  ))}
+</div>
+
 
     <div className="text-gray-500 text-sm">Потенциальный доход:</div>
     <div id="incomeOut" className="text-3xl font-extrabold mb-6">
