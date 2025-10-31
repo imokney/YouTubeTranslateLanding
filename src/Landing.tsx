@@ -138,6 +138,7 @@ useEffect(() => {
 }, []);
 
 
+
   // ScrollSpy + back-to-top
   const sectionIds = useMemo(() => ["services", "process", "pricing", "cases", "contact", "faq"], []);
   const [activeId, setActiveId] = useState<string | null>(null);
