@@ -22,15 +22,13 @@ html {
   animation: gradientShift 12s ease infinite;
 }
 
-/* Product-style pixel dot grid (Notion-like) */
-.bg-grid {
-  background-image: radial-gradient(#00000010 1px, transparent 1px);
-  background-size: 18px 18px;
+/* Subtle dot noise texture */
+.bg-noise {
+  background-image: radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px);
+  background-size: 6px 6px;
 }
-
-/* Dark theme variation */
-.dark .bg-grid {
-  background-image: radial-gradient(#ffffff12 1px, transparent 1px);
+.dark .bg-noise {
+  background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
 }
 
 
