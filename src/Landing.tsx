@@ -96,23 +96,8 @@ useEffect(() => {
   const range = document.getElementById("rangeViews") as HTMLInputElement;
   const viewsOut = document.getElementById("viewsOut")!;
   const incomeOut = document.getElementById("incomeOut")!;
-  const bubble = document.getElementById("rangeBubble")!;
-  if (!range || !viewsOut || !incomeOut || !bubble) return;
-
   const langIds = ["en", "pt", "es"];
   let currentValue = 0;
-
-  /** ✅ Tesla inertia */
-  range.style.transition = "0.12s cubic-bezier(0.22, 1, 0.36, 1)";
-
-  /** ✅ Bubble show/hide once */
-  const showBubble = () => bubble.classList.add("show");
-  const hideBubble = () => bubble.classList.remove("show");
-
-  range.addEventListener("mousedown", showBubble);
-  range.addEventListener("touchstart", showBubble);
-  range.addEventListener("mouseup", hideBubble);
-  range.addEventListener("touchend", hideBubble);
 
   function animate(el: HTMLElement, start: number, end: number, duration = 300) {
     const diff = end - start;
@@ -125,7 +110,6 @@ useEffect(() => {
       el.textContent = "$" + val.toLocaleString() + " / месяц";
       if (progress < 1) requestAnimationFrame(frame);
     }
-
     requestAnimationFrame(frame);
   }
 
@@ -133,20 +117,11 @@ useEffect(() => {
     const views = Number(range.value);
     viewsOut.textContent = views.toLocaleString();
 
-    const percent = (views - 50000) / (5000000 - 50000) * 100;
-    range.style.setProperty("--percent", percent + "%");
-
-    // ✅ Move bubble
-    bubble.textContent = views.toLocaleString();
-    const sliderWidth = range.offsetWidth;
-    const thumbPos = sliderWidth * (percent / 100);
-    bubble.style.setProperty("--bubble-x", thumbPos + "px");
-
-    // ✅ Income calc
     let total = 0;
     langIds.forEach(id => {
-      const el = document.getElementById(id) as HTMLInputElement;
-      if (el.checked) total += (views / 1000) * rpm[id as keyof typeof rpm];
+      if ((document.getElementById(id) as HTMLInputElement).checked) {
+        total += (views / 1000) * rpm[id as keyof typeof rpm];
+      }
     });
 
     animate(incomeOut, currentValue, total);
@@ -155,20 +130,13 @@ useEffect(() => {
 
   range.oninput = calc;
   langIds.forEach(id => {
-    (document.getElementById(id) as HTMLInputElement).onchange = calc;
+    const el = document.getElementById(id) as HTMLInputElement;
+    el.onchange = calc;
   });
 
-  // initialize
   calc();
-
-  // ✅ cleanup to avoid double events if component re-renders
-  return () => {
-    range.removeEventListener("mousedown", showBubble);
-    range.removeEventListener("touchstart", showBubble);
-    range.removeEventListener("mouseup", hideBubble);
-    range.removeEventListener("touchend", hideBubble);
-  };
 }, []);
+
 
 
 
