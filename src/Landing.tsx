@@ -440,13 +440,12 @@ useEffect(() => {
 
 <div className="flex justify-center gap-10 mb-6 text-lg">
   {[
-    { id: "en", flag: "🇺🇸", defaultChecked: true },
-    { id: "pt", flag: "🇵🇹", defaultChecked: true },
-    { id: "es", flag: "🇪🇸", defaultChecked: false },
+    { id: "en", emoji: "🇺🇸", defaultChecked: true },
+    { id: "pt", emoji: "🇵🇹", defaultChecked: true },
+    { id: "es", emoji: "🇪🇸", defaultChecked: false },
   ].map(lang => (
     <label key={lang.id} className="flex flex-col items-center cursor-pointer gap-1">
       
-      {/* hidden checkbox */}
       <input
         id={lang.id}
         type="checkbox"
@@ -454,20 +453,23 @@ useEffect(() => {
         className="hidden peer"
       />
 
-      {/* Circle */}
+      {/* circle */}
       <span
         className="
-          w-6 h-6 rounded-full border-2 border-gray-400
-          peer-checked:border-orange-600 peer-checked:bg-orange-600
+          w-6 h-6 rounded-full border-2 border-gray-400 
+          peer-checked:border-orange-600 peer-checked:bg-orange-600 
           transition-all duration-200
         "
       ></span>
 
-      {/* Flag under circle */}
-      <span className="text-2xl select-none">{lang.flag}</span>
+      {/* emoji flag */}
+      <span className="text-xl select-none">
+        {lang.emoji}
+      </span>
     </label>
   ))}
 </div>
+
 
 
 
