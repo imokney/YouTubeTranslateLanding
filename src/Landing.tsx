@@ -118,6 +118,9 @@ useEffect(() => {
     const views = Number(range.value);
     viewsOut.textContent = views.toLocaleString();
 
+    const percent = (views - 50000) / (5000000 - 50000) * 100;
+    range.style.setProperty("--percent", percent + "%");
+
     let total = 0;
     langIds.forEach(id => {
       if ((document.getElementById(id) as HTMLInputElement).checked) {
