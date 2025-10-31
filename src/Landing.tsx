@@ -423,7 +423,14 @@ useEffect(() => {
         <h2 className="text-3xl font-bold mb-2">Сколько ваш канал может приносить на других языках?</h2>
         <p className="text-gray-500 mb-10 text-lg">Передвиньте ползунок и узнайте потенциал вашего YouTube-канала</p>
 
-        <div className="max-w-xl mx-auto bg-white shadow-xl rounded-2xl p-8 transition">
+        <div className="
+  max-w-xl mx-auto 
+  bg-white dark:bg-neutral-900 
+  text-gray-900 dark:text-white
+  shadow-xl rounded-2xl p-8 transition
+  border border-black/5 dark:border-white/10
+">
+
         <span className="text-sm text-gray-500">Месячные просмотры</span>
 
     <input 
