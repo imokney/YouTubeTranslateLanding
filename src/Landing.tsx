@@ -454,11 +454,22 @@ useEffect(() => {
       />
 
       {/* circle selector */}
-      <span className="
-        w-6 h-6 rounded-full border-2 border-gray-400 
-        peer-checked:border-orange-600 peer-checked:bg-orange-600 
-        transition-all duration-200
-      "/>
+<span
+  className="
+    w-6 h-6 rounded-full border-2 
+    border-gray-400 
+    peer-checked:border-orange-600 
+    flex items-center justify-center
+    transition-all duration-200
+  "
+>
+  <span className="
+    w-2 h-2 rounded-full bg-orange-600 
+    scale-0 peer-checked:scale-100 
+    transition-transform duration-200
+  "></span>
+</span>
+
 
       {/* flag */}
      <img 
