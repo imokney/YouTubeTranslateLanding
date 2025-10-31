@@ -364,65 +364,92 @@ html, body {
   transition: box-shadow 0.5s ease-in-out;
 }
 
-/* === Premium Tesla slider v2 === */
+/* === Brand slider with bubble & inertia === */
 
 #rangeViews {
   -webkit-appearance: none;
   width: 100%;
-  height: 14px; /* толще — как у Tesla */
+  height: 14px;
   border-radius: 999px;
-  background: linear-gradient(to right, #EA580C 0%, #EA580C var(--percent), #ddd var(--percent), #ddd 100%);
+  background: linear-gradient(
+    to right,
+    #EA580C 0%,
+    #EA580C var(--percent),
+    #ddd var(--percent),
+    #ddd 100%
+  );
   outline: none;
   cursor: pointer;
   transition: background 0.25s ease;
   position: relative;
 }
 
-/* Track for Firefox */
-#rangeViews::-moz-range-track {
-  height: 14px;
-  border-radius: 999px;
-  background: #ddd;
+/* Dark mode track */
+.dark #rangeViews {
+  background: linear-gradient(
+    to right,
+    #EA580C 0%,
+    #EA580C var(--percent),
+    #4b4b4b var(--percent),
+    #4b4b4b 100%
+  );
 }
 
-/* Thumb style */
+/* Thumb */
 #rangeViews::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 28px; /* кружок крупнее */
-  height: 28px;
+  width: 30px;
+  height: 30px;
   background: #EA580C;
   border-radius: 50%;
   border: 3px solid white;
   box-shadow:
-    0 0 0 3px rgba(234,88,12,0.2),
-    0 4px 10px rgba(0,0,0,0.2);
+    0 0 10px rgba(234,88,12,0.6),
+    0 0 4px rgba(234,88,12,0.4);
   cursor: pointer;
-  transition: 0.2s ease;
-  margin-top: -7px; /* выравниваем по центру новой толщины */
+  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+  margin-top: -8px;
 }
 
-/* Firefox thumb */
-#rangeViews::-moz-range-thumb {
-  width: 28px;
-  height: 28px;
-  background: #EA580C;
-  border-radius: 50%;
-  border: 3px solid white;
+/* Dark thumb */
+.dark #rangeViews::-webkit-slider-thumb {
+  background: white;
+  border: 3px solid #EA580C;
   box-shadow:
-    0 0 0 3px rgba(234,88,12,0.2),
-    0 4px 10px rgba(0,0,0,0.2);
-  cursor: pointer;
+    0 0 10px rgba(234,88,12,0.55),
+    0 0 6px rgba(234,88,12,0.35);
 }
 
-/* Hover interaction */
-#rangeViews:hover::-webkit-slider-thumb {
-  box-shadow:
-    0 0 0 6px rgba(234,88,12,0.15),
-    0 4px 12px rgba(0,0,0,0.25);
-}
-
-/* Active drag */
 #rangeViews:active::-webkit-slider-thumb {
-  transform: scale(1.12);
+  transform: scale(1.15);
 }
 
+/*** Floating bubble above thumb ***/
+.range-bubble {
+  position: absolute;
+  left: var(--bubble-x);
+  top: -38px;
+  transform: translateX(-50%);
+  background: #EA580C;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s ease, transform .2s ease;
+}
+
+/* Dark bubble */
+.dark .range-bubble {
+  background: #EA580C;
+  color: white;
+}
+
+/* Visible state */
+.range-bubble.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-5px);
+}
