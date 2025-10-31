@@ -118,6 +118,8 @@ useEffect(() => {
     const views = Number(range.value);
     viewsOut.textContent = views.toLocaleString();
 
+
+    // 2 строки чинит полоску
     const percent = (views - 50000) / (5000000 - 50000) * 100;
     range.style.setProperty("--percent", percent + "%");
 
