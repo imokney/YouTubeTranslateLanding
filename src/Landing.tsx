@@ -96,6 +96,7 @@ useEffect(() => {
   const range = document.getElementById("rangeViews") as HTMLInputElement;
   const viewsOut = document.getElementById("viewsOut")!;
   const incomeOut = document.getElementById("incomeOut")!;
+  if (!range || !viewsOut || !incomeOut) return;
   const langIds = ["en", "pt", "es"];
   let currentValue = 0;
 
