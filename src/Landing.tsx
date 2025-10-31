@@ -90,15 +90,26 @@ export default function Landing() {
   const [scrolled, setScrolled] = useState(false);
 
 
-  // ✅ Калькулятор дохода: логика
+// ✅ Калькулятор дохода: логика
 useEffect(() => {
   const rpm = { en: 5, pt: 1.5, es: 2.5 };
   const range = document.getElementById("rangeViews") as HTMLInputElement;
   const viewsOut = document.getElementById("viewsOut")!;
   const incomeOut = document.getElementById("incomeOut")!;
-  if (!range || !viewsOut || !incomeOut) return;
+  const bubble = document.getElementById("rangeBubble")!;
+  if (!range || !viewsOut || !incomeOut || !bubble) return;
+
   const langIds = ["en", "pt", "es"];
   let currentValue = 0;
+
+  /** ✅ Tesla inertia easing on thumb movement **/
+  range.style.transition = '0.12s cubic-bezier(0.22, 1, 0.36, 1)';
+
+  /** ✅ Bubble show/hide events */
+  range.addEventListener("mousedown", () => bubble.classList.add("show"));
+  range.addEventListener("touchstart", () => bubble.classList.add("show"));
+  range.addEventListener("mouseup", () => bubble.classList.remove("show"));
+  range.addEventListener("touchend", () => bubble.classList.remove("show"));
 
   function animate(el: HTMLElement, start: number, end: number, duration = 300) {
     const diff = end - start;
@@ -121,9 +132,17 @@ useEffect(() => {
     const percent = (views - 50000) / (5000000 - 50000) * 100;
     range.style.setProperty("--percent", percent + "%");
 
+    // ✅ Move bubble
+    bubble.textContent = views.toLocaleString();
+    const sliderWidth = range.offsetWidth;
+    const thumbPos = sliderWidth * (percent / 100);
+    bubble.style.setProperty("--bubble-x", thumbPos + "px");
+
+    // ✅ Income calculation
     let total = 0;
     langIds.forEach(id => {
-      if ((document.getElementById(id) as HTMLInputElement).checked) {
+      const el = document.getElementById(id) as HTMLInputElement;
+      if (el.checked) {
         total += (views / 1000) * rpm[id as keyof typeof rpm];
       }
     });
@@ -140,6 +159,7 @@ useEffect(() => {
 
   calc();
 }, []);
+
 
 
   // ScrollSpy + back-to-top
