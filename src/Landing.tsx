@@ -418,49 +418,45 @@ useEffect(() => {
           </div>
         </section>
 
-          {/* YouTube Earnings Calculator */}
-        <section className="py-24 px-4 text-center" id="yt-calculator">
-        <h2 className="text-3xl font-bold mb-2">Сколько ваш канал может приносить на других языках?</h2>
-        <p className="text-gray-500 mb-10 text-lg">Передвиньте ползунок и узнайте потенциал вашего YouTube-канала</p>
+{/* YouTube Earnings Calculator */}
+<section className="py-24 px-4 text-center" id="yt-calculator">
+  <h2 className="text-3xl font-bold mb-2">Сколько ваш канал может приносить на других языках?</h2>
+  <p className="text-gray-500 mb-10 text-lg">Передвиньте ползунок и узнайте потенциал вашего YouTube-канала</p>
 
-        <div className="
-  max-w-xl mx-auto 
-  bg-white dark:bg-neutral-900 
-  text-gray-900 dark:text-white
-  shadow-xl rounded-2xl p-8 transition
-  border border-black/5 dark:border-white/10
-">
-
-        <span className="text-sm text-gray-500">Месячные просмотры</span>
+  <div
+    className="
+      max-w-xl mx-auto 
+      bg-white dark:bg-neutral-900 
+      text-gray-900 dark:text-white
+      shadow-xl rounded-2xl p-8 transition
+      border border-black/5 dark:border-white/10
+    "
+  >
+    <span className="text-sm text-gray-500">Месячные просмотры</span>
 
     <input 
-      id="rangeViews" 
-      type="range" 
-      min="50000" 
-      max="5000000" 
-      step="50000" 
+      id="rangeViews"
+      type="range"
+      min="50000"
+      max="5000000"
+      step="50000"
       defaultValue="500000"
       className="w-full my-4"
     />
 
     <div id="viewsOut" className="text-2xl font-bold mb-6">500,000</div>
 
-<div className="flex justify-center gap-10 mb-6 text-lg">
-  {[
-    { id: "en", flag: "/flags/us.svg", defaultChecked: true, label: "EN" },
-    { id: "pt", flag: "/flags/pt.svg", defaultChecked: true, label: "PT" },
-    { id: "es", flag: "/flags/es.svg", defaultChecked: false, label: "ES" },
-  ].map(lang => (
-    <label key={lang.id} className="flex flex-col items-center cursor-pointer gap-2">
-      
-      <input
-        id={lang.id}
-        type="checkbox"
-        defaultChecked={lang.defaultChecked}
-        className="hidden peer"
-      />
+    <div className="flex justify-center gap-10 mb-6 text-lg">
+      {[
+        { id: "en", flag: "/flags/us.svg", defaultChecked: true },
+        { id: "pt", flag: "/flags/pt.svg", defaultChecked: true },
+        { id: "es", flag: "/flags/es.svg", defaultChecked: false },
+      ].map((lang) => (
+        <label key={lang.id} className="flex flex-col items-center cursor-pointer gap-2">
 
- {/* custom checkbox */}
+          <input id={lang.id} type="checkbox" defaultChecked={lang.defaultChecked} className="hidden peer" />
+
+          {/* custom checkbox */}
           <span
             className="
               w-6 h-6 rounded-full border-2 
@@ -481,10 +477,9 @@ useEffect(() => {
             ></span>
           </span>
 
-          {/* flag */}
           <img
             src={lang.flag}
-            alt={lang.label}
+            alt={lang.id}
             className="w-7 h-5 object-cover rounded-md shadow-sm border border-gray-300 dark:border-gray-600"
           />
         </label>
@@ -497,8 +492,10 @@ useEffect(() => {
     <button className="w-full py-4 bg-black dark:bg-white text-white dark:text-black rounded-xl text-lg font-semibold hover:opacity-90 transition">
       🚀 Получить персональный расчёт
     </button>
-  </div>
-</section>
+
+  </div> {/* ✅ Закрываем карточку */}
+</section> {/* ✅ Закрываем секцию */}
+
 
 
         {/* Pricing */}
