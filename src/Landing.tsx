@@ -461,7 +461,12 @@ useEffect(() => {
       "/>
 
       {/* flag */}
-      <img src={lang.flag} alt={lang.label} className="w-6 h-6 rounded-full shadow-sm" />
+     <img 
+  src={lang.flag} 
+  alt={lang.label} 
+  className="w-7 h-5 object-cover rounded-md shadow-sm border border-gray-300 dark:border-gray-600"
+/>
+
 
     </label>
   ))}
