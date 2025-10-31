@@ -440,11 +440,11 @@ useEffect(() => {
 
 <div className="flex justify-center gap-10 mb-6 text-lg">
   {[
-    { id: "en", emoji: "🇺🇸", defaultChecked: true },
-    { id: "pt", emoji: "🇵🇹", defaultChecked: true },
-    { id: "es", emoji: "🇪🇸", defaultChecked: false },
+    { id: "en", flag: "/flags/us.svg", defaultChecked: true, label: "EN" },
+    { id: "pt", flag: "/flags/pt.svg", defaultChecked: true, label: "PT" },
+    { id: "es", flag: "/flags/es.svg", defaultChecked: false, label: "ES" },
   ].map(lang => (
-    <label key={lang.id} className="flex flex-col items-center cursor-pointer gap-1">
+    <label key={lang.id} className="flex flex-col items-center cursor-pointer gap-2">
       
       <input
         id={lang.id}
@@ -453,22 +453,20 @@ useEffect(() => {
         className="hidden peer"
       />
 
-      {/* circle */}
-      <span
-        className="
-          w-6 h-6 rounded-full border-2 border-gray-400 
-          peer-checked:border-orange-600 peer-checked:bg-orange-600 
-          transition-all duration-200
-        "
-      ></span>
+      {/* circle selector */}
+      <span className="
+        w-6 h-6 rounded-full border-2 border-gray-400 
+        peer-checked:border-orange-600 peer-checked:bg-orange-600 
+        transition-all duration-200
+      "/>
 
-      {/* emoji flag */}
-      <span className="text-xl select-none">
-        {lang.emoji}
-      </span>
+      {/* flag */}
+      <img src={lang.flag} alt={lang.label} className="w-6 h-6 rounded-full shadow-sm" />
+
     </label>
   ))}
 </div>
+
 
 
 
