@@ -320,3 +320,44 @@ html, body {
   background-image: radial-gradient(#ffffff0c 0.6px, transparent 0.6px);
   background-size: 10px 10px;
 }
+
+/* === Мягкий переход между светлой и тёмной темами === */
+.theme-transition {
+  transition: background-color 0.45s ease-in-out,
+              color 0.45s ease-in-out,
+              box-shadow 0.45s ease-in-out,
+              border-color 0.45s ease-in-out,
+              transform 0.45s ease-in-out;
+}
+
+/* Общие анимации для иконок солнца/луны */
+.theme-toggle-icon {
+  transition: all 0.5s cubic-bezier(0.45, 0, 0.25, 1);
+  transform-origin: center;
+}
+
+/* Светлая тема: солнце выезжает плавно, тень исчезает */
+.light .theme-toggle-icon.sun {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+.light .theme-toggle-icon.moon {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.8);
+}
+
+/* Тёмная тема: луна выезжает с лёгким увеличением */
+.dark .theme-toggle-icon.sun {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.8);
+}
+.dark .theme-toggle-icon.moon {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+/* Лёгкое свечение для активной темы */
+.theme-toggle.glow {
+  box-shadow: 0 0 6px rgba(255, 102, 0, 0.4);
+  transition: box-shadow 0.5s ease-in-out;
+}
