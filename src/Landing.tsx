@@ -423,27 +423,28 @@ useEffect(() => {
   <h2 className="text-3xl font-bold mb-2">
     Сколько ваш канал может приносить на других языках?
   </h2>
-  <p className="text-gray-500 mb-10 text-lg">
+  <p className="text-gray-500 dark:text-gray-400 mb-10 text-lg">
     Передвиньте ползунок и узнайте потенциал вашего YouTube-канала
   </p>
 
-  <div
-    className="
-      max-w-xl mx-auto 
-      bg-white dark:bg-neutral-900 
-      text-gray-900 dark:text-white
-      shadow-xl rounded-2xl p-8 transition
-      border border-black/5 dark:border-white/10
-    "
-  >
-    <span className="text-sm text-gray-500">Месячные просмотры</span>
+  <div className="
+    max-w-xl mx-auto 
+    bg-white dark:bg-neutral-900 
+    text-gray-900 dark:text-white
+    shadow-xl rounded-2xl p-8 transition
+    border border-black/5 dark:border-white/10
+  ">
+    
+    <span className="text-sm text-gray-500 dark:text-gray-400">
+      Месячные просмотры
+    </span>
 
-    <input
-      id="rangeViews"
-      type="range"
-      min="50000"
-      max="5000000"
-      step="50000"
+    <input 
+      id="rangeViews" 
+      type="range" 
+      min="50000" 
+      max="5000000" 
+      step="50000" 
       defaultValue="500000"
       className="w-full my-4"
     />
@@ -455,8 +456,10 @@ useEffect(() => {
         { id: "en", flag: "/flags/us.svg", defaultChecked: true },
         { id: "pt", flag: "/flags/pt.svg", defaultChecked: true },
         { id: "es", flag: "/flags/es.svg", defaultChecked: false },
-      ].map((lang) => (
+      ].map(lang => (
         <label key={lang.id} className="flex flex-col items-center cursor-pointer gap-2">
+          
+          {/* native checkbox (hidden) */}
           <input
             id={lang.id}
             type="checkbox"
@@ -464,7 +467,7 @@ useEffect(() => {
             className="hidden peer"
           />
 
-          {/* Custom radio */}
+          {/* custom radio */}
           <span
             className="
               w-6 h-6 rounded-full border-2 
@@ -495,14 +498,16 @@ useEffect(() => {
       ))}
     </div>
 
-    <div className="text-gray-500 text-sm">Потенциальный доход:</div>
+    <div className="text-gray-500 dark:text-gray-400 text-sm">Потенциальный доход:</div>
     <div id="incomeOut" className="text-3xl font-extrabold mb-6">$0 / месяц</div>
 
     <button className="w-full py-4 bg-black dark:bg-white text-white dark:text-black rounded-xl text-lg font-semibold hover:opacity-90 transition">
       🚀 Получить персональный расчёт
     </button>
+
   </div>
 </section>
+
 
 
 
