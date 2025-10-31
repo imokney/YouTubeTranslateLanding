@@ -460,51 +460,41 @@ useEffect(() => {
         className="hidden peer"
       />
 
-      {/* circle selector */}
-<span
-  className="
-    w-6 h-6 rounded-full border-2 
-    border-gray-500 dark:border-gray-400
-    bg-white dark:bg-neutral-800
-    peer-checked:border-orange-500
-    flex items-center justify-center
-    transition-all duration-200
-  "
->
-  <span
-    className="
-      w-3 h-3 rounded-full 
-      bg-orange-500
-      scale-0 peer-checked:scale-100
-      transition-transform duration-200
-    "
-  ></span>
-</span>
+ {/* custom checkbox */}
+          <span
+            className="
+              w-6 h-6 rounded-full border-2 
+              border-gray-500 dark:border-gray-400
+              bg-white dark:bg-neutral-800
+              peer-checked:border-orange-500
+              flex items-center justify-center
+              transition-all duration-200
+            "
+          >
+            <span
+              className="
+                w-3 h-3 rounded-full 
+                bg-orange-500
+                scale-0 peer-checked:scale-100
+                transition-transform duration-200
+              "
+            ></span>
+          </span>
 
-
-
-      {/* flag */}
-     <img 
-  src={lang.flag} 
-  alt={lang.label} 
-  className="w-7 h-5 object-cover rounded-md shadow-sm border border-gray-300 dark:border-gray-600"
-/>
-
-
-    </label>
-  ))}
-</div>
-
-
-
-
-
-    <div className="text-gray-500 text-sm">Потенциальный доход:</div>
-    <div id="incomeOut" className="text-3xl font-extrabold mb-6">
-      $0 / месяц
+          {/* flag */}
+          <img
+            src={lang.flag}
+            alt={lang.label}
+            className="w-7 h-5 object-cover rounded-md shadow-sm border border-gray-300 dark:border-gray-600"
+          />
+        </label>
+      ))}
     </div>
 
-    <button className="w-full py-4 bg-black text-white rounded-xl text-lg font-semibold hover:opacity-90 transition">
+    <div className="text-gray-500 text-sm">Потенциальный доход:</div>
+    <div id="incomeOut" className="text-3xl font-extrabold mb-6">$0 / месяц</div>
+
+    <button className="w-full py-4 bg-black dark:bg-white text-white dark:text-black rounded-xl text-lg font-semibold hover:opacity-90 transition">
       🚀 Получить персональный расчёт
     </button>
   </div>
