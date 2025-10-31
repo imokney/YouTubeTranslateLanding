@@ -438,13 +438,15 @@ useEffect(() => {
 
     <div id="viewsOut" className="text-2xl font-bold mb-6">500,000</div>
 
-<div className="flex justify-center gap-6 mb-6 text-lg">
+<div className="flex justify-center gap-10 mb-6 text-lg">
   {[
-    { id: "en", label: "English", flag: "🇺🇸", defaultChecked: true },
-    { id: "pt", label: "Portuguese", flag: "🇵🇹", defaultChecked: true },
-    { id: "es", label: "Spanish", flag: "🇪🇸", defaultChecked: false },
+    { id: "en", flag: "🇺🇸", defaultChecked: true },
+    { id: "pt", flag: "🇵🇹", defaultChecked: true },
+    { id: "es", flag: "🇪🇸", defaultChecked: false },
   ].map(lang => (
-    <label key={lang.id} className="flex items-center cursor-pointer gap-2">
+    <label key={lang.id} className="flex flex-col items-center cursor-pointer gap-1">
+      
+      {/* hidden checkbox */}
       <input
         id={lang.id}
         type="checkbox"
@@ -452,23 +454,22 @@ useEffect(() => {
         className="hidden peer"
       />
 
-      {/* circle with flag */}
+      {/* Circle */}
       <span
         className="
-          w-7 h-7 flex items-center justify-center 
-          rounded-full border-2 border-gray-400 bg-white
-          peer-checked:border-orange-600 peer-checked:bg-orange-600 
-          text-xl transition-all duration-200
+          w-6 h-6 rounded-full border-2 border-gray-400
+          peer-checked:border-orange-600 peer-checked:bg-orange-600
+          transition-all duration-200
         "
-      >
-        <span className="peer-checked:opacity-0">{lang.flag}</span>
-        <span className="absolute text-white opacity-0 peer-checked:opacity-100">
-          {lang.flag}
-        </span>
-      </span>
+      ></span>
+
+      {/* Flag under circle */}
+      <span className="text-2xl select-none">{lang.flag}</span>
     </label>
   ))}
 </div>
+
+
 
     <div className="text-gray-500 text-sm">Потенциальный доход:</div>
     <div id="incomeOut" className="text-3xl font-extrabold mb-6">
