@@ -364,12 +364,11 @@ html, body {
   transition: box-shadow 0.5s ease-in-out;
 }
 
-/* === Premium Tesla x Brand slider with bubble & inertia === */
-
+/* === Stable slider styles (fix visible track) === */
 #rangeViews {
   -webkit-appearance: none;
   width: 100%;
-  height: 14px;
+  height: 10px;
   border-radius: 999px;
   background: linear-gradient(
     to right,
@@ -378,13 +377,11 @@ html, body {
     #ddd var(--percent),
     #ddd 100%
   );
-  outline: none;
   cursor: pointer;
-  transition: background 0.25s ease;
-  position: relative;
+  outline: none;
 }
 
-/* Dark mode track */
+/* dark mode */
 .dark #rangeViews {
   background: linear-gradient(
     to right,
@@ -398,60 +395,26 @@ html, body {
 /* Thumb */
 #rangeViews::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 30px;
-  height: 30px;
+  width: 26px;
+  height: 26px;
   background: #EA580C;
   border-radius: 50%;
   border: 3px solid white;
-  box-shadow:
-    0 0 10px rgba(234,88,12,0.6),
-    0 0 4px rgba(234,88,12,0.4);
-  cursor: pointer;
-  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
-  margin-top: -8px;
+  box-shadow: 0 0 8px rgba(234,88,12,0.5);
+  margin-top: -8px; /* center the thumb */
 }
 
-/* Dark thumb */
 .dark #rangeViews::-webkit-slider-thumb {
-  background: white;
+  background: #fff;
   border: 3px solid #EA580C;
-  box-shadow:
-    0 0 10px rgba(234,88,12,0.55),
-    0 0 6px rgba(234,88,12,0.35);
 }
 
-#rangeViews:active::-webkit-slider-thumb {
-  transform: scale(1.15);
-}
-
-/*** Floating bubble above thumb ***/
-.range-bubble {
-  position: absolute;
-  left: var(--bubble-x);
-  top: -38px;
-  transform: translateX(-50%);
+#rangeViews::-moz-range-thumb {
+  width: 26px;
+  height: 26px;
   background: #EA580C;
-  color: white;
-  font-size: 13px;
-  font-weight: 600;
-  padding: 4px 8px;
-  border-radius: 6px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity .15s ease, transform .2s ease;
+  border-radius: 50%;
 }
 
-/* Dark bubble */
-.dark .range-bubble {
-  background: #EA580C;
-  color: white;
-}
-
-/* Visible state */
-.range-bubble.show {
-  opacity: 1;
-  transform: translateX(-50%) translateY(-5px);
-}
 
 
