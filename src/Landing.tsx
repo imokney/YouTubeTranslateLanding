@@ -102,14 +102,17 @@ useEffect(() => {
   const langIds = ["en", "pt", "es"];
   let currentValue = 0;
 
-  /** ✅ Tesla inertia easing on thumb movement **/
-  range.style.transition = '0.12s cubic-bezier(0.22, 1, 0.36, 1)';
+  /** ✅ Tesla inertia */
+  range.style.transition = "0.12s cubic-bezier(0.22, 1, 0.36, 1)";
 
-  /** ✅ Bubble show/hide events */
-  range.addEventListener("mousedown", () => bubble.classList.add("show"));
-  range.addEventListener("touchstart", () => bubble.classList.add("show"));
-  range.addEventListener("mouseup", () => bubble.classList.remove("show"));
-  range.addEventListener("touchend", () => bubble.classList.remove("show"));
+  /** ✅ Bubble show/hide once */
+  const showBubble = () => bubble.classList.add("show");
+  const hideBubble = () => bubble.classList.remove("show");
+
+  range.addEventListener("mousedown", showBubble);
+  range.addEventListener("touchstart", showBubble);
+  range.addEventListener("mouseup", hideBubble);
+  range.addEventListener("touchend", hideBubble);
 
   function animate(el: HTMLElement, start: number, end: number, duration = 300) {
     const diff = end - start;
@@ -122,6 +125,7 @@ useEffect(() => {
       el.textContent = "$" + val.toLocaleString() + " / месяц";
       if (progress < 1) requestAnimationFrame(frame);
     }
+
     requestAnimationFrame(frame);
   }
 
@@ -138,13 +142,11 @@ useEffect(() => {
     const thumbPos = sliderWidth * (percent / 100);
     bubble.style.setProperty("--bubble-x", thumbPos + "px");
 
-    // ✅ Income calculation
+    // ✅ Income calc
     let total = 0;
     langIds.forEach(id => {
       const el = document.getElementById(id) as HTMLInputElement;
-      if (el.checked) {
-        total += (views / 1000) * rpm[id as keyof typeof rpm];
-      }
+      if (el.checked) total += (views / 1000) * rpm[id as keyof typeof rpm];
     });
 
     animate(incomeOut, currentValue, total);
@@ -153,12 +155,21 @@ useEffect(() => {
 
   range.oninput = calc;
   langIds.forEach(id => {
-    const el = document.getElementById(id) as HTMLInputElement;
-    el.onchange = calc;
+    (document.getElementById(id) as HTMLInputElement).onchange = calc;
   });
 
+  // initialize
   calc();
+
+  // ✅ cleanup to avoid double events if component re-renders
+  return () => {
+    range.removeEventListener("mousedown", showBubble);
+    range.removeEventListener("touchstart", showBubble);
+    range.removeEventListener("mouseup", hideBubble);
+    range.removeEventListener("touchend", hideBubble);
+  };
 }, []);
+
 
 
 
