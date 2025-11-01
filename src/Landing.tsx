@@ -501,9 +501,7 @@ useEffect(() => {
     <div className="text-gray-500 dark:text-gray-400 text-sm">Потенциальный доход:</div>
     <div id="incomeOut" className="text-3xl font-extrabold mb-6">$0 / месяц</div>
 
-    <button className="w-full py-4 bg-black dark:bg-white text-white dark:text-black rounded-xl text-lg font-semibold hover:opacity-90 transition">
-      🚀 Получить персональный расчёт
-    </button>
+
 
   </div>
 </section>
