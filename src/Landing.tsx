@@ -453,52 +453,50 @@ useEffect(() => {
 
     <div className="flex justify-center gap-10 mb-6 text-lg">
   {[
-    { id: "en", flag: "/flags/us.svg", defaultChecked: true },
-    { id: "pt", flag: "/flags/pt.svg", defaultChecked: true },
-    { id: "es", flag: "/flags/es.svg", defaultChecked: false },
+    { id: "en", flag: "/flags/us.svg", defaultChecked: true, label: "EN" },
+    { id: "pt", flag: "/flags/pt.svg", defaultChecked: true, label: "PT" },
+    { id: "es", flag: "/flags/es.svg", defaultChecked: false, label: "ES" },
   ].map(lang => (
     <label key={lang.id} className="flex flex-col items-center cursor-pointer gap-2">
-
-      {/* Скрытый чекбокс */}
+      
       <input
         id={lang.id}
         type="checkbox"
         defaultChecked={lang.defaultChecked}
-        className="peer hidden"
+        className="hidden peer"
       />
 
-      {/* Круг */}
+      {/* circle selector */}
       <span
         className="
-          w-7 h-7 rounded-full border-2 border-gray-400 dark:border-gray-500
-          bg-transparent dark:bg-transparent
+          w-6 h-6 rounded-full border-2 
+          border-gray-500 dark:border-gray-400
+          bg-white dark:bg-neutral-800
+          peer-checked:border-orange-500
           flex items-center justify-center
           transition-all duration-200
-
-          peer-checked:border-orange-500
         "
       >
         <span
           className="
-            w-3 h-3 rounded-full bg-orange-500
+            w-3 h-3 rounded-full 
+            bg-orange-500
             scale-0 peer-checked:scale-100
             transition-transform duration-200
           "
         ></span>
       </span>
 
-      {/* Флаг */}
-      <img
-        src={lang.flag}
-        alt={lang.id}
-        className="
-          w-8 h-6 rounded-md shadow-sm
-          border border-gray-300 dark:border-gray-600
-        "
+      {/* flag */}
+      <img 
+        src={lang.flag} 
+        alt={lang.label} 
+        className="w-7 h-5 object-cover rounded-md shadow-sm border border-gray-300 dark:border-gray-600"
       />
     </label>
   ))}
 </div>
+
 
 
 
