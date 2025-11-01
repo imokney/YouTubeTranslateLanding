@@ -419,25 +419,24 @@ useEffect(() => {
         </section>
 
 {/* YouTube Earnings Calculator */}
-<section id="yt-calculator" className="py-24 px-4 text-center">
+<section className="py-24 px-4 text-center" id="yt-calculator">
   <h2 className="text-3xl font-bold mb-2">
     Сколько ваш канал может приносить на других языках?
   </h2>
-  <p className="text-gray-500 dark:text-gray-400 mb-10 text-lg">
+  <p className="text-gray-500 mb-10 text-lg">
     Передвиньте ползунок и узнайте потенциал вашего YouTube-канала
   </p>
 
+
   <div className="
-    max-w-xl mx-auto 
-    bg-white dark:bg-neutral-900 
-    text-gray-900 dark:text-white
-    shadow-xl rounded-2xl p-8 transition
-    border border-black/5 dark:border-white/10
-  ">
-    
-    <span className="text-sm text-gray-500 dark:text-gray-400">
-      Месячные просмотры
-    </span>
+  max-w-xl mx-auto 
+  bg-white dark:bg-neutral-900 
+  text-gray-900 dark:text-white
+  shadow-xl rounded-2xl p-8 transition
+  border border-black/5 dark:border-white/10
+">
+
+    <span className="text-sm text-gray-500">Месячные просмотры</span>
 
     <input 
       id="rangeViews" 
@@ -451,36 +450,58 @@ useEffect(() => {
 
     <div id="viewsOut" className="text-2xl font-bold mb-6">500,000</div>
 
+{/* Language selectors */}
 <div className="flex justify-center gap-10 mb-6 text-lg">
   {[
     { id: "en", flag: "🇺🇸", defaultChecked: true },
     { id: "pt", flag: "🇵🇹", defaultChecked: true },
     { id: "es", flag: "🇪🇸", defaultChecked: false },
-  ].map(lang => (
-<div className="flex justify-center gap-6 mb-6 text-lg">
-  {[
-    { id: "en", label: "English", defaultChecked: true },
-    { id: "pt", label: "Portuguese", defaultChecked: true },
-    { id: "es", label: "Spanish", defaultChecked: false },
-  ].map(lang => (
-    <label key={lang.id} className="flex items-center cursor-pointer gap-2">
+  ].map((lang) => (
+    <label key={lang.id} className="flex flex-col items-center cursor-pointer gap-1">
+      {/* скрытый чекбокс */}
       <input
         id={lang.id}
         type="checkbox"
         defaultChecked={lang.defaultChecked}
         className="hidden peer"
       />
+      
+      {/* OUTER CIRCLE */}
       <span
         className="
-          w-5 h-5 rounded-full border-2 border-gray-400 
-          peer-checked:border-orange-600 peer-checked:bg-orange-600 
+          w-7 h-7 rounded-full border-2
+          border-gray-400 dark:border-gray-500
+          flex items-center justify-center
+          bg-transparent
+          peer-checked:border-orange-500
+          peer-checked:bg-orange-500
           transition-all duration-200
         "
-      ></span>
-      {lang.label}
+      >
+        {/* INNER DOT */}
+        <span
+          className="
+            w-3 h-3 rounded-full bg-white
+            scale-0 peer-checked:scale-100
+            transition-transform duration-200
+          "
+        />
+      </span>
+
+      {/* эмодзи-флаг */}
+      <span className="text-2xl select-none">{lang.flag}</span>
     </label>
   ))}
 </div>
+
+<div className="text-gray-500 dark:text-gray-400 text-sm">Потенциальный доход:</div>
+<div id="incomeOut" className="text-3xl font-extrabold mb-6">$0 / месяц</div>
+
+<button className="w-full py-4 bg-black text-white dark:bg-white dark:text-black rounded-xl text-lg font-semibold hover:opacity-90 transition">
+  🚀 Получить персональный расчёт
+</button>
+</div>   {/* ← закрываем карточку калькулятора */}
+</section> {/* ← закрываем СЕКЦИЮ калькулятора */}
 
 
 
