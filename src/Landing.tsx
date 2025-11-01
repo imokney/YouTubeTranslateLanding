@@ -452,50 +452,62 @@ useEffect(() => {
     <div id="viewsOut" className="text-2xl font-bold mb-6">500,000</div>
 
     <div className="flex justify-center gap-10 mb-6 text-lg">
-  {[
-    { id: "en", flag: "/flags/us.svg", defaultChecked: true, label: "EN" },
-    { id: "pt", flag: "/flags/pt.svg", defaultChecked: true, label: "PT" },
-    { id: "es", flag: "/flags/es.svg", defaultChecked: false, label: "ES" },
-  ].map(lang => (
-    <label key={lang.id} className="flex flex-col items-center cursor-pointer gap-2">
-      
-      <input
-        id={lang.id}
-        type="checkbox"
-        defaultChecked={lang.defaultChecked}
-        className="hidden peer"
-      />
+      {[
+        { id: "en", flag: "/flags/us.svg", defaultChecked: true },
+        { id: "pt", flag: "/flags/pt.svg", defaultChecked: true },
+        { id: "es", flag: "/flags/es.svg", defaultChecked: false },
+      ].map(lang => (
+        <label key={lang.id} className="flex flex-col items-center cursor-pointer gap-2">
+          
+          {/* native checkbox (hidden) */}
+          <input
+            id={lang.id}
+            type="checkbox"
+            defaultChecked={lang.defaultChecked}
+            className="hidden peer"
+          />
 
-      {/* circle selector */}
-      <span
-        className="
-          w-6 h-6 rounded-full border-2 
-          border-gray-500 dark:border-gray-400
-          bg-white dark:bg-neutral-800
-          peer-checked:border-orange-500
-          flex items-center justify-center
-          transition-all duration-200
-        "
-      >
-        <span
-          className="
-            w-3 h-3 rounded-full 
-            bg-orange-500
-            scale-0 peer-checked:scale-100
-            transition-transform duration-200
-          "
-        ></span>
-      </span>
+          {/* custom radio */}
+          <span
+            className="
+              w-6 h-6 rounded-full border-2 
+              border-gray-500 dark:border-gray-400
+              bg-white dark:bg-neutral-800
+              peer-checked:border-orange-500
+              flex items-center justify-center
+              transition-all duration-200
+            "
+          >
+            <span
+              className="
+                w-3 h-3 rounded-full 
+                bg-orange-500
+                scale-0 peer-checked:scale-100
+                transition-transform duration-200
+              "
+            ></span>
+          </span>
 
-      {/* flag */}
-      <img 
-        src={lang.flag} 
-        alt={lang.label} 
-        className="w-7 h-5 object-cover rounded-md shadow-sm border border-gray-300 dark:border-gray-600"
-      />
-    </label>
-  ))}
-</div>
+          {/* Flag */}
+          <img
+            src={lang.flag}
+            alt={lang.id}
+            className="w-7 h-5 object-cover rounded-md shadow-sm border border-gray-300 dark:border-gray-600"
+          />
+        </label>
+      ))}
+    </div>
+
+    <div className="text-gray-500 dark:text-gray-400 text-sm">Потенциальный доход:</div>
+    <div id="incomeOut" className="text-3xl font-extrabold mb-6">$0 / месяц</div>
+
+    <button className="w-full py-4 bg-black dark:bg-white text-white dark:text-black rounded-xl text-lg font-semibold hover:opacity-90 transition">
+      🚀 Получить персональный расчёт
+    </button>
+
+  </div>
+</section>
+
 
 
 
