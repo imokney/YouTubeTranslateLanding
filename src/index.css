@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 /* Smooth theme transition */
 .theme-transition {
   transition: background-color 300ms, color 300ms, border-color 300ms;
@@ -384,22 +385,22 @@ html, body {
   position: relative;
 }
 
-/* Dark mode track */
+/* dark mode track */
 .dark #rangeViews {
   background: linear-gradient(
     to right,
     #EA580C 0%,
     #EA580C var(--percent),
-    #4b4b4b var(--percent),
-    #4b4b4b 100%
+    #3b3b3b var(--percent),
+    #3b3b3b 100%
   );
 }
 
-/* Thumb */
+/* thumb */
 #rangeViews::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 30px;
-  height: 30px;
+  width: 28px;
+  height: 28px;
   background: #EA580C;
   border-radius: 50%;
   border: 3px solid white;
@@ -407,24 +408,22 @@ html, body {
     0 0 10px rgba(234,88,12,0.6),
     0 0 4px rgba(234,88,12,0.4);
   cursor: pointer;
-  transition: transform 0.18s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform .15s cubic-bezier(.22,1,.36,1);
   margin-top: -7px;
 }
 
-/* Dark thumb */
+/* dark thumb */
 .dark #rangeViews::-webkit-slider-thumb {
-  background: white;
+  background: #1b1b1b;
   border: 3px solid #EA580C;
-  box-shadow:
-    0 0 10px rgba(234,88,12,0.55),
-    0 0 6px rgba(234,88,12,0.35);
 }
 
+/* press bounce */
 #rangeViews:active::-webkit-slider-thumb {
   transform: scale(1.15);
 }
 
-/*** Floating bubble above thumb ***/
+/* bubble */
 .range-bubble {
   position: absolute;
   left: var(--bubble-x);
@@ -442,26 +441,7 @@ html, body {
   transition: opacity .15s ease, transform .2s ease;
 }
 
-/* Dark bubble */
-.dark .range-bubble {
-  background: #EA580C;
-  color: white;
-}
-
-/* Visible state */
 .range-bubble.show {
   opacity: 1;
-  transform: translateX(-50%) translateY(-5px);
+  transform: translateX(-50%) translateY(-6px);
 }
-
-
-/* === YouTube Calculator Dark Mode Fix === */
-.dark #yt-calculator span,
-.dark #yt-calculator p,
-.dark #yt-calculator div {
-  color: #e5e5e5 !important;
-}
-.dark #yt-calculator #incomeOut {
-  color: #fff !important;
-}
-/* ======================================= */
