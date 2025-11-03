@@ -1,0 +1,447 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* Smooth theme transition */
+.theme-transition {
+  transition: background-color 300ms, color 300ms, border-color 300ms;
+}
+
+/* Enable smooth scroll behavior for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Animated gradient background */
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradientShift 12s ease infinite;
+}
+
+/* Subtle dot noise texture */
+.bg-noise {
+  background-image: radial-gradient(rgba(0,0,0,0.03) 1px, transparent 1px);
+  background-size: 6px 6px;
+}
+.dark .bg-noise {
+  background-image: radial-gradient(rgba(255,255,255,0.04) 1px, transparent 1px);
+}
+
+
+
+/* ...твой текущий CSS... */
+
+/* Ленивая отрисовка длинных секций */
+.cv {
+  content-visibility: auto;
+  contain-intrinsic-size: 1000px;
+}
+
+
+/* Фокус-стили по доступности */
+:focus-visible {
+  outline: 2px solid rgba(255, 102, 0, 0.7);
+  outline-offset: 2px;
+}
+
+/* ===== Smooth GPU hints ===== */
+.gpu {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* ===== Glass (без артефактов) ===== */
+.glass {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 6px 30px rgba(0,0,0,.12), inset 0 1px 0 rgba(255,255,255,.06);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+}
+:root.dark .glass {
+  background: rgba(22, 22, 22, 0.35);
+  border-color: rgba(255, 255, 255, 0.10);
+}
+
+/* ====== GLASS CARD (тёмная тема как раньше + новый градиент на hover) ====== */
+
+.glass-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+
+  /* базовая тонкая рамка — без мигания */
+  border: 1px solid rgba(0, 0, 0, 0.06);
+
+  /* светлая тема — чуть плотнее, хорошая читаемость */
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+
+  /* лёгкая тень; не меняем на hover, чтобы не прыгал антиалиасинг */
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* Тёмная тема — как «старый» внешний вид (глубокий тёмный фон, тонкое стекло) */
+:root.dark .glass-card {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(12, 12, 12, 0.60);           /* ← фундаментально тёмный фон */
+  backdrop-filter: blur(5px) saturate(110%);    /* чуть меньше blur, меньше «мыла» */
+  -webkit-backdrop-filter: blur(5px) saturate(110%);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.30);
+}
+
+/* Внутренний слой — без молочной пелены в тёмной теме */
+.glass-card__inner {
+  position: relative;
+  z-index: 1;
+  border-radius: inherit;
+  padding: 1.5rem;
+  background: linear-gradient(to bottom, rgba(255,255,255,.55), rgba(255,255,255,.42));
+}
+:root.dark .glass-card__inner {
+  background: transparent;                      /* ← убираем серую заливку */
+}
+
+/* Градиентная окантовка: мягко появляется только на hover.
+   Никаких mask-composite → нет «зубцов» на углах. */
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(120deg, #ff7a1a, #ff3b6a);
+  opacity: 0;                                   /* нет вспышки при загрузке */
+  transition: opacity .28s ease;
+  z-index: 0;
+}
+
+/* Активируем подсветку границы только для интерактивных карточек */
+.glass-card--interactive:hover::before { opacity: .45; }
+:root.dark .glass-card--interactive:hover::before { opacity: .24; } /* темнее в dark */
+
+/* Вспомогательные анимационные подсказки для любых hover-трансформаций снаружи */
+.glass-card,
+.glass-card__inner {
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Плавные переходы цветов/тени/прозрачности (без анимации border-color) */
+.theme-transition * {
+  transition:
+    background-color .28s ease,
+    color .28s ease,
+    box-shadow .28s ease,
+    opacity .28s ease,
+    transform .28s ease;
+}
+
+/* ==== FIX: тёмная тема от предка .dark, а не :root.dark ==== */
+
+/* Карточка: плотный тёмный фон + мягкое стекло */
+.dark .glass-card {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(12, 12, 12, 0.60);
+  backdrop-filter: blur(5px) saturate(110%);
+  -webkit-backdrop-filter: blur(5px) saturate(110%);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.30);
+}
+
+/* Без «молочной» подложки внутри */
+.dark .glass-card__inner {
+  background: transparent !important;
+}
+
+/* Градиентная окантовка в тёмной теме — мягче */
+.dark .glass-card--interactive:hover::before {
+  opacity: .24;
+}
+
+/* Шапка-стекло */
+.dark .glass {
+  background: rgba(22, 22, 22, 0.35);
+  border-color: rgba(255, 255, 255, 0.10);
+}
+
+/* Фоновая точечная текстура — слабее на тёмной */
+.dark .bg-noise {
+  background-image: radial-gradient(#ffffff10 0.6px, transparent 0.6px);
+  background-size: 10px 10px;
+}
+
+/* === Чёткий текст по всей странице === */
+html, body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* === GlassCard: стекло на псевдослое, текст — на «сухом» === */
+.glass-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,.06);
+  /* ВАЖНО: фон самого элемента прозрачен — без «молока» под текстом */
+  background: transparent;
+  contain: paint;            /* изолируем слой, меньше артефактов */
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Стеклянная подложка — на ::after, ПОД границей и текстом */
+.glass-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  background: rgba(255,255,255,.62);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  box-shadow: 0 10px 24px rgba(0,0,0,.08);
+}
+/* Тёмная тема — глубокий фон, меньший blur */
+.dark .glass-card {
+  border-color: rgba(255,255,255,.08);
+}
+.dark .glass-card::after {
+  background: rgba(12,12,12,.58);
+  backdrop-filter: blur(5px) saturate(112%);
+  -webkit-backdrop-filter: blur(5px) saturate(112%);
+  box-shadow: 0 12px 28px rgba(0,0,0,.30);
+}
+
+/* Градиентная окантовка — как раньше (поверх стекла, под контентом) */
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1; /* над стеклом, под контентом */
+  background: linear-gradient(120deg, #ff7a1a, #ff3b6a);
+  opacity: 0;
+  transition: opacity .28s ease;
+}
+.glass-card:hover::before { opacity: .45; }
+.dark .glass-card:hover::before { opacity: .24; }
+
+/* Контент всегда на «сухом» слое */
+.glass-card__inner {
+  position: relative;
+  z-index: 2;
+  padding: 1.5rem;
+  background: transparent !important; /* важно: никакой заливки */
+}
+
+/* Лёгкая «сеточка» в тёмной — ещё мягче, чтобы текст выглядел резче */
+.dark .bg-noise {
+  background-image: radial-gradient(#ffffff0c 0.6px, transparent 0.6px);
+  background-size: 10px 10px;
+}
+ 
+/* === Чёткий текст по всей странице === */
+html, body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* === GlassCard: стекло на псевдослое, текст — на «сухом» === */
+.glass-card {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,.06);
+  /* ВАЖНО: фон самого элемента прозрачен — без «молока» под текстом */
+  background: transparent;
+  contain: paint;            /* изолируем слой, меньше артефактов */
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Стеклянная подложка — на ::after, ПОД границей и текстом */
+.glass-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 0;
+  background: rgba(255,255,255,.62);
+  backdrop-filter: blur(8px) saturate(120%);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  box-shadow: 0 10px 24px rgba(0,0,0,.08);
+}
+/* Тёмная тема — глубокий фон, меньший blur */
+.dark .glass-card {
+  border-color: rgba(255,255,255,.08);
+}
+.dark .glass-card::after {
+  background: rgba(12,12,12,.58);
+  backdrop-filter: blur(5px) saturate(112%);
+  -webkit-backdrop-filter: blur(5px) saturate(112%);
+  box-shadow: 0 12px 28px rgba(0,0,0,.30);
+}
+
+/* Градиентная окантовка — как раньше (поверх стекла, под контентом) */
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1; /* над стеклом, под контентом */
+  background: linear-gradient(120deg, #ff7a1a, #ff3b6a);
+  opacity: 0;
+  transition: opacity .28s ease;
+}
+.glass-card:hover::before { opacity: .45; }
+.dark .glass-card:hover::before { opacity: .24; }
+
+/* Контент всегда на «сухом» слое */
+.glass-card__inner {
+  position: relative;
+  z-index: 2;
+  padding: 1.5rem;
+  background: transparent !important; /* важно: никакой заливки */
+}
+
+/* Лёгкая «сеточка» в тёмной — ещё мягче, чтобы текст выглядел резче */
+.dark .bg-noise {
+  background-image: radial-gradient(#ffffff0c 0.6px, transparent 0.6px);
+  background-size: 10px 10px;
+}
+
+/* === Мягкий переход между светлой и тёмной темами === */
+.theme-transition {
+  transition: background-color 0.45s ease-in-out,
+              color 0.45s ease-in-out,
+              box-shadow 0.45s ease-in-out,
+              border-color 0.45s ease-in-out,
+              transform 0.45s ease-in-out;
+}
+
+/* Общие анимации для иконок солнца/луны */
+.theme-toggle-icon {
+  transition: all 0.5s cubic-bezier(0.45, 0, 0.25, 1);
+  transform-origin: center;
+}
+
+/* Светлая тема: солнце выезжает плавно, тень исчезает */
+.light .theme-toggle-icon.sun {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+.light .theme-toggle-icon.moon {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.8);
+}
+
+/* Тёмная тема: луна выезжает с лёгким увеличением */
+.dark .theme-toggle-icon.sun {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.8);
+}
+.dark .theme-toggle-icon.moon {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+
+/* Лёгкое свечение для активной темы */
+.theme-toggle.glow {
+  box-shadow: 0 0 6px rgba(255, 102, 0, 0.4);
+  transition: box-shadow 0.5s ease-in-out;
+}
+
+/* === Brand slider with bubble & inertia === */
+
+#rangeViews {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 14px;
+  border-radius: 999px;
+  background: linear-gradient(
+    to right,
+    #EA580C 0%,
+    #EA580C var(--percent),
+    #ddd var(--percent),
+    #ddd 100%
+  );
+  outline: none;
+  cursor: pointer;
+  transition: background 0.25s ease;
+  position: relative;
+}
+
+/* dark mode track */
+.dark #rangeViews {
+  background: linear-gradient(
+    to right,
+    #EA580C 0%,
+    #EA580C var(--percent),
+    #3b3b3b var(--percent),
+    #3b3b3b 100%
+  );
+}
+
+/* thumb */
+#rangeViews::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 28px;
+  height: 28px;
+  background: #EA580C;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow:
+    0 0 10px rgba(234,88,12,0.6),
+    0 0 4px rgba(234,88,12,0.4);
+  cursor: pointer;
+  transition: transform .15s cubic-bezier(.22,1,.36,1);
+  margin-top: -7px;
+}
+
+/* dark thumb */
+.dark #rangeViews::-webkit-slider-thumb {
+  background: #1b1b1b;
+  border: 3px solid #EA580C;
+}
+
+/* press bounce */
+#rangeViews:active::-webkit-slider-thumb {
+  transform: scale(1.15);
+}
+
+/* bubble */
+.range-bubble {
+  position: absolute;
+  left: var(--bubble-x);
+  top: -38px;
+  transform: translateX(-50%);
+  background: #EA580C;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s ease, transform .2s ease;
+}
+
+.range-bubble.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(-6px);
+}
