@@ -16,6 +16,10 @@ import {
   Sparkles,
   Moon,
   Sun,
+  CheckCheck,
+  Target,
+  Rocket,
+  Heart,
 } from "lucide-react";
 
 // 👉 JSON-контент, редактируемый через админку
@@ -61,6 +65,7 @@ function ThemeSwitch({
     } catch {}
   }, [theme]);
 
+
   return (
     <button
       role="switch"
@@ -88,6 +93,18 @@ function ThemeSwitch({
 export default function Landing() {
   const [theme, setTheme] = useState<"light" | "dark">(() => getPreferredTheme());
   const [scrolled, setScrolled] = useState(false);
+
+      {/* скорлл к форме */}
+    const scrollToId = (id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    const header = document.querySelector("header") as HTMLElement | null;
+    const offset = header?.offsetHeight ?? 0;
+    const y = el.getBoundingClientRect().top + window.scrollY - offset - 8;
+
+  window.scrollTo({ top: y, behavior: "smooth" });
+};
 
 
 // ✅ Калькулятор дохода: логика
@@ -226,7 +243,8 @@ useEffect(() => {
                 { id: "services", label: "Вы получаете" },
                 { id: "process", label: "Как мы работаем" },
                 { id: "cases", label: "Кейсы" },
-                { id: "pricing", label: "Тарифы" },
+                { id: "pricing", label: "Формат" },
+                { id: "contact", label: "Контакты" },
                 { id: "faq", label: "FAQ" },
               ].map((l) => (
                 <a
@@ -247,14 +265,13 @@ useEffect(() => {
             </nav>
             <div className="flex items-center gap-3">
               <ThemeSwitch theme={theme} setTheme={setTheme} />
-              <a
-                href={TELEGRAM_LINK}
-                target="_blank"
-                rel="noreferrer"
-                className="hidden sm:inline-block rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 shadow-md shadow-orange-600/20 text-sm"
+              <button
+              onClick={() => scrollToId("contact")}
+              className="hidden sm:inline-block rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 shadow-md shadow-orange-600/20 text-sm"
               >
-                Связаться
-              </a>
+              Связаться
+              </button>
+
             </div>
           </div>
         </header>
@@ -273,7 +290,7 @@ useEffect(() => {
                 {home.heroSubtitle}
               </motion.p>
               <motion.div variants={fadeInUp} className="mt-6 flex flex-col sm:flex-row gap-3">
-                <MagneticButton onClick={() => window.open(TELEGRAM_LINK, "_blank", "noopener")}>
+                <MagneticButton onClick={() => scrollToId("contact")}>
                   <span className="inline-flex items-center gap-2">
                     {home.ctaPrimary} <ArrowRight className="w-4 h-4" />
                   </span>
@@ -440,7 +457,7 @@ useEffect(() => {
 
   <div
     className="
-      max-w-xl mx-auto 
+      relative z-10 max-w-xl mx-auto 
       bg-white dark:bg-neutral-900 
       text-gray-900 dark:text-white
       shadow-xl rounded-2xl p-8 transition
@@ -506,82 +523,92 @@ useEffect(() => {
 
 
 {/* Partnership Models */}
-<section id="models" className="py-24 px-4 text-center scroll-mt-24 py-20">
-  <h2 className="text-3xl font-bold mb-2">Форматы сотрудничества</h2>
+<section id="pricing" className="py-24 px-4 text-center scroll-mt-24" data-testid="section-pricing">
+  <h2 className="text-3xl font-bold mb-2">Формат сотрудничества</h2>
   <p className="text-gray-500 dark:text-gray-400 mb-10 text-lg">
-    Выберите модель и узнайте детали
+    Или почему вам стоит выбрать нас
   </p>
 
   <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
 
     {[
       {
-        emoji: "🌍",
-        title: "Global",
-        text: [
-          "Перевод и озвучка на новые языки",
-          "Создание и управление каналами",
-          "Рост и монетизация на международных рынках"
-        ],
-        btn: "Запустить глобальный канал"
+        icon: Rocket,
+        title: "Global scale",
+        description: 
+          "Полный цикл локализации, дубляжа и управления каналами. Вы говорите с миром как будто сами владеете каждым языком.",
       },
       {
-        emoji: "🚀",
-        title: "Scaling",
-        text: [
-          "Международный контент-бренд",
-          "Контент-стратегия для новых рынков",
-          "Ускоренный рост и партнёрская модель"
-        ],
-        btn: "Обсудить стратегию"
+        icon: Heart,
+        title: "Partner-first",
+        description:
+          "Мы не агентство — мы партнёры. Создаём международные медиа-бренды вместе, а не продаём услуги.",
       },
       {
-        emoji: "🎯",
-        title: "Pilot",
-        text: [
-          "Аналитика вашего канала",
-          "Прогноз монетизации",
-          "Тестовый запуск одного языка без риска"
-        ],
-        btn: "Получить тестовый запуск"
-      }
+        icon: Target,
+        title: "Zero-risk pilot",
+        description:
+          "Запуск на одном рынке без риска. Аналитика, прогноз, тест, масштабирование только после подтверждённого результата.",
+      },
     ].map((card, i) => (
-      <div key={i} className="relative group [perspective:1000px] cursor-pointer">
-        
-        {/* Inner wrapper */}
-        <div className="
-          relative h-64 w-full transition-transform duration-700 
-          [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]
-        ">
-          
-          {/* Front */}
-          <div className="
-            absolute inset-0 flex flex-col items-center justify-center rounded-2xl 
-            bg-white dark:bg-neutral-900 shadow-xl border border-black/5 dark:border-white/10 
-            text-5xl font-bold 
-            [backface-visibility:hidden]
-          ">
-            {card.emoji}
-            <span className="mt-2 text-lg text-gray-600 dark:text-gray-400">{card.title}</span>
+      <div key={i} className="relative group [perspective:1200px] cursor-pointer">
+        <div className="relative h-80 w-full transition-transform duration-[900ms] [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
+
+          {/* FRONT */}
+          <div className="absolute inset-0 rounded-2xl backdrop-blur-xl bg-white/70 dark:bg-white/5
+                          border border-white/50 dark:border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.08)]
+                          transition-all duration-500
+                          group-hover:shadow-[0_0_32px_6px_rgba(255,127,80,0.35)]
+                          group-hover:border-transparent
+                          after:absolute after:inset-0 after:rounded-2xl after:p-[2px] after:bg-gradient-to-br
+                          after:from-orange-500/80 after:via-pink-500/80 after:to-purple-500/80
+                          after:opacity-0 group-hover:after:opacity-100 after:transition-opacity
+                          after:duration-500 after:-z-10
+
+                          flex flex-col justify-between p-8 [backface-visibility:hidden]">
+
+            {/* Icon + check */}
+            <div className="flex justify-between items-start">
+              <card.icon className="w-9 h-9 text-gray-900 dark:text-gray-100" />
+              
+              <span className="group-hover:hidden">
+                <Check className="w-7 h-7 text-gray-600 dark:text-gray-400 opacity-40" />
+              </span>
+              <span className="hidden group-hover:block">
+                <Check className="w-7 h-7 text-orange-600 dark:text-orange-400" />
+              </span>
+            </div>
+
+            {/* Title */}
+            <div className="text-left mt-auto">
+              <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                {card.title}
+              </div>
+            </div>
           </div>
 
-          {/* Back */}
-          <div className="
-            absolute inset-0 rounded-2xl bg-white dark:bg-neutral-900 shadow-xl 
-            border border-black/5 dark:border-white/10 p-6 text-left flex flex-col 
-            [transform:rotateY(180deg)] [backface-visibility:hidden]
-          ">
-            <ul className="text-sm text-gray-700 dark:text-gray-300 mb-4 space-y-1">
-              {card.text.map((t, j) => (
-                <li key={j}>• {t}</li>
-              ))}
-            </ul>
-            <button className="
-              mt-auto w-full py-3 bg-black dark:bg-white text-white dark:text-black 
-              rounded-xl text-sm font-semibold hover:opacity-90 transition
-            ">
-              {card.btn}
-            </button>
+          {/* BACK */}
+          <div className="absolute inset-0 rounded-2xl backdrop-blur-xl bg-white dark:bg-neutral-900
+                          border border-white/40 dark:border-white/10 shadow-xl
+                          transition-all duration-500
+group-hover:shadow-[0_0_32px_6px_rgba(255,127,80,0.35)]
+group-hover:border-transparent
+after:absolute after:inset-0 after:rounded-2xl after:p-[2px] after:bg-gradient-to-br
+after:from-orange-500/80 after:via-pink-500/80 after:to-purple-500/80
+after:opacity-0 group-hover:after:opacity-100 after:transition-opacity
+after:duration-500 after:-z-10
+
+                          p-8 flex flex-col justify-between
+                          [transform:rotateY(180deg)] [backface-visibility:hidden]">
+
+            <div className="flex justify-between items-start mb-4">
+              <card.icon className="w-9 h-9 text-gray-900 dark:text-gray-100" />
+              <CheckCheck className="w-7 h-7 text-orange-600 dark:text-orange-400" />
+            </div>
+
+            <p className="text-base leading-relaxed text-gray-800 dark:text-gray-200 font-medium">
+              {card.description}
+            </p>
           </div>
 
         </div>
@@ -590,6 +617,9 @@ useEffect(() => {
 
   </div>
 </section>
+
+
+
 
 {/* Contact */}
 <section id="contact" className="scroll-mt-24 py-20 bg-gray-50 dark:bg-[#0D0B0A]" data-testid="section-contact">
@@ -708,7 +738,7 @@ useEffect(() => {
             ✅
           </motion.div>
 
-          <p className="text-lg font-medium">Спасибо! Заявка отправлена 🎉</p>
+          <p className="text-lg font-medium">Спасибо! Совсем скоро мы ответим вам 🎉</p>
           <p className="text-sm text-gray-500 dark:text-neutral-400">
             Форма вернётся автоматически
           </p>
@@ -803,15 +833,15 @@ function FAQAccordion() {
                 <span className="font-semibold">{f.q}</span>
                 <span className={`ml-4 transition-transform ${opened ? "rotate-45" : ""}`}>＋</span>
               </div>
-              <div
-                className={`grid transition-[grid-template-rows] duration-300 ease-out ${
-                  opened ? "grid-rows-[1fr] mt-2" : "grid-rows-[0fr] mt-0"
-                }`}
-              >
-                <div className="overflow-hidden">
-                  <p className="text-gray-600 dark:text-neutral-300">{f.a}</p>
-                </div>
-              </div>
+            <motion.div
+            initial={false}
+            animate={{ height: opened ? 'auto' : 0 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="overflow-hidden"
+            >
+            <p className="text-gray-600 dark:text-neutral-300">{f.a}</p>
+            </motion.div>
+
             </button>
           </motion.div>
         );

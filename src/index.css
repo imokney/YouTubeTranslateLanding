@@ -1,12 +1,30 @@
 @tailwind base;
+
+html {
+  font-size: 17px;
+}
+
+html, body {
+  transition: background-color .35s ease, color .35s ease;
+}
+
+
 @tailwind components;
 @tailwind utilities;
 
 
 /* Smooth theme transition */
 .theme-transition {
-  transition: background-color 300ms, color 300ms, border-color 300ms;
+  transition: 
+    background-color .35s ease,
+    color .35s ease,
+    border-color .35s ease,
+    fill .35s ease,
+    stroke .35s ease,
+    box-shadow .35s ease,
+    transform .35s ease;
 }
+
 
 /* Enable smooth scroll behavior for anchor links */
 html {
