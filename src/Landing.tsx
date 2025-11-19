@@ -16,6 +16,10 @@ import {
   Sparkles,
   Moon,
   Sun,
+  CheckCheck,
+  Target,
+  Rocket,
+  Heart,
 } from "lucide-react";
 
 // 👉 JSON-контент, редактируемый через админку
@@ -61,6 +65,7 @@ function ThemeSwitch({
     } catch {}
   }, [theme]);
 
+
   return (
     <button
       role="switch"
@@ -89,54 +94,71 @@ export default function Landing() {
   const [theme, setTheme] = useState<"light" | "dark">(() => getPreferredTheme());
   const [scrolled, setScrolled] = useState(false);
 
+      {/* скорлл к форме */}
+    const scrollToId = (id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    const header = document.querySelector("header") as HTMLElement | null;
+    const offset = header?.offsetHeight ?? 0;
+    const y = el.getBoundingClientRect().top + window.scrollY - offset - 8;
+
+  window.scrollTo({ top: y, behavior: "smooth" });
+};
+
 
 // ✅ Калькулятор дохода: логика
 useEffect(() => {
-  const rpm = { en: 5, pt: 1.5, es: 2.5 };
   const range = document.getElementById("rangeViews") as HTMLInputElement;
   const viewsOut = document.getElementById("viewsOut")!;
   const incomeOut = document.getElementById("incomeOut")!;
-  if (!range || !viewsOut || !incomeOut) return;
-  const langIds = ["en", "pt", "es"];
-  let currentValue = 0;
+  const bubble = document.getElementById("rangeBubble")!;
+  const rpm = { en: 5, pt: 1.5, es: 2.5 };
+  const langs = ["en", "pt", "es"];
+  let current = 0;
 
-  function animate(el: HTMLElement, start: number, end: number, duration = 300) {
+  function animate(el: HTMLElement, start: number, end: number) {
+    const t = 260;
     const diff = end - start;
-    let startTime: number | null = null;
-
-    function frame(time: number) {
-      if (!startTime) startTime = time;
-      const progress = Math.min((time - startTime) / duration, 1);
-      const val = Math.floor(start + diff * progress);
-      el.textContent = "$" + val.toLocaleString() + " / месяц";
-      if (progress < 1) requestAnimationFrame(frame);
+    let st: number | null = null;
+    function step(time: number) {
+      if (!st) st = time;
+      const p = Math.min((time - st) / t, 1);
+      el.textContent = "$" + Math.floor(start + diff * p).toLocaleString() + " / месяц";
+      if (p < 1) requestAnimationFrame(step);
     }
-    requestAnimationFrame(frame);
+    requestAnimationFrame(step);
   }
 
   function calc() {
-    const views = Number(range.value);
-    viewsOut.textContent = views.toLocaleString();
+    const v = Number(range.value);
+    viewsOut.textContent = v.toLocaleString();
 
+    const percent = ((v - 50000) / (5000000 - 50000)) * 100;
+    range.style.setProperty("--percent", `${percent}%`);
 
-    // 2 строки чинит полоску
-    const percent = (views - 50000) / (5000000 - 50000) * 100;
-    range.style.setProperty("--percent", percent + "%");
+    const pos = range.offsetWidth * (percent / 100);
+    bubble.style.setProperty("--bubble-x", pos + "px");
+    bubble.textContent = v.toLocaleString();
 
     let total = 0;
-    langIds.forEach(id => {
-      if ((document.getElementById(id) as HTMLInputElement).checked) {
-        total += (views / 1000) * rpm[id as keyof typeof rpm];
-      }
+    langs.forEach(l => {
+      const el = document.getElementById(l) as HTMLInputElement;
+      if (el?.checked) total += (v / 1000) * rpm[l as keyof typeof rpm];
     });
 
-    animate(incomeOut, currentValue, total);
-    currentValue = total;
+    animate(incomeOut, current, total);
+    current = total;
   }
 
   range.oninput = calc;
-  langIds.forEach(id => {
-    const el = document.getElementById(id) as HTMLInputElement;
+  range.onmousedown = () => bubble.classList.add("show");
+  range.onmouseup = () => bubble.classList.remove("show");
+  range.ontouchstart = () => bubble.classList.add("show");
+  range.ontouchend = () => bubble.classList.remove("show");
+
+  langs.forEach(l => {
+    const el = document.getElementById(l) as HTMLInputElement;
     el.onchange = calc;
   });
 
@@ -145,10 +167,16 @@ useEffect(() => {
 
 
 
+
   // ScrollSpy + back-to-top
   const sectionIds = useMemo(() => ["services", "process", "pricing", "cases", "contact", "faq"], []);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [showTop, setShowTop] = useState(false);
+
+   // ✅ Флаг успешной отправки формы
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
 
   useEffect(() => {
     const onScrollShadow = () => setScrolled(window.scrollY > 10);
@@ -215,7 +243,8 @@ useEffect(() => {
                 { id: "services", label: "Вы получаете" },
                 { id: "process", label: "Как мы работаем" },
                 { id: "cases", label: "Кейсы" },
-                { id: "pricing", label: "Тарифы" },
+                { id: "pricing", label: "Формат" },
+                { id: "contact", label: "Контакты" },
                 { id: "faq", label: "FAQ" },
               ].map((l) => (
                 <a
@@ -236,14 +265,13 @@ useEffect(() => {
             </nav>
             <div className="flex items-center gap-3">
               <ThemeSwitch theme={theme} setTheme={setTheme} />
-              <a
-                href={TELEGRAM_LINK}
-                target="_blank"
-                rel="noreferrer"
-                className="hidden sm:inline-block rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 shadow-md shadow-orange-600/20 text-sm"
+              <button
+              onClick={() => scrollToId("contact")}
+              className="hidden sm:inline-block rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 shadow-md shadow-orange-600/20 text-sm"
               >
-                Связаться
-              </a>
+              Связаться
+              </button>
+
             </div>
           </div>
         </header>
@@ -262,7 +290,7 @@ useEffect(() => {
                 {home.heroSubtitle}
               </motion.p>
               <motion.div variants={fadeInUp} className="mt-6 flex flex-col sm:flex-row gap-3">
-                <MagneticButton onClick={() => window.open(TELEGRAM_LINK, "_blank", "noopener")}>
+                <MagneticButton onClick={() => scrollToId("contact")}>
                   <span className="inline-flex items-center gap-2">
                     {home.ctaPrimary} <ArrowRight className="w-4 h-4" />
                   </span>
@@ -293,17 +321,14 @@ useEffect(() => {
             </motion.div>
 
             {/* Правая колонка hero */}
-            <div className="mt-8 md:mt-0">
+
               <VideoShowcase />
-              <p className="mt-3 text-sm text-gray-500 dark:text-neutral-400">
-                Переключайте аудио-дорожки: EN / RU / ES — демонстрация локализации.
-              </p>
-            </div>
+
           </div>
         </section>
 
         {/* Services */}
-        <section id="services" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-[#0D0B0A]" data-testid="section-services">
+        <section id="services" className="scroll-mt-24 py-20" data-testid="section-services">
           <div className="max-w-6xl mx-auto px-4">
             <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">
               Вы получаете
@@ -330,20 +355,15 @@ useEffect(() => {
                     </div>
                     <p className="text-sm text-gray-600 dark:text-neutral-300 mt-2">{s.desc}</p>
                     {/* Пример списка фич — оставлен как было; можно тоже вынести в JSON при желании */}
-                    <ul className="mt-3 space-y-2 text-sm text-gray-600 dark:text-neutral-300">
-                      <li className="flex items-center gap-2">
-                        <Check className="w-4 h-4 text-orange-600" />
-                        Профессиональный перевод и озвучка
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <Check className="w-4 h-4 text-orange-600" />
-                        Согласование деталей и контроль качества
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <Check className="w-4 h-4 text-orange-600" />
-                        Быстрый запуск и поддержка
-                      </li>
-                    </ul>
+                  <ul className="mt-3 space-y-2 text-sm text-gray-600 dark:text-neutral-300">
+                      {s.features.map((f, i) => (
+                  <li key={i} className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-orange-600" />
+                    {f}
+                  </li>
+                    ))}
+                  </ul>
+
                   </GlassCard>
                 </motion.div>
               ))}
@@ -352,7 +372,7 @@ useEffect(() => {
         </section>
 
         {/* Process */}
-        <section id="process" className="scroll-mt-24 py-20" data-testid="section-process">
+        <section id="process" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-[#0D0B0A]" data-testid="section-process">
           <div className="max-w-6xl mx-auto px-4">
             <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">
               Как мы работаем
@@ -384,7 +404,7 @@ useEffect(() => {
         </section>
 
         {/* Cases */}
-        <section id="cases" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-[#0D0B0A]" data-testid="section-cases">
+        <section id="cases" className="scroll-mt-24 py-20" data-testid="section-cases">
           <div className="max-w-6xl mx-auto px-4">
             <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">
               Кейсы
@@ -419,281 +439,312 @@ useEffect(() => {
         </section>
 
 {/* YouTube Earnings Calculator */}
-<section className="py-24 px-4 text-center" id="yt-calculator">
+<section id="yt-calculator" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-[#0D0B0A] px-4 text-center">
   <h2 className="text-3xl font-bold mb-2">
     Сколько ваш канал может приносить на других языках?
   </h2>
-  <p className="text-gray-500 mb-10 text-lg">
+  <p className="text-gray-500 dark:text-gray-400 mb-10 text-lg">
     Передвиньте ползунок и узнайте потенциал вашего YouTube-канала
   </p>
 
+  <div
+    className="
+      relative z-10 max-w-xl mx-auto 
+      bg-white dark:bg-neutral-900 
+      text-gray-900 dark:text-white
+      shadow-xl rounded-2xl p-8 transition
+      border border-black/5 dark:border-white/10
 
-  <div className="
-  max-w-xl mx-auto 
-  bg-white dark:bg-neutral-900 
-  text-gray-900 dark:text-white
-  shadow-xl rounded-2xl p-8 transition
-  border border-black/5 dark:border-white/10
-">
+      transition-all duration-300
+      hover:-translate-y-1
+      hover:shadow-[0_0_32px_6px_rgba(255,127,80,0.35)]
+    "
+  >
+    <span className="text-sm text-gray-500 dark:text-gray-400">
+      Месячные просмотры
+    </span>
 
-    <span className="text-sm text-gray-500">Месячные просмотры</span>
-
-    <input 
-      id="rangeViews" 
-      type="range" 
-      min="50000" 
-      max="5000000" 
-      step="50000" 
-      defaultValue="500000"
-      className="w-full my-4"
-    />
+    <div className="relative w-full">
+      <input 
+        id="rangeViews" 
+        type="range" 
+        min="50000" 
+        max="5000000" 
+        step="50000" 
+        defaultValue="500000"
+        className="w-full my-6"
+      />
+      <div id="rangeBubble" className="range-bubble">500,000</div>
+    </div>
 
     <div id="viewsOut" className="text-2xl font-bold mb-6">500,000</div>
 
-{/* Language selectors */}
-<div className="flex justify-center gap-10 mb-6 text-lg">
-  {[
-    { id: "en", flag: "🇺🇸", defaultChecked: true },
-    { id: "pt", flag: "🇵🇹", defaultChecked: true },
-    { id: "es", flag: "🇪🇸", defaultChecked: false },
-  ].map((lang) => (
-    <label key={lang.id} className="flex flex-col items-center cursor-pointer gap-1">
-      {/* скрытый чекбокс */}
-      <input
-        id={lang.id}
-        type="checkbox"
-        defaultChecked={lang.defaultChecked}
-        className="hidden peer"
-      />
-      
-      {/* OUTER CIRCLE */}
-      <span
-        className="
-          w-7 h-7 rounded-full border-2
-          border-gray-400 dark:border-gray-500
-          flex items-center justify-center
-          bg-transparent
-          peer-checked:border-orange-500
-          peer-checked:bg-orange-500
-          transition-all duration-200
-        "
-      >
-        {/* INNER DOT */}
-        <span
-          className="
-            w-3 h-3 rounded-full bg-white
-            scale-0 peer-checked:scale-100
-            transition-transform duration-200
-          "
-        />
-      </span>
+    <div className="flex justify-center gap-10 mb-6">
+      {[
+        { id: "en", flag: "🇺🇸", defaultChecked: true },
+        { id: "pt", flag: "🇵🇹", defaultChecked: true },
+        { id: "es", flag: "🇪🇸", defaultChecked: false }
+      ].map((lang) => (
+        <label key={lang.id} className="flex flex-col items-center cursor-pointer gap-1">
+          <input
+            id={lang.id}
+            type="checkbox"
+            defaultChecked={lang.defaultChecked}
+            className="hidden peer"
+          />
 
-      {/* эмодзи-флаг */}
-      <span className="text-2xl select-none">{lang.flag}</span>
-    </label>
-  ))}
-</div>
+          <span
+            className="
+              w-6 h-6 rounded-full border-2 border-gray-400 
+              peer-checked:border-orange-600 peer-checked:bg-orange-600 
+              transition-all duration-200
+            "
+          ></span>
 
-<div className="text-gray-500 dark:text-gray-400 text-sm">Потенциальный доход:</div>
-<div id="incomeOut" className="text-3xl font-extrabold mb-6">$0 / месяц</div>
+          <span className="text-2xl">{lang.flag}</span>
+        </label>
+      ))}
+    </div>
 
-<button className="w-full py-4 bg-black text-white dark:bg-white dark:text-black rounded-xl text-lg font-semibold hover:opacity-90 transition">
-  🚀 Получить персональный расчёт
-</button>
-</div>   {/* ← закрываем карточку калькулятора */}
-</section> {/* ← закрываем СЕКЦИЮ калькулятора */}
+    <div className="text-gray-500 dark:text-gray-400 text-sm">
+      Потенциальный доход:
+    </div>
+    <div id="incomeOut" className="text-3xl font-extrabold mb-6">
+      $0 / месяц
+    </div>
 
 
+  </div>
+</section>
 
-        {/* Pricing */}
-        <section id="pricing" className="scroll-mt-24 py-20" data-testid="section-pricing">
-          <div className="max-w-6xl mx-auto px-4">
-            <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">
-              Тарифы
-            </motion.h2>
-            <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 mt-2">
-              Прозрачная стоимость. Скидки при подписке от 4 роликов в месяц.
-            </motion.p>
 
-            {/* карточки тарифов */}
-            <motion.div
-              variants={stagger}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, amount: 0.2 }}
-              className="mt-10 grid md:grid-cols-3 gap-6"
-            >
-              {/* Карточка 1 */}
-              <motion.div className="gpu"
-               variants={fadeInUp}
-               whileHover={{ y: -2, scale: 1.01 }}
-               transition={{ type: "spring", stiffness: 240, damping: 26 }}>
-                <GlassCard>
-                  <div className="font-semibold">Субтитры</div>
-                  <div className="text-3xl font-bold mt-2">
-                    от $6 <span className="text-base font-normal text-gray-500 dark:text-neutral-400">/ мин</span>
-                  </div>
-                  <ul className="text-sm text-gray-600 dark:text-neutral-300 space-y-2 mt-3">
-                    <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-orange-600" />
-                      Перевод + тайм-коды
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-orange-600" />
-                      Форматы .srt/.vtt
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-orange-600" />
-                      1 круг правок
-                    </li>
-                  </ul>
-                  <motion.a
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
-                    href={TELEGRAM_LINK}
-                    target="_blank"
-                    className="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 shadow-orange-600/25 shadow-lg"
-                  >
-                    Заказать демо
-                  </motion.a>
-                </GlassCard>
-              </motion.div>
+{/* Partnership Models */}
+<section id="pricing" className="py-24 px-4 text-center scroll-mt-24" data-testid="section-pricing">
+  <h2 className="text-3xl font-bold mb-2">Формат сотрудничества</h2>
+  <p className="text-gray-500 dark:text-gray-400 mb-10 text-lg">
+    Или почему вам стоит выбрать нас
+  </p>
 
-              {/* Карточка 2 */}
-              <motion.div variants={fadeInUp} whileHover={{ y: -4 }}>
-                <GlassCard>
-                  <div className="font-semibold">Озвучка</div>
-                  <div className="text-3xl font-bold mt-2">
-                    от $12 <span className="text-base font-normal text-gray-500 dark:text-neutral-400">/ мин</span>
-                  </div>
-                  <ul className="text-sm text-gray-600 dark:text-neutral-300 space-y-2 mt-3">
-                    <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-orange-600" />
-                      AI-голоса или актёры
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-orange-600" />
-                      Сведение и шумоподавление
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-orange-600" />
-                      2 круга правок
-                    </li>
-                  </ul>
-                  <motion.a
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
-                    href={TELEGRAM_LINK}
-                    target="_blank"
-                    className="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 shadow-orange-600/25 shadow-lg"
-                  >
-                    Заказать демо
-                  </motion.a>
-                </GlassCard>
-              </motion.div>
+  <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
 
-              {/* Карточка 3 */}
-              <motion.div variants={fadeInUp} whileHover={{ y: -4 }}>
-                <GlassCard>
-                  <div className="font-semibold">Локализация канала</div>
-                  <div className="text-3xl font-bold mt-2">по запросу</div>
-                  <ul className="text-sm text-gray-600 dark:text-neutral-300 space-y-2 mt-3">
-                    <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-orange-600" />
-                      Обложки, описания, теги
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-orange-600" />
-                      Аудит и стратегия выхода
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-orange-600" />
-                      Локализация плейлистов
-                    </li>
-                  </ul>
-                  <motion.a
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
-                    href={TELEGRAM_LINK}
-                    target="_blank"
-                    className="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 shadow-orange-600/25 shadow-lg"
-                  >
-                    Обсудить проект
-                  </motion.a>
-                </GlassCard>
-              </motion.div>
-            </motion.div>
-            
-          </div>
-        </section>
+    {[
+      {
+        icon: Rocket,
+        title: "Global scale",
+        description: 
+          "Полный цикл локализации, дубляжа и управления каналами. Вы говорите с миром как будто сами владеете каждым языком.",
+      },
+      {
+        icon: Heart,
+        title: "Partner-first",
+        description:
+          "Мы не агентство — мы партнёры. Создаём международные медиа-бренды вместе, а не продаём услуги.",
+      },
+      {
+        icon: Target,
+        title: "Zero-risk pilot",
+        description:
+          "Запуск на одном рынке без риска. Аналитика, прогноз, тест, масштабирование только после подтверждённого результата.",
+      },
+    ].map((card, i) => (
+      <div key={i} className="relative group [perspective:1200px] cursor-pointer">
+        <div className="relative h-80 w-full transition-transform duration-[900ms] [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
 
-        {/* Contact */}
-        <section id="contact" className="scroll-mt-24 py-20 bg-gray-50 dark:bg-[#0D0B0A]" data-testid="section-contact">
-          <div className="max-w-2xl mx-auto px-4">
-            <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold text-center">
-              Расскажите о проекте
-            </motion.h2>
-            <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 text-center mt-2">
-              Мы ответим в течение рабочего дня. Или напишите сразу в Telegram.
-            </motion.p>
-            <motion.form
-              variants={fadeInUp}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true }}
-              onSubmit={(e) => {
-                e.preventDefault();
-                alert("Спасибо! Мы свяжемся с вами в Telegram/по email.");
-              }}
-              className="mt-8 grid gap-4"
-            >
-              <input
-                placeholder="Ваше имя"
-                required
-                className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2
-                                                                  focus:outline-none focus:ring-2 focus:ring-orange-500/50"
-              />
-              <input
-                type="email"
-                placeholder="Почта"
-                required
-                className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2
-                                                                  focus:outline-none focus:ring-2 focus:ring-orange-500/50"
-              />
-              <input
-                placeholder="Ссылка на канал/видео"
-                className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2
-                                                                  focus:outline-none focus:ring-2 focus:ring-orange-500/50"
-              />
-              <textarea
-                placeholder="Кратко опишите задачу (язык, длительность, дедлайн)"
-                className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2
-                                                                  focus:outline-none focus:ring-2 focus:ring-orange-500/50"
-                rows={5}
-              />
-              <div className="flex gap-3">
-                <motion.button whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }} type="submit" className="rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 shadow-lg shadow-orange-600/25">
-                  Отправить
-                </motion.button>
-                <motion.a
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                  href={TELEGRAM_LINK}
-                  target="_blank"
-                  className="rounded-2xl border border-orange-300 text-orange-700 hover:bg-orange-50 px-4 py-2 dark:border-orange-500/40 dark:text-orange-300 dark:hover:bg-orange-500/10"
-                >
-                  Написать в Telegram
-                </motion.a>
+          {/* FRONT */}
+          <div className="absolute inset-0 rounded-2xl backdrop-blur-xl bg-white/70 dark:bg-white/5
+                          border border-white/50 dark:border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.08)]
+                          transition-all duration-500
+                          group-hover:shadow-[0_0_32px_6px_rgba(255,127,80,0.35)]
+                          group-hover:border-transparent
+                          after:absolute after:inset-0 after:rounded-2xl after:p-[2px] after:bg-gradient-to-br
+                          after:from-orange-500/80 after:via-pink-500/80 after:to-purple-500/80
+                          after:opacity-0 group-hover:after:opacity-100 after:transition-opacity
+                          after:duration-500 after:-z-10
+
+                          flex flex-col justify-between p-8 [backface-visibility:hidden]">
+
+            {/* Icon + check */}
+            <div className="flex justify-between items-start">
+              <card.icon className="w-9 h-9 text-gray-900 dark:text-gray-100" />
+              
+              <span className="group-hover:hidden">
+                <Check className="w-7 h-7 text-gray-600 dark:text-gray-400 opacity-40" />
+              </span>
+              <span className="hidden group-hover:block">
+                <Check className="w-7 h-7 text-orange-600 dark:text-orange-400" />
+              </span>
+            </div>
+
+            {/* Title */}
+            <div className="text-left mt-auto">
+              <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                {card.title}
               </div>
-              <p className="text-xs text-gray-500 dark:text-neutral-400">
-                Или напишите на почту:{" "}
-                <a href={`mailto:${EMAIL}`} className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">
-                  {EMAIL}
-                </a>
-              </p>
-            </motion.form>
+            </div>
           </div>
-        </section>
+
+          {/* BACK */}
+          <div className="absolute inset-0 rounded-2xl backdrop-blur-xl bg-white dark:bg-neutral-900
+                          border border-white/40 dark:border-white/10 shadow-xl
+                          transition-all duration-500
+                          group-hover:shadow-[0_0_32px_6px_rgba(255,127,80,0.35)]
+                          group-hover:border-transparent
+                          after:absolute after:inset-0 after:rounded-2xl after:p-[2px] after:bg-gradient-to-br
+                          after:from-orange-500/80 after:via-pink-500/80 after:to-purple-500/80
+                          after:opacity-0 group-hover:after:opacity-100 after:transition-opacity
+                          after:duration-500 after:-z-10
+                          p-8 flex flex-col justify-between
+                          [transform:rotateY(180deg)] [backface-visibility:hidden]">
+
+            <div className="flex justify-between items-start mb-4">
+              <card.icon className="w-9 h-9 text-gray-900 dark:text-gray-100" />
+              <CheckCheck className="w-7 h-7 text-orange-600 dark:text-orange-400" />
+            </div>
+
+            <p className="text-base leading-relaxed text-gray-800 dark:text-gray-200 font-medium">
+              {card.description}
+            </p>
+          </div>
+
+        </div>
+      </div>
+    ))}
+
+  </div>
+</section>
+
+
+
+
+{/* Contact */}
+<section id="contact" className="scroll-mt-24 py-20 bg-gray-50 dark:bg-[#0D0B0A]" data-testid="section-contact">
+  <div className="max-w-2xl mx-auto px-4">
+    <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold text-center">
+      Расскажите о проекте
+    </motion.h2>
+    <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 text-center mt-2">
+      Мы ответим в течение рабочего дня. Или напишите сразу в Telegram.
+    </motion.p>
+
+    <motion.form
+      variants={fadeInUp}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true }}
+      onSubmit={async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+
+        const formData = new FormData(e.target as HTMLFormElement);
+        formData.append("access_key", "cd31617a-233d-4a30-ac96-6efa637ee704");
+
+        // honeypot check
+        if (formData.get("bot_trap")) return;
+
+        const response = await fetch("https://api.web3forms.com/submit", {
+          method: "POST",
+          body: formData
+        });
+
+        const result = await response.json();
+        setIsSubmitting(false);
+
+        if (result.success) {
+          setSubmitted(true);
+          setTimeout(() => setSubmitted(false), 5000); // return form after 5 sec
+        } else {
+          alert("Ошибка отправки. Попробуйте позже 🙏");
+        }
+      }}
+      className="mt-8 grid gap-4"
+    >
+      {!submitted ? (
+        <>
+          {/* Honeypot bot field */}
+          <input type="text" name="bot_trap" style={{ display: "none" }} tabIndex={-1} autoComplete="off" />
+
+          <input
+            name="name"
+            placeholder="Ваше имя"
+            required
+            className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2
+                       focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+          />
+
+          <input
+            type="email"
+            name="email"
+            placeholder="Почта"
+            required
+            className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2
+                       focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+          />
+
+          <input
+            name="channel"
+            placeholder="Ссылка на канал/видео"
+            className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2
+                       focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+          />
+
+          <textarea
+            name="message"
+            placeholder="Кратко опишите задачу (язык, длительность, дедлайн)"
+            rows={5}
+            className="relative z-10 rounded-2xl bg-white dark:bg-neutral-900 border border-black/5 dark:border-white/10 px-4 py-2
+                       focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+          />
+
+          {/* Buttons */}
+          <div className="flex gap-3">
+            <motion.button
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.99 }}
+              disabled={isSubmitting}
+              type="submit"
+              className={`rounded-2xl text-white px-4 py-2 shadow-lg shadow-orange-600/25
+                ${isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-orange-600 hover:bg-orange-700"}`}
+            >
+              {isSubmitting ? "Отправляем..." : "Отправить"}
+            </motion.button>
+
+            <motion.a
+              whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
+              href={TELEGRAM_LINK} target="_blank"
+              className="rounded-2xl border border-orange-300 text-orange-700 hover:bg-orange-50 px-4 py-2 
+                         dark:border-orange-500/40 dark:text-orange-300 dark:hover:bg-orange-500/10"
+            >
+              Написать в Telegram
+            </motion.a>
+          </div>
+        </>
+      ) : (
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="flex flex-col items-center gap-2 py-6"
+        >
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            className="w-16 h-16 rounded-full bg-green-500 flex items-center justify-center text-white text-3xl"
+          >
+            ✅
+          </motion.div>
+
+          <p className="text-lg font-medium">Спасибо! Совсем скоро мы ответим вам 🎉</p>
+          <p className="text-sm text-gray-500 dark:text-neutral-400">
+            Форма вернётся автоматически
+          </p>
+        </motion.div>
+      )}
+    </motion.form>
+  </div>
+</section>
+
+
+
 
         {/* FAQ */}
         <section id="faq" className="scroll-mt-24 py-20" data-testid="section-faq">
@@ -777,15 +828,15 @@ function FAQAccordion() {
                 <span className="font-semibold">{f.q}</span>
                 <span className={`ml-4 transition-transform ${opened ? "rotate-45" : ""}`}>＋</span>
               </div>
-              <div
-                className={`grid transition-[grid-template-rows] duration-300 ease-out ${
-                  opened ? "grid-rows-[1fr] mt-2" : "grid-rows-[0fr] mt-0"
-                }`}
-              >
-                <div className="overflow-hidden">
-                  <p className="text-gray-600 dark:text-neutral-300">{f.a}</p>
-                </div>
-              </div>
+            <motion.div
+            initial={false}
+            animate={{ height: opened ? 'auto' : 0 }}
+            transition={{ duration: 0.4, ease: "easeInOut" }}
+            className="overflow-hidden"
+            >
+            <p className="text-gray-600 dark:text-neutral-300">{f.a}</p>
+            </motion.div>
+
             </button>
           </motion.div>
         );
