@@ -321,12 +321,9 @@ useEffect(() => {
             </motion.div>
 
             {/* Правая колонка hero */}
-            <div className="mt-8 md:mt-0">
+
               <VideoShowcase />
-              <p className="mt-3 text-sm text-gray-500 dark:text-neutral-400">
-                Переключайте аудио-дорожки: EN / RU / ES — демонстрация локализации.
-              </p>
-            </div>
+
           </div>
         </section>
 
@@ -358,20 +355,15 @@ useEffect(() => {
                     </div>
                     <p className="text-sm text-gray-600 dark:text-neutral-300 mt-2">{s.desc}</p>
                     {/* Пример списка фич — оставлен как было; можно тоже вынести в JSON при желании */}
-                    <ul className="mt-3 space-y-2 text-sm text-gray-600 dark:text-neutral-300">
-                      <li className="flex items-center gap-2">
-                        <Check className="w-4 h-4 text-orange-600" />
-                        Профессиональный перевод и озвучка
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <Check className="w-4 h-4 text-orange-600" />
-                        Согласование деталей и контроль качества
-                      </li>
-                      <li className="flex items-center gap-2">
-                        <Check className="w-4 h-4 text-orange-600" />
-                        Быстрый запуск и поддержка
-                      </li>
-                    </ul>
+                  <ul className="mt-3 space-y-2 text-sm text-gray-600 dark:text-neutral-300">
+                      {s.features.map((f, i) => (
+                  <li key={i} className="flex items-center gap-2">
+                  <Check className="w-4 h-4 text-orange-600" />
+                    {f}
+                  </li>
+                    ))}
+                  </ul>
+
                   </GlassCard>
                 </motion.div>
               ))}
@@ -462,6 +454,10 @@ useEffect(() => {
       text-gray-900 dark:text-white
       shadow-xl rounded-2xl p-8 transition
       border border-black/5 dark:border-white/10
+
+      transition-all duration-300
+      hover:-translate-y-1
+      hover:shadow-[0_0_32px_6px_rgba(255,127,80,0.35)]
     "
   >
     <span className="text-sm text-gray-500 dark:text-gray-400">
@@ -591,13 +587,12 @@ useEffect(() => {
           <div className="absolute inset-0 rounded-2xl backdrop-blur-xl bg-white dark:bg-neutral-900
                           border border-white/40 dark:border-white/10 shadow-xl
                           transition-all duration-500
-group-hover:shadow-[0_0_32px_6px_rgba(255,127,80,0.35)]
-group-hover:border-transparent
-after:absolute after:inset-0 after:rounded-2xl after:p-[2px] after:bg-gradient-to-br
-after:from-orange-500/80 after:via-pink-500/80 after:to-purple-500/80
-after:opacity-0 group-hover:after:opacity-100 after:transition-opacity
-after:duration-500 after:-z-10
-
+                          group-hover:shadow-[0_0_32px_6px_rgba(255,127,80,0.35)]
+                          group-hover:border-transparent
+                          after:absolute after:inset-0 after:rounded-2xl after:p-[2px] after:bg-gradient-to-br
+                          after:from-orange-500/80 after:via-pink-500/80 after:to-purple-500/80
+                          after:opacity-0 group-hover:after:opacity-100 after:transition-opacity
+                          after:duration-500 after:-z-10
                           p-8 flex flex-col justify-between
                           [transform:rotateY(180deg)] [backface-visibility:hidden]">
 

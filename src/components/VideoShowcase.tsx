@@ -1,184 +1,195 @@
 import React, { useEffect, useRef, useState } from "react";
-import { track } from "../lib/analytics";
-
-type Track = { id: number; name: string; lang?: string };
+import LanguageSlider from "./LanguageSlider";
 
 export default function VideoShowcase() {
   const hostRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const hlsRef = useRef<any>(null);
 
   const [visible, setVisible] = useState(false);
-  const [upgraded, setUpgraded] = useState(false);
-  const [tracks, setTracks] = useState<Track[]>([]);
-  const [currentTrack, setCurrentTrack] = useState<number | null>(null);
-  const [muted, setMuted] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const [started, setStarted] = useState(false);
 
+  const VIDEOS = {
+    ru: "/demo/video-ru.mp4",
+    en: "/demo/video-en.mp4",
+    pt: "/demo/video-pt.mp4",
+  };
+
+  const [lang, setLang] = useState<"ru" | "en" | "pt">("ru");
+
+  // -------------------------------------------------------
+  // ГАРАНТИРОВАННАЯ ФУНКЦИЯ ДЛЯ УСТАНОВКИ ГРОМКОСТИ = 0.4
+  // -------------------------------------------------------
+  const setVolumeSafe = () => {
+    const v = videoRef.current;
+    if (!v) return;
+
+    // моментально
+    v.volume = 0.4;
+
+    // после обновления браузером
+    setTimeout(() => {
+      if (videoRef.current) {
+        videoRef.current.volume = 0.4;
+      }
+    }, 0);
+  };
+
+  // Обработчики volume + metadata
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+
+    setVolumeSafe();
+
+    const applyVolume = () => setVolumeSafe();
+
+    v.addEventListener("loadedmetadata", applyVolume);
+    v.addEventListener("loadeddata", applyVolume);
+    v.addEventListener("volumechange", applyVolume);
+
+    return () => {
+      v.removeEventListener("loadedmetadata", applyVolume);
+      v.removeEventListener("loadeddata", applyVolume);
+      v.removeEventListener("volumechange", applyVolume);
+    };
+  }, []);
+
+  // -------------------------------------------------------
+  // Переключение языка без паузы
+  // -------------------------------------------------------
+  const switchLang = (newLang: "ru" | "en" | "pt") => {
+  const v = videoRef.current;
+  if (!v) return;
+
+  // скрываем вспышку
+  v.style.transition = "opacity 0.25s";
+  v.style.opacity = "0";
+
+  const t = v.currentTime;
+  v.src = VIDEOS[newLang];
+  v.currentTime = t;
+  setVolumeSafe();
+
+  setTimeout(() => {
+    v.play().catch(() => {});
+    v.style.opacity = "1"; // плавное проявление
+  }, 100);
+
+  setLang(newLang);
+};
+
+
+  // -------------------------------------------------------
+  // Ленивая загрузка блока
+  // -------------------------------------------------------
   useEffect(() => {
     const obs = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setVisible(true); obs.disconnect(); } },
+      ([e]) => {
+        if (e.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
       { rootMargin: "200px" }
     );
+
     if (hostRef.current) obs.observe(hostRef.current);
     return () => obs.disconnect();
   }, []);
 
-  const isSafariHls = () => {
-    const v = document.createElement("video");
-    return v.canPlayType("application/vnd.apple.mpegurl") !== "";
-  };
+  // -------------------------------------------------------
+  // Старт DEMO
+  // -------------------------------------------------------
+  const startDemo = (e: any) => {
+    e.preventDefault(); // фикс — ничего не скроллит
+    e.stopPropagation();
 
-  const setupHls = async () => {
-    if (!videoRef.current || upgraded) return;
-    setLoading(true);
-    track("video_demo_open");
+    setStarted(true);
 
-    const video = videoRef.current;
-    const src = "/demo/master.m3u8";
-
-    try {
-      if (isSafariHls()) {
-        video.src = src;
-        await video.play().catch(() => {});
-        const iv = setInterval(() => {
-          const at: any = (video as any).audioTracks;
-          if (at && at.length) {
-            const list: Track[] = [];
-            for (let i = 0; i < at.length; i++) {
-              const t = at[i];
-              list.push({ id: i, name: t.label || t.language || `Track ${i + 1}`, lang: t.language });
-            }
-            setTracks(list);
-            setCurrentTrack(at.selectedIndex ?? 0);
-            clearInterval(iv);
-          }
-        }, 300);
-      } else {
-        const { default: Hls } = await import("hls.js");
-        const hls = new Hls({ startLevel: 0 });
-        hls.attachMedia(video);
-        hls.on(Hls.Events.MEDIA_ATTACHED, () => hls.loadSource(src));
-        hls.on(Hls.Events.MANIFEST_PARSED, () => video.play().catch(() => {}));
-        hls.on(Hls.Events.AUDIO_TRACKS_UPDATED, (_: any, data: any) => {
-          const list: Track[] = data.audioTracks.map((t: any, idx: number) => ({
-            id: idx, name: t.name || t.lang || `Track ${idx + 1}`, lang: t.lang,
-          }));
-          setTracks(list);
-          setCurrentTrack(hls.audioTrack ?? 0);
-        });
-        hls.on(Hls.Events.AUDIO_TRACK_SWITCHED, (_: any, data: any) => setCurrentTrack(data.id));
-        hlsRef.current = hls;
+    setTimeout(() => {
+      if (videoRef.current) {
+        setVolumeSafe();
+        videoRef.current.play().catch(() => {});
       }
-      setUpgraded(true);
-    } finally {
-      setLoading(false);
-    }
+    }, 50);
   };
-
-  const onSelectTrack = (id: number) => {
-    setCurrentTrack(id);
-    track("video_audio_change", { id });
-
-    const video = videoRef.current!;
-    const at: any = (video as any).audioTracks;
-    if (at && at.length) {
-      for (let i = 0; i < at.length; i++) at[i].enabled = i === id;
-      return;
-    }
-    if (hlsRef.current) {
-      hlsRef.current.audioTrack = id;
-    }
-  };
-
-  const onUnmutePlay = async () => {
-    const v = videoRef.current!;
-    try {
-      v.muted = false; setMuted(false);
-      await v.play();
-      track("video_unmute");
-    } catch {}
-  };
-
-  useEffect(() => {
-    const v = videoRef.current;
-    if (!v) return;
-    const onTime = () => {
-      const p = v.currentTime / (v.duration || 1);
-      if (p >= 0.25 && p < 0.26) track("video_watch_25");
-      if (p >= 0.5 && p < 0.51) track("video_watch_50");
-      if (p >= 0.99) track("video_watch_100");
-    };
-    v.addEventListener("timeupdate", onTime);
-    return () => v.removeEventListener("timeupdate", onTime);
-  }, [upgraded]);
-
-  useEffect(() => {
-    return () => { if (hlsRef.current) { try { hlsRef.current.destroy(); } catch {}; hlsRef.current = null; } };
-  }, []);
 
   return (
-    <div ref={hostRef}>
+    <div ref={hostRef} className="select-none">
       {!visible ? (
-        <div className="rounded-2xl border border-black/5 dark:border-white/10 bg-black/80" style={{ aspectRatio: "16/9" }} />
+        <div
+          className="rounded-2xl border border-black/5 dark:border-white/10 bg-black/80"
+          style={{ aspectRatio: "16/9" }}
+        />
       ) : (
-        <div className="relative rounded-2xl border border-black/5 dark:border-white/10 overflow-hidden bg-black">
-          <video
-            ref={videoRef}
-            className="w-full aspect-video"
-            playsInline
-            muted
-            loop={!upgraded}
-            autoPlay
-            preload="metadata"
-            poster="/demo/poster.jpg"
-            src={upgraded ? undefined : "/demo/teaser.mp4"}
-            controls={upgraded}
-          >
-            {/* VTT субтитры */}
-            <track kind="subtitles" srcLang="en" label="EN Subtitles" src="/demo/en.vtt" default />
-            <track kind="subtitles" srcLang="ru" label="RU Subtitles" src="/demo/ru.vtt" />
-            <track kind="subtitles" srcLang="es" label="ES Subtitles" src="/demo/es.vtt" />
-          </video>
+        <>
+          {/* ░░░ ЗАГЛУШКА ДО СТАРТА ░░░ */}
+          {!started && (
+            <div
+            className="
+    relative rounded-2xl overflow-hidden
+    border border-black/5 dark:border-white/10
+    bg-black flex items-center justify-center
+    transition-shadow
+    hover:shadow-[0_0_25px_rgba(255,98,0,0.35),0_0_45px_rgba(255,255,255,0.15)]
+  "
+  style={{ aspectRatio: '16/9' }}
+>
 
-          <div className="absolute top-3 right-3 left-3 flex flex-wrap gap-2 items-center justify-between">
-            {upgraded && tracks.length > 0 && (
-              <div className="ml-auto flex items-center gap-2 bg-black/50 backdrop-blur px-3 py-2 rounded-xl text-white">
-                <span className="text-xs opacity-80">Язык</span>
-                <select
-                  className="bg-black/30 border border-white/20 rounded-lg text-sm px-2 py-1"
-                  value={currentTrack ?? 0}
-                  onChange={(e) => onSelectTrack(parseInt(e.target.value, 10))}
-                >
-                  {tracks.map((t) => (
-                    <option key={t.id} value={t.id}>{t.name}</option>
-                  ))}
-                </select>
-                {muted && (
-                  <button
-                    onClick={onUnmutePlay}
-                    className="ml-2 text-xs bg-orange-600 hover:bg-orange-700 px-2 py-1 rounded-lg"
-                    title="Включить звук"
-                  >
-                    Включить звук
-                  </button>
-                )}
-              </div>
-            )}
-          </div>
-
-          {!upgraded && (
-            <div className="absolute inset-0 flex items-center justify-center">
+              {/* Кнопка Play */}
               <button
-                onClick={setupHls}
-                className="rounded-2xl bg-orange-600 hover:bg-orange-700 text-white px-5 py-3 shadow-lg shadow-orange-600/25 text-sm md:text-base"
-                disabled={loading}
+                onClick={startDemo}
+                className="
+                  group absolute left-1/2 top-1/2
+                  -translate-x-1/2 -translate-y-1/2
+                  w-24 h-16
+                  bg-orange-600
+                  rounded-2xl flex items-center justify-center
+                  shadow-[0_0_25px_rgba(255,98,0,0.45)]
+                  hover:bg-orange-700
+                  hover:shadow-[0_0_35px_rgba(255,98,0,0.55)]
+                  hover:scale-[1.02]
+                  active:scale-95
+                  transition-all
+                "
               >
-                {loading ? "Загрузка…" : "Слушать демо (EN/RU/ES)"}
+                <div
+                  className="
+                    w-0 h-0
+                    border-t-[12px] border-t-transparent
+                    border-b-[12px] border-b-transparent
+                    border-l-[20px] border-l-white
+                    ml-1
+                  "
+                />
               </button>
             </div>
           )}
-        </div>
+
+          {/* ░░░ ВИДЕО ПОСЛЕ СТАРТА ░░░ */}
+          {started && (
+            <div className="mt-0">
+              <div
+                className="
+                  relative rounded-2xl overflow-hidden
+                  border border-black/5 dark:border-white/10 bg-black
+                  shadow-[0_0_35px_rgba(255,98,0,0.5),0_0_70px_rgba(255,255,255,0.25)]
+                "
+              >
+                <video
+                  ref={videoRef}
+                  className="w-full aspect-video"
+                  controls
+                  playsInline
+                  autoPlay
+                  src={VIDEOS[lang]}
+                />
+              </div>
+
+              <LanguageSlider lang={lang} onChange={switchLang} />
+            </div>
+          )}
+        </>
       )}
     </div>
   );
