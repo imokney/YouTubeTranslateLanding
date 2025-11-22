@@ -9,9 +9,9 @@ export default function VideoShowcase() {
   const [started, setStarted] = useState(false);
 
   const VIDEOS = {
-    ru: "https://github.com/imokney/YouTubeTranslateLanding/releases/download/video/video-ru.mp4",
-    en: "https://github.com/imokney/YouTubeTranslateLanding/releases/download/video/video-en.mp4",
-    pt: "https://github.com/imokney/YouTubeTranslateLanding/releases/download/video/video-pt.mp4",
+    ru: "/demo/ru_vid.mp4",
+    en: "/demo/en_vid.mp4",
+    pt: "/demo/pt_vid.mp4",
   };
 
   const [lang, setLang] = useState<"ru" | "en" | "pt">("ru");
