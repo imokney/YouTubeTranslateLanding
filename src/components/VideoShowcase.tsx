@@ -9,9 +9,9 @@ export default function VideoShowcase() {
   const [started, setStarted] = useState(false);
 
   const VIDEOS = {
-    ru: "/demo/video-ru.mp4",
-    en: "/demo/video-en.mp4",
-    pt: "/demo/video-pt.mp4",
+    ru: "/video/video-ru.mp4",
+    en: "/video/video-en.mp4",
+    pt: "/video/video-pt.mp4",
   };
 
   const [lang, setLang] = useState<"ru" | "en" | "pt">("ru");
