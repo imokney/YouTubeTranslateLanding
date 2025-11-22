@@ -25,12 +25,6 @@ build/
 .DS_Store
 Thumbs.db
 
-# Git LFS artifacts
-*.mp4
-*.webm
-*.aac
-*.wav
-
 # Logs
 *.log
 logs/
