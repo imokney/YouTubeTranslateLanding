@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef, useState } from "react";
 import LanguageSlider from "./LanguageSlider";
 
@@ -9,9 +10,9 @@ export default function VideoShowcase() {
   const [started, setStarted] = useState(false);
 
   const VIDEOS = {
-    ru: "/demo/video-ru.mp4",
-    en: "/demo/video-en.mp4",
-    pt: "/demo/video-pt.mp4",
+    ru: "/demo/ru_vid.mp4",
+    en: "/demo/en_vid.mp4",
+    pt: "/demo/pt_vid.mp4",
   };
 
   const [lang, setLang] = useState<"ru" | "en" | "pt">("ru");
