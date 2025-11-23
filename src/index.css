@@ -463,3 +463,109 @@ html, body {
   opacity: 1;
   transform: translateX(-50%) translateY(-6px);
 }
+
+/* Плавный переход футера — УБИРАЕТ резкую линию */
+.footer-blend {
+  position: absolute;
+  top: -140px;          /* Насколько поднимается вверх поверх секции */
+  left: 0;
+  width: 100%;
+  height: 220px;        /* Высота плавного перехода */
+  pointer-events: none;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,0) 0%,      /* прозрачный */
+    rgba(255,255,255,0.4) 40%,   /* мягкое начало */
+    rgba(255,255,255,0.8) 80%,   /* плотнее */
+    rgba(255,255,255,1) 100%     /* полностью */
+  );
+
+  filter: blur(40px);            /* Главный секрет плавности */
+  z-index: 5;
+}
+
+/* Для тёмной темы */
+.dark .footer-blend {
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,0.3) 40%,
+    rgba(0,0,0,0.7) 80%,
+    rgba(0,0,0,1) 100%
+  );
+}
+
+/* Динамический градиент */
+@keyframes smoothGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* мягкая маска, убирающая резкую границу */
+.footer-mask {
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,1) 20%,
+    rgba(0,0,0,1) 80%,
+    rgba(0,0,0,0) 100%
+  );
+}
+
+/* основной анимированный градиент футера */
+.footer-gradient-dynamic {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 192, 138, 0.65),
+    rgba(255, 176, 184, 0.55),
+    rgba(247, 183, 255, 0.50)
+  );
+  background-size: 200% 200%;
+  animation: smoothGradient 12s ease infinite;
+}
+
+
+
+
+/* ==== Base Card (always opaque) ==== */
+.glass-card-solid {
+  position: relative;
+  border-radius: 20px;
+  padding: 1.5rem;
+  background: #fff;                      /* светлая тема */
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+}
+
+/* Тёмная тема — без прозрачности */
+.dark .glass-card-solid {
+  background: linear-gradient(135deg, #2c1d15 0%, #451d28 100%);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+}
+
+/* ==== Hover gradient overlay (как раньше) ==== */
+.glass-card-solid::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(120deg, #ff7a1a, #ff3b6a);
+  opacity: 0;
+  transition: opacity .25s ease;
+  z-index: 0;
+}
+
+.glass-card-solid:hover::before {
+  opacity: .35;
+}
+
+.dark .glass-card-solid:hover::before {
+  opacity: .20;
+}
+
+/* Контент сверху */
+.glass-card-content {
+  position: relative;
+  z-index: 1;
+}

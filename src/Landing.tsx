@@ -234,10 +234,14 @@ useEffect(() => {
           }`}
         >
           <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Globe2 className="w-5 h-5" />
-              <span className="font-semibold text-sm md:text-base">{AGENCY_NAME}</span>
-            </div>
+          <a
+              href="/"
+              className="flex items-center gap-2 cursor-pointer select-none hover:opacity-80 transition"
+            >
+            <img src="/icons/logo1.png" className="w-5 h-5" alt="logo" />
+            <span className="font-semibold text-sm md:text-base">{AGENCY_NAME}</span>
+          </a>
+
             <nav className="hidden md:flex items-center gap-6 text-sm">
               {[
                 { id: "services", label: "Вы получаете" },
@@ -756,25 +760,93 @@ useEffect(() => {
           </div>
         </section>
 
-        {/* Footer */}
-        <footer className="border-t border-black/5 dark:border-white/10 py-10">
-          <div className="max-w-6xl mx-auto px-4 text-sm text-gray-600 dark:text-neutral-400 flex flex-col md:flex-row items-center justify-between gap-4">
-            <div>
-              © {new Date().getFullYear()} {AGENCY_NAME}. Все права защищены.
-            </div>
-            <div className="flex items-center gap-4">
-              <a href={TELEGRAM_LINK} target="_blank" rel="noreferrer" className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">
-                Telegram
-              </a>
-              <a href={`mailto:${EMAIL}`} className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">
-                Email
-              </a>
-              <a href="#" className="underline text-orange-700 hover:text-orange-800 dark:text-orange-300 dark:hover:text-orange-200">
-                Политика конфиденциальности
-              </a>
-            </div>
-          </div>
-        </footer>
+
+{/* Банер */}
+<section className="mt-24 mb-48 px-4">
+  <div
+    className="
+      relative z-10 max-w-7xl mx-auto rounded-3xl p-12 md:p-18
+      transition-transform duration-300 hover:-translate-y-1
+      shadow-xl
+      bg-gradient-to-r from-[#ffc08a] via-[#ffb0b8] to-[#f7b7ff]
+      dark:bg-[linear-gradient(135deg,#2c1d15_0%,#451d28_100%)]
+    "
+  >
+    <div className="flex flex-col md:flex-row items-center justify-between gap-10">
+       {/* ЛОГО + ТЕКСТ */}
+      <div className="flex items-center gap-6 flex-1">
+        <img 
+          src="/icons/logo-white.png" 
+          alt="logo"
+          className="w-16 h-16 md:w-20 md:h-20 object-contain"
+        />
+
+      {/* Текст */}
+      <h2 className="text-4xl md:text-5xl font-bold text-white dark:text-gray-200 text-center md:text-left">
+        Готовы расти глобально?
+      </h2>
+
+      {/* Кнопка */}
+      <a
+        onClick={() => scrollToId("contact")}
+        className="
+      ml-auto
+      cursor-pointer select-none
+      px-8 py-4 rounded-xl
+      bg-orange-600 text-white font-semibold
+      shadow hover:bg-orange-700 transition
+        "
+      >
+        Стать партнёром
+      </a>
+    </div>
+  </div>
+  </div>
+</section>
+
+
+
+
+
+<footer className="relative overflow-hidden footer-gradient-dynamic py-12 min-h-[180px] footer-mask">
+
+    {/* Плавный переход сверху */}
+  <div className="footer-blend"></div>
+
+  {/* Верхняя панель: копирайт + политика */}
+  <div className="absolute top-10 left-10 flex items-center gap-6 text-black dark:text-white text-sm">
+    <span>© lang2lang 2025</span>
+    <a href="https://www.lang2lang.io/privacy.html" className="underline hover:text-white">Политика конфиденциальности</a>
+  </div>
+
+  {/* Верхняя панель: кнопки */}
+  <div className="absolute top-10 right-10 flex items-center gap-4">
+
+    {/* Telegram */}
+<a
+  href="https://t.me/sup_lang2lang"
+  className="w-12 h-12 flex items-center justify-center rounded-xl 
+  bg-white text-orange-600 border border-orange-500 
+  hover:bg-orange-600 hover:text-white transition cursor-pointer shadow-md"
+>
+  <img src="/icons/telegram.svg" className="w-6 h-6" />
+</a>
+
+    {/* Email */}
+<a
+  href="mailto:support@lang2lang.io"
+  className="w-12 h-12 flex items-center justify-center rounded-xl 
+  bg-white text-orange-600 border border-orange-500 
+  hover:bg-orange-600 hover:text-white transition cursor-pointer shadow-md"
+>
+  <img src="/icons/email.svg" className="w-6 h-6" />
+</a>
+
+  </div>
+</footer>
+
+
+
 
         {/* Back to top */}
         {showTop && (
