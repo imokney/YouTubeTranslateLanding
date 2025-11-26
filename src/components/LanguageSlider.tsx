@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
+import Flag from "./Flag";
 
 interface Props {
   lang: "ru" | "en" | "pt";
@@ -6,12 +7,17 @@ interface Props {
 }
 
 export default function LanguageSlider({ lang, onChange }: Props) {
-  const languages = ["ru", "en", "pt"] as const;
+  const languages = [
+    { id: "ru", code: "ru" },
+    { id: "en", code: "us" },
+    { id: "pt", code: "pt" }
+  ] as const;
 
   const containerRef = useRef<HTMLDivElement | null>(null);
+
   const [dragging, setDragging] = useState(false);
 
-  const getIndex = (l: string) => languages.indexOf(l as any);
+  const getIndex = (l: string) => languages.findIndex(x => x.id === l);
 
   const [pos, setPos] = useState(getIndex(lang));
 
@@ -25,13 +31,11 @@ export default function LanguageSlider({ lang, onChange }: Props) {
     const rect = containerRef.current.getBoundingClientRect();
     const rel = (clientX - rect.left) / rect.width;
 
-    // диапазон 0 - 1 → переводим в 0 - 2
-    const index = Math.round(rel * 2);
-
-    const clamped = Math.max(0, Math.min(2, index));
+    const index = Math.round(rel * (languages.length - 1));
+    const clamped = Math.max(0, Math.min(languages.length - 1, index));
 
     setPos(clamped);
-    onChange(languages[clamped]);
+    onChange(languages[clamped].id);
   };
 
   return (
@@ -46,25 +50,26 @@ export default function LanguageSlider({ lang, onChange }: Props) {
         onTouchEnd={() => setDragging(false)}
         onMouseLeave={() => setDragging(false)}
       >
-        {/* подписи */}
+
+        {/* Флаги */}
         <div className="flex justify-between relative z-20">
           {languages.map((l) => (
             <div
-              key={l}
-              onClick={() => onChange(l)}
-              className={`px-4 py-1 text-sm uppercase transition font-medium ${
-                lang === l
-                  ? "text-white"
-                  : "text-white/60 hover:text-white/80"
+              key={l.id}
+              onClick={() => onChange(l.id)}
+              className={`px-4 py-1 transition ${
+                lang === l.id
+                  ? "opacity-100"
+                  : "opacity-50 hover:opacity-80"
               }`}
               style={{ width: 70, textAlign: "center" }}
             >
-              {l}
+              <Flag code={l.code} />
             </div>
           ))}
         </div>
 
-        {/* оранжевый бегунок */}
+        {/* Бегунок */}
         <div
           className="absolute top-2 bottom-2 bg-orange-600 rounded-lg transition-all z-10"
           style={{
