@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
+import Flag from "./components/Flag";
 import {
   ArrowRight,
   PlayCircle,
@@ -169,7 +170,7 @@ useEffect(() => {
 
 
   // ScrollSpy + back-to-top
-  const sectionIds = useMemo(() => ["services", "process", "pricing", "cases", "contact", "faq"], []);
+  const sectionIds = useMemo(() => ["services", "process", "pricing", "contact", "faq"], []);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [showTop, setShowTop] = useState(false);
 
@@ -245,8 +246,7 @@ useEffect(() => {
             <nav className="hidden md:flex items-center gap-6 text-sm">
               {[
                 { id: "services", label: "Вы получаете" },
-                { id: "process", label: "Как мы работаем" },
-                { id: "cases", label: "Кейсы" },
+                { id: "process", label: "Как мы работаем" },,
                 { id: "pricing", label: "Формат" },
                 { id: "contact", label: "Контакты" },
                 { id: "faq", label: "FAQ" },
@@ -407,43 +407,8 @@ useEffect(() => {
           </div>
         </section>
 
-        {/* Cases */}
-        <section id="cases" className="scroll-mt-24 py-20" data-testid="section-cases">
-          <div className="max-w-6xl mx-auto px-4">
-            <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">
-              Кейсы
-            </motion.h2>
-            <motion.p variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-gray-600 dark:text-neutral-300 mt-2">
-              Несколько примеров до/после. Замените заглушки на ваши ролики.
-            </motion.p>
-            <motion.div
-              variants={stagger}
-              initial="hidden"
-              whileInView="show"
-              viewport={{ once: true, amount: 0.2 }}
-              className="mt-10 grid md:grid-cols-3 gap-6"
-            >
-              {[1, 2, 3].map((i) => (
-                <motion.div key={i} variants={fadeInUp} whileHover={{ y: -4 }}>
-                  <GlassCard>
-                    <div className="rounded-xl overflow-hidden border border-black/5 dark:border-white/10 bg-white/60 dark:bg-white/5">
-                      <div className="aspect-video bg-gray-100 dark:bg-neutral-800 flex items-center justify-center text-gray-400 dark:text-neutral-500">
-                        Видео {i}
-                      </div>
-                      <div className="p-4">
-                        <div className="text-base font-semibold">Tech review → Spanish</div>
-                        <div className="text-sm text-gray-600 dark:text-neutral-400">+130% просмотров из Латам</div>
-                      </div>
-                    </div>
-                  </GlassCard>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </section>
-
 {/* YouTube Earnings Calculator */}
-<section id="yt-calculator" className="scroll-mt-24 py-20 bg-orange-50 dark:bg-[#0D0B0A] px-4 text-center">
+<section id="yt-calculator" className="scroll-mt-24 py-20 px-4 text-center">
   <h2 className="text-3xl font-bold mb-2">
     Сколько ваш канал может приносить на других языках?
   </h2>
@@ -485,9 +450,9 @@ useEffect(() => {
 
     <div className="flex justify-center gap-10 mb-6">
       {[
-        { id: "en", flag: "🇺🇸", defaultChecked: true },
-        { id: "pt", flag: "🇵🇹", defaultChecked: true },
-        { id: "es", flag: "🇪🇸", defaultChecked: false }
+        { id: "en", code: "us", defaultChecked: true },
+        { id: "pt", code: "pt", defaultChecked: true },
+        { id: "es", code: "es", defaultChecked: false }
       ].map((lang) => (
         <label key={lang.id} className="flex flex-col items-center cursor-pointer gap-1">
           <input
@@ -505,7 +470,7 @@ useEffect(() => {
             "
           ></span>
 
-          <span className="text-2xl">{lang.flag}</span>
+          <Flag code={lang.code} />
         </label>
       ))}
     </div>
@@ -523,7 +488,7 @@ useEffect(() => {
 
 
 {/* Partnership Models */}
-<section id="pricing" className="py-24 px-4 text-center scroll-mt-24" data-testid="section-pricing">
+<section id="pricing" className="py-24 bg-orange-50 dark:bg-[#0D0B0A] px-4 text-center scroll-mt-24" data-testid="section-pricing">
   <h2 className="text-3xl font-bold mb-2">Формат сотрудничества</h2>
   <p className="text-gray-500 dark:text-gray-400 mb-10 text-lg">
     Или почему вам стоит выбрать нас
@@ -746,8 +711,6 @@ useEffect(() => {
     </motion.form>
   </div>
 </section>
-
-
 
 
         {/* FAQ */}

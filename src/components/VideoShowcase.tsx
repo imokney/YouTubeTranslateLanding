@@ -137,6 +137,16 @@ export default function VideoShowcase() {
   style={{ aspectRatio: '16/9' }}
 >
 
+      {/* Anime preview */}
+    <img
+      src="/demo/prev2.png"   // ← твоя картинка
+      alt="preview"
+      className="absolute inset-0 w-full h-full object-cover opacity-80"
+    />
+
+    {/* Dark overlay */}
+    <div className="absolute inset-0 bg-black/55"></div>
+
               {/* Кнопка Play */}
               <button
                 onClick={startDemo}
