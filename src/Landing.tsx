@@ -33,6 +33,8 @@ import FloatingOrbs from "./components/ui/FloatingOrbs";
 import GlassCard from "./components/ui/GlassCard";
 import MagneticButton from "./components/ui/MagneticButton";
 
+import TechMarquee from "./components/TechMarquee";
+
 const AGENCY_NAME = "lang2lang";
 const TELEGRAM_LINK = "https://t.me/sup_lang2lang";
 const EMAIL = "support@lang2lang.io";
@@ -712,6 +714,8 @@ useEffect(() => {
   </div>
 </section>
 
+        {/* ➤ ➤ ➤ ДОБАВЛЕНО: Бегущая строка */}
+        <TechMarquee />
 
         {/* FAQ */}
         <section id="faq" className="scroll-mt-24 py-20" data-testid="section-faq">
