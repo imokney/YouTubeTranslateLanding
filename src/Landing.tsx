@@ -35,6 +35,9 @@ import MagneticButton from "./components/ui/MagneticButton";
 
 import TechMarquee from "./components/TechMarquee";
 
+import FloatingBlobs from "./components/ui/FloatingBlobs";
+import Dust from "./components/ui/Dust";
+
 const AGENCY_NAME = "lang2lang";
 const TELEGRAM_LINK = "https://t.me/sup_lang2lang";
 const EMAIL = "support@lang2lang.io";
@@ -220,9 +223,27 @@ useEffect(() => {
   return (
     <div className={theme === "dark" ? "dark" : ""}>
       <div className="theme-transition min-h-screen bg-white text-gray-900 dark:bg-neutral-950 dark:text-neutral-100 relative overflow-hidden">
+        
+ 
+
         {/* Текстура фона */}
         <div aria-hidden className="pointer-events-none absolute inset-0 bg-noise" />
 
+        {/* 🔥 Тёплый сияющий акцент снизу справа */}
+        <div
+        aria-hidden
+        className="
+          pointer-events-none
+          absolute bottom-[-260px] right-[-220px]
+          w-[620px] h-[620px]
+          rounded-full
+          bg-orange-500/35
+          blur-[140px]
+          dark:bg-orange-400/30
+          z-0
+        "
+      />
+        
         {/* Анимированный градиент Hero */}
         <div
           aria-hidden
