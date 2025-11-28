@@ -517,92 +517,81 @@ useEffect(() => {
     Или почему вам стоит выбрать нас
   </p>
 
-  <div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+<div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
 
-    {[
-      {
-        icon: Rocket,
-        title: "Global scale",
-        description: 
-          "Полный цикл локализации, дубляжа и управления каналами. Вы говорите с миром как будто сами владеете каждым языком.",
-      },
-      {
-        icon: Heart,
-        title: "Partner-first",
-        description:
-          "Мы не агентство — мы партнёры. Создаём международные медиа-бренды вместе, а не продаём услуги.",
-      },
-      {
-        icon: Target,
-        title: "Zero-risk pilot",
-        description:
-          "Запуск на одном рынке без риска. Аналитика, прогноз, тест, масштабирование только после подтверждённого результата.",
-      },
-    ].map((card, i) => (
-      <div key={i} className="relative group [perspective:1200px] cursor-pointer">
-        <div className="relative h-80 w-full transition-transform duration-[900ms] [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
+  {[
+    {
+      icon: Rocket,
+      description:
+        "Полный цикл локализации, дубляжа и управления каналами. Говорите с миром на любом языке.",
+    },
+    {
+      icon: Heart,
+      description:
+        "Мы не агентство — мы партнёры. Развиваем международные медиа-бренды вместе.",
+    },
+    {
+      icon: Target,
+      description:
+        "Тестируем один рынок без риска. Масштабируем — только после доказанного результата.",
+    },
+  ].map((card, i) => (
+    <div key={i} className="relative group [perspective:1200px] cursor-pointer">
+      <div className="relative h-80 w-full transition-transform duration-[900ms] [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
 
-          {/* FRONT */}
-          <div className="absolute inset-0 rounded-2xl backdrop-blur-xl bg-white/70 dark:bg-white/5
-                          border border-white/50 dark:border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.08)]
-                          transition-all duration-500
-                          group-hover:shadow-[0_0_32px_6px_rgba(255,127,80,0.35)]
-                          group-hover:border-transparent
-                          after:absolute after:inset-0 after:rounded-2xl after:p-[2px] after:bg-gradient-to-br
-                          after:from-orange-500/80 after:via-pink-500/80 after:to-purple-500/80
-                          after:opacity-0 group-hover:after:opacity-100 after:transition-opacity
-                          after:duration-500 after:-z-10
+        {/* FRONT */}
+        <div className="absolute inset-0 rounded-2xl backdrop-blur-xl bg-white/70 dark:bg-white/5
+                        border border-white/50 dark:border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.08)]
+                        flex items-center justify-center
+                        [backface-visibility:hidden]
+                        transition-all duration-500
+                        group-hover:shadow-[0_0_32px_6px_rgba(255,127,80,0.35)]
+                        group-hover:border-transparent">
 
-                          flex flex-col justify-between p-8 [backface-visibility:hidden]">
-
-            {/* Icon + check */}
-            <div className="flex justify-between items-start">
-              <card.icon className="w-9 h-9 text-gray-900 dark:text-gray-100" />
-              
-              <span className="group-hover:hidden">
-                <Check className="w-7 h-7 text-gray-600 dark:text-gray-400 opacity-40" />
-              </span>
-              <span className="hidden group-hover:block">
-                <Check className="w-7 h-7 text-orange-600 dark:text-orange-400" />
-              </span>
+            {/* одна галочка как в старом варианте */}
+            <div className="absolute top-6 right-7">
+              <Check className="w-7 h-7 text-gray-600 dark:text-gray-400 opacity-40" />
             </div>
 
-            {/* Title */}
-            <div className="text-left mt-auto">
-              <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                {card.title}
-              </div>
-            </div>
+          {/* Оранжевый круг + иконка */}
+          <div className="w-24 h-24 rounded-full bg-orange-600/20 border border-orange-500/40 flex items-center justify-center shadow-[0_0_20px_rgba(255,127,80,0.4)]">
+            <card.icon className="w-14 h-14 text-orange-500" />
           </div>
-
-          {/* BACK */}
-          <div className="absolute inset-0 rounded-2xl backdrop-blur-xl bg-white dark:bg-neutral-900
-                          border border-white/40 dark:border-white/10 shadow-xl
-                          transition-all duration-500
-                          group-hover:shadow-[0_0_32px_6px_rgba(255,127,80,0.35)]
-                          group-hover:border-transparent
-                          after:absolute after:inset-0 after:rounded-2xl after:p-[2px] after:bg-gradient-to-br
-                          after:from-orange-500/80 after:via-pink-500/80 after:to-purple-500/80
-                          after:opacity-0 group-hover:after:opacity-100 after:transition-opacity
-                          after:duration-500 after:-z-10
-                          p-8 flex flex-col justify-between
-                          [transform:rotateY(180deg)] [backface-visibility:hidden]">
-
-            <div className="flex justify-between items-start mb-4">
-              <card.icon className="w-9 h-9 text-gray-900 dark:text-gray-100" />
-              <CheckCheck className="w-7 h-7 text-orange-600 dark:text-orange-400" />
-            </div>
-
-            <p className="text-base leading-relaxed text-gray-800 dark:text-gray-200 font-medium">
-              {card.description}
-            </p>
-          </div>
-
         </div>
-      </div>
-    ))}
 
-  </div>
+        {/* BACK */}
+        <div className="
+              absolute inset-0 rounded-2xl backdrop-blur-xl
+              bg-white dark:bg-neutral-900
+              border border-white/40 dark:border-white/10 shadow-xl
+              transition-all duration-500
+              group-hover:shadow-[0_0_32px_6px_rgba(255,127,80,0.35)]
+              group-hover:border-transparent
+              after:absolute after:inset-0 after:rounded-2xl after:p-[2px]
+              after:bg-gradient-to-br
+              after:from-orange-500/80 after:via-pink-500/80 after:to-purple-500/80
+              after:opacity-100 after:transition-opacity
+              after:duration-500 after:-z-10
+              p-8 flex items-center justify-center
+              [transform:rotateY(180deg)] [backface-visibility:hidden]
+            ">
+
+            {/* двойная оранжевая галочка сверху справа */}
+            <div className="absolute top-6 right-7 flex items-center gap-1">
+              <CheckCheck className="w-7 h-7 text-gray-100 dark:text-gray-100" />
+            </div>
+
+          <p className="text-base leading-relaxed text-gray-100 dark:text-gray-200 font-medium">
+            {card.description}
+          </p>
+        </div>
+
+      </div>
+    </div>
+  ))}
+
+</div>
+
 </section>
 
 
@@ -751,7 +740,7 @@ useEffect(() => {
 
 {/* Банер */}
 <section className="mt-24 mb-48 px-4">
-  <div
+<div
     className="
       relative z-10 max-w-7xl mx-auto rounded-3xl p-12 md:p-18
       transition-transform duration-300 hover:-translate-y-1
@@ -761,34 +750,39 @@ useEffect(() => {
     "
   >
     <div className="flex flex-col md:flex-row items-center justify-between gap-10">
-       {/* ЛОГО + ТЕКСТ */}
-      <div className="flex items-center gap-6 flex-1">
-        <img 
-          src="/icons/logo-white.png" 
+
+      {/* ЛОГО + ТЕКСТ */}
+      <div className="flex items-center gap-6 flex-1 min-w-0">
+        <img
+          src="/icons/logo-white.png"
           alt="logo"
-          className="w-16 h-16 md:w-20 md:h-20 object-contain"
+          className="w-20 h-20 object-contain"
         />
 
-      {/* Текст */}
-      <h2 className="text-4xl md:text-5xl font-bold text-white dark:text-gray-200 text-center md:text-left">
-        Готовы расти глобально?
-      </h2>
+        <h2 className="
+          text-3xl md:text-4xl lg:text-5xl
+          font-bold text-white
+          leading-tight whitespace-nowrap
+        ">
+          Пора вещать на весь мир
+        </h2>
+      </div>
 
-      {/* Кнопка */}
+      {/* КНОПКА */}
       <a
         onClick={() => scrollToId("contact")}
         className="
-      ml-auto
-      cursor-pointer select-none
-      px-8 py-4 rounded-xl
-      bg-orange-600 text-white font-semibold
-      shadow hover:bg-orange-700 transition
+          cursor-pointer select-none
+          px-8 py-4 rounded-xl
+          bg-orange-600 text-white font-semibold
+          hover:bg-orange-700 transition
+          shadow-[0_0_20px_4px_rgba(255,98,0,0.35)]
+          whitespace-nowrap
         "
       >
         Стать партнёром
       </a>
     </div>
-  </div>
   </div>
 </section>
 
@@ -796,42 +790,40 @@ useEffect(() => {
 
 
 
-<footer className="relative overflow-hidden footer-gradient-dynamic py-12 min-h-[180px] footer-mask">
 
-    {/* Плавный переход сверху */}
+<footer className="py-12 min-h-[180px] footer-mask">
   <div className="footer-blend"></div>
 
   {/* Верхняя панель: копирайт + политика */}
-  <div className="absolute top-10 left-10 flex items-center gap-6 text-black dark:text-white text-sm">
-    <span>© lang2lang 2025</span>
-    <a href="https://www.lang2lang.io/privacy.html" className="underline hover:text-white">Политика конфиденциальности</a>
+  <div className="absolute left-10 bottom-10 flex items-center gap-6 text-black dark:text-white text-sm">
+    <span>© lang2lang 2025. Все права защищены</span>
+    <a href="https://www.lang2lang.io/privacy.html" className="underline hover:text-white">
+      Политика конфиденциальности
+    </a>
   </div>
 
-  {/* Верхняя панель: кнопки */}
-  <div className="absolute top-10 right-10 flex items-center gap-4">
+  {/* Кнопки справа → прозрачные + выравнивание */}
+  <div className="absolute right-20 bottom-10 flex items-center gap-4">
+    <a
+      href="https://t.me/sup_lang2lang"
+      className="w-12 h-12 flex items-center justify-center rounded-xl
+      bg-white/10 backdrop-blur border border-white/20
+      hover:bg-orange-600 hover:border-orange-600 transition cursor-pointer shadow-sm"
+    >
+      <img src="/icons/telegram.svg" className="w-6 h-6 opacity-80" />
+    </a>
 
-    {/* Telegram */}
-<a
-  href="https://t.me/sup_lang2lang"
-  className="w-12 h-12 flex items-center justify-center rounded-xl 
-  bg-white text-orange-600 border border-orange-500 
-  hover:bg-orange-600 hover:text-white transition cursor-pointer shadow-md"
->
-  <img src="/icons/telegram.svg" className="w-6 h-6" />
-</a>
-
-    {/* Email */}
-<a
-  href="mailto:support@lang2lang.io"
-  className="w-12 h-12 flex items-center justify-center rounded-xl 
-  bg-white text-orange-600 border border-orange-500 
-  hover:bg-orange-600 hover:text-white transition cursor-pointer shadow-md"
->
-  <img src="/icons/email.svg" className="w-6 h-6" />
-</a>
-
+    <a
+      href="mailto:support@lang2lang.io"
+      className="w-12 h-12 flex items-center justify-center rounded-xl
+      bg-white/10 backdrop-blur border border-white/20
+      hover:bg-orange-600 hover:border-orange-600 transition cursor-pointer shadow-sm"
+    >
+      <img src="/icons/email.svg" className="w-6 h-6 opacity-80" />
+    </a>
   </div>
 </footer>
+
 
 
 
