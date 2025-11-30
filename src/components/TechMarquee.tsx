@@ -22,7 +22,7 @@ export default function TechMarquee() {
     items.map((item, i) => (
       <div
         key={`${suffix}${i}`}
-        className="shrink-0 w-[140px] h-[40px] mx-6 flex items-center justify-center"
+        className="shrink-0 w-[160px] h-[60px] mx-6 flex items-center justify-center"
       >
         {/* светлая тема */}
         <img
@@ -43,9 +43,7 @@ export default function TechMarquee() {
 
   return (
     <section className="w-full overflow-hidden py-14 mt-24 bg-transparent">
-      <h3 className="text-center text-xl font-semibold text-gray-800 dark:text-gray-100 mb-8">
-        Technology stack &amp; integrations
-      </h3>
+
 
       <div className="relative overflow-hidden marquee-mask">
         <div
