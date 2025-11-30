@@ -243,6 +243,21 @@ useEffect(() => {
           z-0
         "
       />
+
+      <div
+        aria-hidden
+        className="
+        pointer-events-none
+        absolute bottom-[-240px] left-[-220px]
+        w-[620px] h-[620px]
+        rounded-full
+        bg-pink-500/30
+        blur-[150px]
+        dark:bg-pink-400/25
+        z-0
+        "
+      />
+
         
         {/* Анимированный градиент Hero */}
         <div
@@ -266,30 +281,32 @@ useEffect(() => {
             <span className="font-semibold text-sm md:text-base">{AGENCY_NAME}</span>
           </a>
 
-            <nav className="hidden md:flex items-center gap-6 text-sm">
-              {[
-                { id: "services", label: "Вы получаете" },
-                { id: "process", label: "Как мы работаем" },,
-                { id: "pricing", label: "Формат" },
-                { id: "contact", label: "Контакты" },
-                { id: "faq", label: "FAQ" },
+          <nav className="hidden md:flex items-center gap-6 text-sm">
+            {[
+            { id: "services", label: "Вы получаете" },
+            { id: "process", label: "Как мы работаем" },
+            { id: "pricing", label: "Формат" },
+            { id: "contact", label: "Контакты" },
+            { id: "faq", label: "FAQ" },
               ].map((l) => (
-                <a
-                  key={l.id}
-                  href={`#${l.id}`}
-                  className={`relative hover:text-gray-700 dark:hover:text-neutral-300 transition-colors ${
-                    activeId === l.id ? "text-orange-600 dark:text-orange-300" : ""
-                  }`}
-                >
-                  {l.label}
-                  <span
-                    className={`absolute -bottom-1 left-0 h-[2px] w-full rounded bg-current transition-opacity ${
-                      activeId === l.id ? "opacity-100" : "opacity-0"
-                    }`}
-                  />
-                </a>
-              ))}
-            </nav>
+          <button
+            key={l.id}
+            type="button"
+            onClick={() => scrollToId(l.id)}
+            className={`relative hover:text-gray-700 dark:hover:text-neutral-300 transition-colors ${
+            activeId === l.id ? "text-orange-600 dark:text-orange-300" : ""
+            }`}
+          >
+            {l.label}
+          <span
+            className={`absolute -bottom-1 left-0 h-[2px] w-full rounded bg-current transition-opacity ${
+            activeId === l.id ? "opacity-100" : "opacity-0"
+            }`}
+          />
+          </button>
+            ))}
+          </nav>
+
             <div className="flex items-center gap-3">
               <ThemeSwitch theme={theme} setTheme={setTheme} />
               <button
@@ -331,7 +348,7 @@ useEffect(() => {
                   {home.ctaSecondary} <PlayCircle className="w-5 h-5" />
                 </motion.a>
               </motion.div>
-              <motion.div variants={fadeInUp} className="mt-6 flex flex-wrap gap-4 text-sm text-gray-600 dark:text-neutral-300">
+              <motion.div variants={fadeInUp} className="mt-6 flex flex-wrap gap-4 text-[13.97px] text-gray-600 dark:text-neutral-300">
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4 text-orange-600" />
                   Быстрый запуск
@@ -382,7 +399,7 @@ useEffect(() => {
                     </div>
                     <p className="text-sm text-gray-600 dark:text-neutral-300 mt-2">{s.desc}</p>
                     {/* Пример списка фич — оставлен как было; можно тоже вынести в JSON при желании */}
-                  <ul className="mt-3 space-y-2 text-sm text-gray-600 dark:text-neutral-300">
+                  <ul className="mt-3 space-y-2 text-[13.9px] text-gray-600 dark:text-neutral-300">
                       {s.features.map((f, i) => (
                   <li key={i} className="flex items-center gap-2">
                   <Check className="w-4 h-4 text-orange-600" />
@@ -422,7 +439,7 @@ useEffect(() => {
                     <div className="text-xl font-semibold">
                       Шаг {i.step}. {i.title}
                     </div>
-                    <div className="text-gray-600 dark:text-neutral-300 mt-2">{i.text}</div>
+                    <div className="text-[15.5px] text-gray-600 dark:text-neutral-300 mt-2">{i.text}</div>
                   </GlassCard>
                 </motion.div>
               ))}
@@ -728,7 +745,7 @@ useEffect(() => {
         <TechMarquee />
 
         {/* FAQ */}
-        <section id="faq" className="scroll-mt-24 py-20" data-testid="section-faq">
+        <section id="faq" className="scroll-mt-24 py-32" data-testid="section-faq">
           <div className="max-w-6xl mx-auto px-4">
             <motion.h2 variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }} className="text-3xl font-bold">
               FAQ
@@ -762,9 +779,9 @@ useEffect(() => {
         <h2 className="
           text-3xl md:text-4xl lg:text-5xl
           font-bold text-white
-          leading-tight whitespace-nowrap
+          leading-tight
         ">
-          Пора вещать на весь мир
+          Расскажите о себе всему миру
         </h2>
       </div>
 
@@ -791,19 +808,37 @@ useEffect(() => {
 
 
 
-<footer className="py-12 min-h-[180px] footer-mask">
-  <div className="footer-blend"></div>
+<footer className="py-12 relative footer-mask">
 
-  {/* Верхняя панель: копирайт + политика */}
-  <div className="absolute left-10 bottom-10 flex items-center gap-6 text-black dark:text-white text-sm">
+
+
+  {/* Левый блок: копирайт + политика */}
+  <div
+    className="
+      flex flex-col md:flex-row gap-3 md:gap-6
+      text-black dark:text-white text-sm
+      px-6
+      md:absolute md:left-10 md:bottom-10
+    "
+  >
     <span>© lang2lang 2025. Все права защищены</span>
-    <a href="https://www.lang2lang.io/privacy.html" className="underline hover:text-white">
+
+    <a
+      href="https://www.lang2lang.io/privacy.html"
+      className="underline hover:text-white"
+    >
       Политика конфиденциальности
     </a>
   </div>
 
-  {/* Кнопки справа → прозрачные + выравнивание */}
-  <div className="absolute right-20 bottom-10 flex items-center gap-4">
+  {/* Правый блок: кнопки */}
+  <div
+    className="
+      flex gap-4 px-6 mt-6
+      md:mt-0
+      md:absolute md:right-20 md:bottom-10
+    "
+  >
     <a
       href="https://t.me/sup_lang2lang"
       className="w-12 h-12 flex items-center justify-center rounded-xl
@@ -822,6 +857,7 @@ useEffect(() => {
       <img src="/icons/email.svg" className="w-6 h-6 opacity-80" />
     </a>
   </div>
+
 </footer>
 
 
