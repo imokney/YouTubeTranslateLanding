@@ -1,10 +1,14 @@
+import React from "react";
+
 export default function Flag({ code }: { code: string }) {
   return (
-    <img
-      src={`/flags/${code}.svg`}
-      alt={code}
-      className="w-6 h-6 rounded-full shadow-sm"
-      draggable="false"
-    />
+<img
+  src={`/flags/${code}.png`}
+  alt={code}
+  className="w-7 h-auto rounded-[4px] shadow-sm block"
+/>
+
+
+
   );
 }
