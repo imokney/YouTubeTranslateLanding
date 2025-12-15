@@ -4,6 +4,9 @@ import { inject } from '@vercel/analytics'
 import Landing from './Landing'
 import './index.css'
 import Lenis from '@studio-freight/lenis'
+import { injectSpeedInsights } from '@vercel/speed-insights'
+
+injectSpeedInsights()
 
 // Initialize Vercel Web Analytics
 inject()
