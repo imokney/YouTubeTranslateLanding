@@ -494,7 +494,7 @@ useEffect(() => {
         { id: "pt", code: "pt", defaultChecked: true },
         { id: "es", code: "es", defaultChecked: false }
       ].map((lang) => (
-        <label key={lang.id} className="flex flex-col items-center cursor-pointer gap-1">
+        <label key={lang.id} className="flex flex-col items-center cursor-pointer gap-2">
           <input
             id={lang.id}
             type="checkbox"
@@ -554,13 +554,14 @@ useEffect(() => {
     },
   ].map((card, i) => (
     <div key={i} className="relative group [perspective:1200px] cursor-pointer">
-      <div className="relative h-80 w-full transition-transform duration-[900ms] [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
+      <div className="relative h-80 w-full transition-transform duration-[900ms] preserve-3d group-hover:[transform:rotateY(180deg)]">
 
         {/* FRONT */}
         <div className="absolute inset-0 rounded-2xl backdrop-blur-xl bg-white/70 dark:bg-white/5
                         border border-white/50 dark:border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.08)]
                         flex items-center justify-center
-                        [backface-visibility:hidden]
+                        backface-hidden
+                        [transform:translateZ(1px)]
                         transition-all duration-500
                         group-hover:shadow-[0_0_32px_6px_rgba(255,127,80,0.35)]
                         group-hover:border-transparent">
@@ -590,7 +591,7 @@ useEffect(() => {
               after:opacity-100 after:transition-opacity
               after:duration-500 after:-z-10
               p-8 flex items-center justify-center
-              [transform:rotateY(180deg)] [backface-visibility:hidden]
+              backface-hidden [transform:rotateY(180deg)_translateZ(1px)]
             ">
 
             {/* двойная оранжевая галочка сверху справа */}
@@ -896,35 +897,88 @@ function FAQAccordion() {
     },
     {
       q: "Как долго я могу получать доход с локализованных каналов?",
-      a: "Всегда. Пока видео продолжают набирать просмотры, ваш канала будет монетезироваться и мы будем делиться с вами полученным доходом.",
+      a: "Всегда. Пока видео продолжают набирать просмотры, ваш канал будет монетезироваться и мы будем делиться с вами полученным доходом.",
     },
   ];
+
   const [open, setOpen] = useState<number | null>(null);
+
+  const isIOS =
+    typeof window !== "undefined" &&
+    /iPad|iPhone|iPod/.test(navigator.userAgent) &&
+    !(window as any).MSStream;
 
   return (
     <div className="mt-8 grid md:grid-cols-2 gap-6">
       {items.map((f, i) => {
         const opened = open === i;
+
         return (
-          <motion.div key={i} variants={fadeInUp} initial="hidden" whileInView="show" viewport={{ once: true }}>
+          <motion.div
+            key={i}
+            variants={fadeInUp}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+          >
             <button
               onClick={() => setOpen(opened ? null : i)}
-              className="w-full text-left relative z-10 rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900 p-6 focus:outline-none focus:ring-2 focus:ring-orange-500/50"
+              className="
+                w-full text-left relative z-10
+                rounded-2xl border border-black/5 dark:border-white/10
+                bg-white dark:bg-neutral-900
+                p-6
+                focus:outline-none focus:ring-2 focus:ring-orange-500/50
+              "
               aria-expanded={opened}
             >
               <div className="flex items-start justify-between gap-4">
                 <span className="font-semibold">{f.q}</span>
-                <span className={`ml-4 transition-transform ${opened ? "rotate-45" : ""}`}>＋</span>
+                <span
+                  className={`ml-4 transition-transform ${
+                    opened ? "rotate-45" : ""
+                  }`}
+                >
+                  ＋
+                </span>
               </div>
-            <motion.div
-            initial={false}
-            animate={{ height: opened ? 'auto' : 0 }}
-            transition={{ duration: 0.4, ease: "easeInOut" }}
-            className="overflow-hidden"
-            >
-            <p className="text-gray-600 dark:text-neutral-300">{f.a}</p>
-            </motion.div>
 
+              {/* 🔽 РАЗНАЯ АНИМАЦИЯ */}
+              {isIOS ? (
+                /* iOS — лёгкая анимация (без лагов) */
+                <div
+                  className={`
+                    grid
+                    transition-[grid-template-rows,opacity]
+                    duration-500
+                    ease-[cubic-bezier(0.4,0,0.2,1)]
+                    ${opened
+                      ? "grid-rows-[1fr] opacity-100"
+                      : "grid-rows-[0fr] opacity-0"}
+                  `}
+                >
+                  <div className="overflow-hidden">
+                    <p className="text-gray-600 dark:text-neutral-300 mt-3">
+                      {f.a}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                /* Desktop — КАК БЫЛО */
+                <motion.div
+                  initial={false}
+                  animate={{
+                    height: opened ? "auto" : 0,
+                    opacity: opened ? 1 : 0,
+                  }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                  className="overflow-hidden"
+                >
+                  <p className="text-gray-600 dark:text-neutral-300 mt-3">
+                    {f.a}
+                  </p>
+                </motion.div>
+              )}
             </button>
           </motion.div>
         );
