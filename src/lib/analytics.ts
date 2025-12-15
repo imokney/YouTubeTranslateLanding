@@ -1,5 +1,10 @@
+import { track as vercelTrack } from '@vercel/analytics'
+
 export function track(name: string, props: Record<string, any> = {}) {
   try {
+    // Vercel Web Analytics
+    vercelTrack(name, props)
+    
     // Plausible
     // @ts-ignore
     if ((window as any).plausible) (window as any).plausible(name, { props });
