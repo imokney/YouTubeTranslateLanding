@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useLayoutEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import Flag from "./components/Flag";
 import InteractiveHoverButton from "./components/ui/HoverButton";
@@ -53,6 +53,16 @@ const getPreferredTheme = (): "light" | "dark" => {
   return "light";
 };
 
+const getInitialTheme = (): "light" | "dark" => {
+  if (typeof document !== "undefined") {
+    return document.documentElement.classList.contains("dark")
+      ? "dark"
+      : "light";
+  }
+  return "light";
+};
+
+
 const applyTheme = (t: "light" | "dark") => {
   if (typeof document === "undefined") return;
   document.documentElement.classList.toggle("dark", t === "dark");
@@ -60,7 +70,17 @@ const applyTheme = (t: "light" | "dark") => {
 
 const isIOSDevice = () => {
   if (typeof window === "undefined") return false;
-  return /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+  const ua = navigator.userAgent || "";
+  const iOS = /iPad|iPhone|iPod/.test(ua);
+
+  // iPadOS 13+ часто маскируется под Mac
+  const iPadOS =
+    navigator.platform === "MacIntel" &&
+    typeof navigator.maxTouchPoints === "number" &&
+    navigator.maxTouchPoints > 1;
+
+  return iOS || iPadOS;
 };
 
 
@@ -80,17 +100,9 @@ function ThemeSwitch({
 }) {
   const isDark = theme === "dark";
 
-  useEffect(() => {
-    applyTheme(theme);
-    try {
-      localStorage.setItem("theme", theme);
-    } catch {}
-  }, [theme]);
-
   const toggle = () => {
     const next = isDark ? "light" : "dark";
 
-    // iOS: переключаем без анимаций/прорисовок переходов
     if (isIOSDevice()) {
       const root = document.documentElement;
 
@@ -118,7 +130,6 @@ function ThemeSwitch({
       aria-label="Переключить тему"
       title={isDark ? "Светлая тема" : "Тёмная тема"}
     >
-      {/* Важно: на iOS лучше не использовать motion.layout */}
       <span
         className={`absolute flex items-center justify-center h-5 w-5 rounded-full bg-white shadow-sm text-orange-500 transition-transform duration-300
           ${isDark ? "translate-x-[22px]" : "translate-x-[2px]"}`}
@@ -130,20 +141,18 @@ function ThemeSwitch({
 }
 
 
+
 export default function Landing() {
-  const [theme, setTheme] = useState<"light" | "dark">(() => getPreferredTheme());
+  const [theme, setTheme] = useState<"light" | "dark">(getInitialTheme);
+  useLayoutEffect(() => {
+    applyTheme(theme);
+    try { localStorage.setItem("theme", theme); } catch {}
+  }, [theme]);
   const [scrolled, setScrolled] = useState(false);
   const isIOS = useMemo(() => isIOSDevice(), []);
 
   /* ---- UI behavior ---- */
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-      {/* скорлл к форме */}
+      //скорлл к форме 
     const scrollToId = (id: string) => {
     const el = document.getElementById(id);
     if (!el) return;
