@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import Flag from "./components/Flag";
+import InteractiveHoverButton from "./components/ui/HoverButton";
+//import ParticleImageBlock from "./components/ParticleImageBlock";
 import {
   ArrowRight,
   PlayCircle,
@@ -51,6 +53,12 @@ const getPreferredTheme = (): "light" | "dark" => {
   return "light";
 };
 
+const applyTheme = (t: "light" | "dark") => {
+  if (typeof document === "undefined") return;
+  document.documentElement.classList.toggle("dark", t === "dark");
+};
+
+
 const fadeInUp = {
   hidden: { opacity: 0, y: 16 },
   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
@@ -66,10 +74,14 @@ function ThemeSwitch({
 }) {
   const isDark = theme === "dark";
   useEffect(() => {
+    // применяем на <html> (быстрее и меньше лагов)
+    applyTheme(theme);
+
     try {
       localStorage.setItem("theme", theme);
     } catch {}
   }, [theme]);
+
 
 
   return (
@@ -187,9 +199,14 @@ useEffect(() => {
   useEffect(() => {
     const onScrollShadow = () => setScrolled(window.scrollY > 10);
     const onScrollTop = () => setShowTop(window.scrollY > 600);
+    const onScrollActiveReset = () => {
+        // если мы почти вверху — не подсвечиваем пункты меню
+        if (window.scrollY < 120) setActiveId(null);
+      };
 
     window.addEventListener("scroll", onScrollShadow, { passive: true });
     window.addEventListener("scroll", onScrollTop, { passive: true });
+    window.addEventListener("scroll", onScrollActiveReset, { passive: true });
 
     // ✅ Выбираем секцию с максимальным пересечением
     const io = new IntersectionObserver(
@@ -216,6 +233,7 @@ useEffect(() => {
     return () => {
       window.removeEventListener("scroll", onScrollShadow);
       window.removeEventListener("scroll", onScrollTop);
+      window.removeEventListener("scroll", onScrollActiveReset);
       io.disconnect();
     };
   }, [sectionIds]);
@@ -327,27 +345,37 @@ useEffect(() => {
             <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }}>
               <motion.h1 variants={fadeInUp} className="text-4xl md:text-5xl font-bold leading-tight">
                 {home.heroTitle}{" "}
-                <span className="bg-gradient-to-r from-orange-600 to-amber-500 bg-clip-text text-transparent">каналы YouTube</span>
+                <span
+                  className="
+                    bg-gradient-to-r
+                    from-orange-500 via-amber-400 to-rose-500
+                    bg-clip-text text-transparent
+                    colorful-text
+                  "
+                >
+                  каналы YouTube
+                </span>
+
                 <br />на других языках
               </motion.h1>
               <motion.p variants={fadeInUp} className="mt-4 text-lg text-gray-600 dark:text-neutral-300">
                 {home.heroSubtitle}
               </motion.p>
-              <motion.div variants={fadeInUp} className="mt-6 flex flex-col sm:flex-row gap-3">
+              <motion.div variants={fadeInUp} className="mt-6 flex flex-col sm:flex-row items-start sm:items-center gap-3">
                 <MagneticButton onClick={() => scrollToId("contact")}>
                   <span className="inline-flex items-center gap-2">
                     {home.ctaPrimary} <ArrowRight className="w-4 h-4" />
                   </span>
                 </MagneticButton>
-                <motion.a
-                  whileHover={{ y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                  href="#pricing"
-                  className="inline-flex items-center gap-2 rounded-2xl border border-orange-300 text-orange-700 hover:bg-orange-50 px-4 py-2 dark:border-orange-500/40 dark:text-orange-300 dark:hover:bg-orange-500/10"
-                >
-                  {home.ctaSecondary} <PlayCircle className="w-5 h-5" />
-                </motion.a>
+
+                <InteractiveHoverButton
+                  text="Почему мы"
+                  onClick={() => scrollToId("pricing")}
+                  
+                />
               </motion.div>
+
+              
               <motion.div variants={fadeInUp} className="mt-6 flex flex-wrap gap-4 text-[13.97px] text-gray-600 dark:text-neutral-300">
                 <div className="flex items-center gap-2">
                   <Clock className="w-4 h-4 text-orange-600" />
@@ -804,6 +832,7 @@ useEffect(() => {
   </div>
 </section>
 
+{/*<ParticleImageBlock/> скрыл блок*/}
 
 
 

@@ -1,5 +1,26 @@
 @tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@keyframes gradient-x {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.colorful-text {
+  background-size: 200% 200%;
+  animation: gradient-x 4s ease infinite;
+}
+
 
 html {
   font-family: "Inter", system-ui, sans-serif;
@@ -10,16 +31,22 @@ html {
   font-size: 17px;
 }
 
+/*
 html, body {
   transition: background-color .35s ease, color .35s ease;
 }
-
+*/
 
 @tailwind components;
 @tailwind utilities;
 
 
-/* Smooth theme transition */
+/* Smooth theme transition (лёгкий) */
+.theme-transition {
+  transition: background-color .18s linear, color .18s linear;
+}
+
+/* Smooth theme transition
 .theme-transition {
   transition: 
     background-color .35s ease,
@@ -30,7 +57,7 @@ html, body {
     box-shadow .35s ease,
     transform .35s ease;
 }
-
+*/
 
 /* Enable smooth scroll behavior for anchor links */
 html {
@@ -159,7 +186,7 @@ html {
   transform: translateZ(0);
 }
 
-/* Плавные переходы цветов/тени/прозрачности (без анимации border-color) */
+/* Плавные переходы цветов/тени/прозрачности (без анимации border-color)
 .theme-transition * {
   transition:
     background-color .28s ease,
@@ -168,6 +195,7 @@ html {
     opacity .28s ease,
     transform .28s ease;
 }
+*/
 
 /* ==== FIX: тёмная тема от предка .dark, а не :root.dark ==== */
 
@@ -348,7 +376,7 @@ html, body {
   background-size: 10px 10px;
 }
 
-/* === Мягкий переход между светлой и тёмной темами === */
+/* === Мягкий переход между светлой и тёмной темами === 
 .theme-transition {
   transition: background-color 0.45s ease-in-out,
               color 0.45s ease-in-out,
@@ -356,6 +384,7 @@ html, body {
               border-color 0.45s ease-in-out,
               transform 0.45s ease-in-out;
 }
+*/
 
 /* Общие анимации для иконок солнца/луны */
 .theme-toggle-icon {
@@ -693,4 +722,19 @@ html, body {
 .backface-hidden {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
+}
+
+
+/* iOS/мобилки: blur + анимированный контент часто даёт мерцание */
+@media (max-width: 768px) {
+  .glass,
+  .glass-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+.disable-transitions * {
+  transition: none !important;
+  animation: none !important;
 }
