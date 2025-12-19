@@ -58,12 +58,18 @@ const applyTheme = (t: "light" | "dark") => {
   document.documentElement.classList.toggle("dark", t === "dark");
 };
 
+const isIOSDevice = () => {
+  if (typeof window === "undefined") return false;
+  return /iPad|iPhone|iPod/.test(navigator.userAgent);
+};
+
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 16 },
   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
 };
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.08 } } };
+
 
 function ThemeSwitch({
   theme,
@@ -73,44 +79,69 @@ function ThemeSwitch({
   setTheme: (t: "light" | "dark") => void;
 }) {
   const isDark = theme === "dark";
-  useEffect(() => {
-    // применяем на <html> (быстрее и меньше лагов)
-    applyTheme(theme);
 
+  useEffect(() => {
+    applyTheme(theme);
     try {
       localStorage.setItem("theme", theme);
     } catch {}
   }, [theme]);
 
+  const toggle = () => {
+    const next = isDark ? "light" : "dark";
 
+    // iOS: переключаем без анимаций/прорисовок переходов
+    if (isIOSDevice()) {
+      const root = document.documentElement;
+
+      root.classList.add("disable-transitions");
+      requestAnimationFrame(() => {
+        setTheme(next);
+        requestAnimationFrame(() => {
+          root.classList.remove("disable-transitions");
+        });
+      });
+      return;
+    }
+
+    setTheme(next);
+  };
 
   return (
     <button
       role="switch"
       aria-checked={isDark}
-      onClick={() => setTheme(isDark ? "light" : "dark")}
+      onClick={toggle}
       className={`relative inline-flex h-7 w-12 items-center rounded-full border transition-colors duration-300 
         ${isDark ? "bg-orange-600 border-orange-600" : "bg-gray-300 border-gray-300"} 
         dark:${isDark ? "bg-orange-600 border-orange-600" : "bg-neutral-700 border-neutral-700"}`}
       aria-label="Переключить тему"
       title={isDark ? "Светлая тема" : "Тёмная тема"}
     >
-      <motion.span
-        layout
-        transition={{ type: "spring", stiffness: 500, damping: 30 }}
-        className={`absolute flex items-center justify-center h-5 w-5 rounded-full bg-white shadow-sm text-orange-500 ${
-          isDark ? "right-0.5" : "left-0.5"
-        }`}
+      {/* Важно: на iOS лучше не использовать motion.layout */}
+      <span
+        className={`absolute flex items-center justify-center h-5 w-5 rounded-full bg-white shadow-sm text-orange-500 transition-transform duration-300
+          ${isDark ? "translate-x-[22px]" : "translate-x-[2px]"}`}
       >
         {isDark ? <Moon className="w-3.5 h-3.5" /> : <Sun className="w-3.5 h-3.5" />}
-      </motion.span>
+      </span>
     </button>
   );
 }
 
+
 export default function Landing() {
   const [theme, setTheme] = useState<"light" | "dark">(() => getPreferredTheme());
   const [scrolled, setScrolled] = useState(false);
+  const isIOS = useMemo(() => isIOSDevice(), []);
+
+  /* ---- UI behavior ---- */
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
       {/* скорлл к форме */}
     const scrollToId = (id: string) => {
@@ -340,7 +371,7 @@ useEffect(() => {
 
         {/* Hero */}
         <section className="relative pt-28 md:pt-32">
-          <FloatingOrbs />
+          {!isIOS && <FloatingOrbs />}
           <div className="max-w-6xl mx-auto px-4 py-16 md:py-20 grid md:grid-cols-2 gap-10 items-center">
             <motion.div variants={stagger} initial="hidden" whileInView="show" viewport={{ once: true, amount: 0.3 }}>
               <motion.h1 variants={fadeInUp} className="text-4xl md:text-5xl font-bold leading-tight">
@@ -476,7 +507,13 @@ useEffect(() => {
         </section>
 
 {/* YouTube Earnings Calculator */}
-<section id="yt-calculator" className="scroll-mt-24 py-20 px-4 text-center">
+<motion.section 
+    id="yt-calculator" className="scroll-mt-24 py-20 px-4 text-center"
+    variants={fadeInUp}
+    initial="hidden"
+    whileInView="show"
+    viewport={{ once: true, amount: 0.2 }}>
+  
   <h2 className="text-3xl font-bold mb-2">
     Сколько ваш канал может приносить на других языках?
   </h2>
@@ -484,7 +521,7 @@ useEffect(() => {
     Передвиньте ползунок и узнайте потенциал вашего YouTube-канала
   </p>
 
-  <div
+  <motion.div
     className="
       relative z-10 max-w-xl mx-auto 
       bg-white dark:bg-neutral-900 
@@ -551,18 +588,32 @@ useEffect(() => {
     </div>
 
 
-  </div>
-</section>
+  </motion.div>
+</motion.section>
 
 
 {/* Partnership Models */}
-<section id="pricing" className="py-24 bg-orange-50 dark:bg-[#0D0B0A] px-4 text-center scroll-mt-24" data-testid="section-pricing">
-  <h2 className="text-3xl font-bold mb-2">Формат сотрудничества</h2>
-  <p className="text-gray-500 dark:text-gray-400 mb-10 text-lg">
+<motion.section 
+  id="pricing" 
+  className="py-24 bg-orange-50 dark:bg-[#0D0B0A] px-4 text-center scroll-mt-24" 
+  data-testid="section-pricing"
+  variants={fadeInUp}
+  initial="hidden"
+  whileInView="show"
+  viewport={{ once: true, amount: 0.2 }}
+>
+  <motion.h2 variants={fadeInUp} className="text-3xl font-bold mb-2">Формат сотрудничества</motion.h2>
+  <motion.p variants={fadeInUp} className="text-gray-500 dark:text-gray-400 mb-10 text-lg">
     Или почему вам стоит выбрать нас
-  </p>
+  </motion.p>
 
-<div className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+<motion.div 
+  className="grid md:grid-cols-3 gap-6 max-w-6xl mx-auto"
+  variants={stagger}
+  initial="hidden"
+  whileInView="show"
+  viewport={{ once: true, amount: 0.2 }}
+>
 
   {[
     {
@@ -581,8 +632,8 @@ useEffect(() => {
         "Тестируем один рынок без риска. Масштабируем — только после доказанного результата.",
     },
   ].map((card, i) => (
-    <div key={i} className="relative group [perspective:1200px] cursor-pointer">
-      <div className="relative h-80 w-full transition-transform duration-[900ms] preserve-3d group-hover:[transform:rotateY(180deg)]">
+    <motion.div key={i} variants={fadeInUp} className="relative group [perspective:1200px] cursor-pointer">
+      <div className="relative h-80 w-full will-change-transform transition-transform duration-[300ms] preserve-3d group-hover:[transform:rotateY(180deg)]">
 
         {/* FRONT */}
         <div className="absolute inset-0 rounded-2xl backdrop-blur-xl bg-white/70 dark:bg-white/5
@@ -633,12 +684,12 @@ useEffect(() => {
         </div>
 
       </div>
-    </div>
+    </motion.div>
   ))}
 
-</div>
+</motion.div>
 
-</section>
+</motion.section>
 
 
 
@@ -785,7 +836,12 @@ useEffect(() => {
 
 
 {/* Банер */}
-<section className="mt-24 mb-48 px-4">
+<motion.section 
+  className="mt-24 mb-48 px-4"
+  variants={fadeInUp}
+  initial="hidden"
+  whileInView="show"
+  viewport={{ once: true, amount: 0.2 }}>
 <div
     className="
       relative z-10 max-w-7xl mx-auto rounded-3xl p-12 md:p-18
@@ -830,7 +886,7 @@ useEffect(() => {
       </a>
     </div>
   </div>
-</section>
+</motion.section>
 
 {/*<ParticleImageBlock/> скрыл блок*/}
 
