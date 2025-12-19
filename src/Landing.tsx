@@ -996,11 +996,7 @@ function FAQAccordion() {
   ];
 
   const [open, setOpen] = useState<number | null>(null);
-
-  const isIOS =
-    typeof window !== "undefined" &&
-    /iPad|iPhone|iPod/.test(navigator.userAgent) &&
-    !(window as any).MSStream;
+  const ios = useMemo(() => isIOSDevice(), []);
 
   return (
     <div className="mt-8 grid md:grid-cols-2 gap-6">
@@ -1013,67 +1009,43 @@ function FAQAccordion() {
             variants={fadeInUp}
             initial="hidden"
             whileInView="show"
-            viewport={{ once: true }}
+            viewport={{ once: true, amount: 0.2 }}
+            className="rounded-2xl border border-black/5 dark:border-white/10 bg-white dark:bg-neutral-900"
           >
+            {/* Кнопка — только заголовок */}
             <button
               onClick={() => setOpen(opened ? null : i)}
-              className="
-                w-full text-left relative z-10
-                rounded-2xl border border-black/5 dark:border-white/10
-                bg-white dark:bg-neutral-900
-                p-6
-                focus:outline-none focus:ring-2 focus:ring-orange-500/50
-              "
+              className="w-full text-left p-6 focus:outline-none focus:ring-2 focus:ring-orange-500/50 rounded-2xl"
               aria-expanded={opened}
+              type="button"
             >
               <div className="flex items-start justify-between gap-4">
                 <span className="font-semibold">{f.q}</span>
-                <span
-                  className={`ml-4 transition-transform ${
-                    opened ? "rotate-45" : ""
-                  }`}
-                >
+                <span className={`ml-4 transition-transform ${opened ? "rotate-45" : ""}`}>
                   ＋
                 </span>
               </div>
-
-              {/* 🔽 РАЗНАЯ АНИМАЦИЯ */}
-              {isIOS ? (
-                /* iOS — лёгкая анимация (без лагов) */
-                <div
-                  className={`
-                    grid
-                    transition-[grid-template-rows,opacity]
-                    duration-500
-                    ease-[cubic-bezier(0.4,0,0.2,1)]
-                    ${opened
-                      ? "grid-rows-[1fr] opacity-100"
-                      : "grid-rows-[0fr] opacity-0"}
-                  `}
-                >
-                  <div className="overflow-hidden">
-                    <p className="text-gray-600 dark:text-neutral-300 mt-3">
-                      {f.a}
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                /* Desktop — КАК БЫЛО */
-                <motion.div
-                  initial={false}
-                  animate={{
-                    height: opened ? "auto" : 0,
-                    opacity: opened ? 1 : 0,
-                  }}
-                  transition={{ duration: 0.4, ease: "easeInOut" }}
-                  className="overflow-hidden"
-                >
-                  <p className="text-gray-600 dark:text-neutral-300 mt-3">
-                    {f.a}
-                  </p>
-                </motion.div>
-              )}
             </button>
+
+            {/* Контент ответа — ВНЕ button (критично для iOS стабильности) */}
+            {ios ? (
+              opened ? (
+                <div className="px-6 pb-6 -mt-2">
+                  <p className="text-gray-600 dark:text-neutral-300">{f.a}</p>
+                </div>
+              ) : null
+            ) : (
+              <motion.div
+                initial={false}
+                animate={{ height: opened ? "auto" : 0, opacity: opened ? 1 : 0 }}
+                transition={{ duration: 0.35, ease: "easeInOut" }}
+                className="overflow-hidden"
+              >
+                <div className="px-6 pb-6 -mt-2">
+                  <p className="text-gray-600 dark:text-neutral-300">{f.a}</p>
+                </div>
+              </motion.div>
+            )}
           </motion.div>
         );
       })}
