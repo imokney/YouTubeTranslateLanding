@@ -151,6 +151,9 @@ export default function Landing() {
   const [scrolled, setScrolled] = useState(false);
   const isIOS = useMemo(() => isIOSDevice(), []);
 
+  const [calcReady, setCalcReady] = useState(false);
+
+
   /* ---- UI behavior ---- */
       //скорлл к форме 
     const scrollToId = (id: string) => {
@@ -165,27 +168,65 @@ export default function Landing() {
 };
 
 
-// ✅ Калькулятор дохода: логика
 useEffect(() => {
-  const range = document.getElementById("rangeViews") as HTMLInputElement;
-  const viewsOut = document.getElementById("viewsOut")!;
-  const incomeOut = document.getElementById("incomeOut")!;
-  const bubble = document.getElementById("rangeBubble")!;
+  const el = document.getElementById("yt-calculator");
+  if (!el) return;
+
+  // Если уже включили — повторно не надо
+  if (calcReady) return;
+
+  const io = new IntersectionObserver(
+    ([entry]) => {
+      if (entry.isIntersecting) {
+        setCalcReady(true);
+        io.disconnect();
+      }
+    },
+    {
+      // Подгружаем чуть заранее, чтобы к моменту,
+      // когда человек увидит блок, всё уже работало
+      root: null,
+      rootMargin: "300px 0px",
+      threshold: 0.01,
+    }
+  );
+
+  io.observe(el);
+  return () => io.disconnect();
+}, [calcReady]);
+
+
+// ✅ Калькулятор дохода: логика (ленивый запуск — только когда долистали)
+useEffect(() => {
+  if (!calcReady) return;
+
+  const range = document.getElementById("rangeViews") as HTMLInputElement | null;
+  const viewsOut = document.getElementById("viewsOut") as HTMLElement | null;
+  const incomeOut = document.getElementById("incomeOut") as HTMLElement | null;
+  const bubble = document.getElementById("rangeBubble") as HTMLElement | null;
+
+  // если вдруг элементов нет (например SSR/перерендер) — выходим безопасно
+  if (!range || !viewsOut || !incomeOut || !bubble) return;
+
   const rpm = { en: 5, pt: 1.5, es: 2.5 };
-  const langs = ["en", "pt", "es"];
+  const langs = ["en", "pt", "es"] as const;
+
   let current = 0;
+  let rafId: number | null = null;
 
   function animate(el: HTMLElement, start: number, end: number) {
     const t = 260;
     const diff = end - start;
     let st: number | null = null;
-    function step(time: number) {
+
+    const step = (time: number) => {
       if (!st) st = time;
       const p = Math.min((time - st) / t, 1);
       el.textContent = "$" + Math.floor(start + diff * p).toLocaleString() + " / месяц";
-      if (p < 1) requestAnimationFrame(step);
-    }
-    requestAnimationFrame(step);
+      if (p < 1) rafId = requestAnimationFrame(step);
+    };
+
+    rafId = requestAnimationFrame(step);
   }
 
   function calc() {
@@ -200,28 +241,55 @@ useEffect(() => {
     bubble.textContent = v.toLocaleString();
 
     let total = 0;
-    langs.forEach(l => {
-      const el = document.getElementById(l) as HTMLInputElement;
-      if (el?.checked) total += (v / 1000) * rpm[l as keyof typeof rpm];
+    langs.forEach((l) => {
+      const el = document.getElementById(l) as HTMLInputElement | null;
+      if (el?.checked) total += (v / 1000) * rpm[l];
     });
+
+    // гасим предыдущую анимацию, чтобы не было “перетягивания” на iOS
+    if (rafId) cancelAnimationFrame(rafId);
 
     animate(incomeOut, current, total);
     current = total;
   }
 
-  range.oninput = calc;
-  range.onmousedown = () => bubble.classList.add("show");
-  range.onmouseup = () => bubble.classList.remove("show");
-  range.ontouchstart = () => bubble.classList.add("show");
-  range.ontouchend = () => bubble.classList.remove("show");
+  // handlers
+  const onInput = () => calc();
+  const onDown = () => bubble.classList.add("show");
+  const onUp = () => bubble.classList.remove("show");
 
-  langs.forEach(l => {
-    const el = document.getElementById(l) as HTMLInputElement;
-    el.onchange = calc;
+  range.addEventListener("input", onInput, { passive: true });
+  range.addEventListener("mousedown", onDown);
+  range.addEventListener("mouseup", onUp);
+  range.addEventListener("touchstart", onDown, { passive: true });
+  range.addEventListener("touchend", onUp);
+
+  const langHandlers: Array<{ el: HTMLInputElement; fn: () => void }> = [];
+  langs.forEach((l) => {
+    const el = document.getElementById(l) as HTMLInputElement | null;
+    if (!el) return;
+    const fn = () => calc();
+    el.addEventListener("change", fn);
+    langHandlers.push({ el, fn });
   });
 
+  // первый расчёт — теперь только когда долистали
   calc();
-}, []);
+
+  // cleanup (важно для iOS и для будущих перерендеров)
+  return () => {
+    if (rafId) cancelAnimationFrame(rafId);
+
+    range.removeEventListener("input", onInput);
+    range.removeEventListener("mousedown", onDown);
+    range.removeEventListener("mouseup", onUp);
+    range.removeEventListener("touchstart", onDown);
+    range.removeEventListener("touchend", onUp);
+
+    langHandlers.forEach(({ el, fn }) => el.removeEventListener("change", fn));
+  };
+}, [calcReady]);
+
 
 
 
@@ -1080,5 +1148,3 @@ function FAQAccordion() {
     </div>
   );
 }
-
-
